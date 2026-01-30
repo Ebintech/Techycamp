@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refer & Earn | Baja Broking</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #f5f3ff 0%, #fce7f3 50%, #dbeafe 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .loading-overlay.active { display: flex; }
+        
+        .loading-dots div {
+            width: 14px;
+            height: 14px;
+            background: #6366f1;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 5px;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+        
+        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .container { max-width: 500px; width: 100%; }
+        
+        .card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 8px;
+        }
+        
+        .gradient-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+            border-radius: 24px 24px 0 0;
+        }
+        
+        .card-content { padding: 40px 32px; }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        
+        .logo {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background: white;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .header h1 {
+            color: #1f2937;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .reward-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 9999px;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+        
+        .info-box {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+        
+        .form-group {
+            margin-bottom: 14px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 12px;
+            font-size: 14px;
+            transition: all 0.2s;
+            color: #374151;
+        }
+        
+        .form-group input::placeholder {
+            color: #9ca3af;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: white;
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 9999px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            margin-top: 12px;
+        }
+        
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        }
+        
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .hp-field {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .tracker-link {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .tracker-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .tracker-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            margin-bottom: 24px;
+        }
+        
+        .modal-header h2 {
+            color: #1f2937;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        
+        .modal-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .link-section {
+            margin-bottom: 20px;
+        }
+        
+        .link-label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .link-input-wrapper {
+            position: relative;
+        }
+        
+        .link-input {
+            width: 100%;
+            padding: 12px 50px 12px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #4b5563;
+            background: #f9fafb;
+        }
+        
+        .copy-btn {
+            position: absolute;
+            right: 4px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .copy-btn:hover {
+            background: #4f46e5;
+        }
+        
+        .copy-btn.copied {
+            background: #10b981;
+        }
+        
+        .close-btn {
+            width: 100%;
+            padding: 12px;
+            background: #f3f4f6;
+            color: #374151;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+        
+        .close-btn:hover {
+            background: #e5e7eb;
+        }
+        
+        .accordion {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+        
+        .accordion-header {
+            width: 100%;
+            padding: 14px;
+            background: none;
+            border: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            text-align: left;
+        }
+        
+        .accordion-header h3 {
+            color: #1f2937;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+        
+        .accordion-icon.open {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-content.open {
+            max-height: 400px;
+        }
+        
+        .accordion-body {
+            padding: 0 14px 14px;
+            color: #4b5563;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .accordion-body ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .accordion-body li {
+            padding: 6px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .accordion-body li:before {
+            content: "•";
+            position: absolute;
+            left: 6px;
+            color: #6366f1;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-dots">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="card">
+            <div class="gradient-border"></div>
+            <div class="card-content">
+                <div id="formView">
+                    <div class="header">
+                        <div class="logo">
+                            <img src="https://campguruji.in/img/app-logo.png" alt="Logo">
+                        </div>
+                        <h1>Refer & Earn</h1>
+                        <div class="reward-badge">
+                            Earn up to ₹<span id="totalPayout">400</span>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        💰 <strong>How it works:</strong> Share your referral link, earn when your referrals complete their first trade!
+                    </div>
+
+                    <form id="referForm">
+                        <div class="form-group">
+                            <label for="mobile">Your Mobile Number *</label>
+                            <input 
+                                type="tel" 
+                                id="mobile" 
+                                placeholder="10-digit mobile number" 
+                                required
+                                pattern="[0-9]{10}"
+                                maxlength="10"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="upi">Your UPI ID *</label>
+                            <input 
+                                type="text" 
+                                id="upi" 
+                                placeholder="yourname@paytm" 
+                                required
+                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}"
+                            >
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telegram">Telegram Channel Link (Optional)</label>
+                            <input 
+                                type="url" 
+                                id="telegram" 
+                                placeholder="https://t.me/yourchannel (optional)"
+                            >
+                        </div>
+                        
+                        <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
+                        
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            GENERATE MY REFERRAL LINK
+                        </button>
+                    </form>
+
+                    <div class="tracker-link">
+                        <a href="refer-tracker.html">📊 Track Your Referrals</a>
+                    </div>
+
+                    <div class="accordion">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <h3>Terms and Conditions</h3>
+                            <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul>
+                                    <li>Valid only once per user/UPI/IP/Device</li>
+                                    <li>Duplicate accounts will not be rewarded</li>
+                                    <li>Payout after referee completes first trade</li>
+                                    <li>Merchant verifies all transactions</li>
+                                    <li>Fraudulent activity leads to rejection</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="linksModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🎉 Your Links are Ready!</h2>
+                <p>Share your referral link and start earning</p>
+            </div>
+
+            <div class="link-section">
+                <label class="link-label">📣 Your Referral Link</label>
+                <div class="link-input-wrapper">
+                    <input type="text" class="link-input" id="referralLink" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('referralLink', this)">Copy</button>
+                </div>
+            </div>
+
+            <div class="link-section">
+                <label class="link-label">📈 Your Tracker Link</label>
+                <div class="link-input-wrapper">
+                    <input type="text" class="link-input" id="trackerLink" readonly>
+                    <button class="copy-btn" onclick="copyToClipboard('trackerLink', this)">Copy</button>
+                </div>
+            </div>
+
+            <button class="close-btn" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+
+    <script>
+        // ================================
+        // ✅ CONFIGURATION - ALL URLS SET!
+        // ================================
+        
+        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        const CAMPAIGN_SLUG = 'baja-broking';
+        
+        const PAYOUTS = {
+            referrer: 200,
+            referee: 200
+        };
+        
+        document.getElementById('totalPayout').textContent = PAYOUTS.referrer + PAYOUTS.referee;
+        
+        // ================================
+        // FUNCTIONS
+        // ================================
+        
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.accordion-icon');
+            content.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+        
+        function generateReferrerId() {
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substring(2, 9);
+            return 'REF' + timestamp + random.toUpperCase();
+        }
+        
+        function copyToClipboard(inputId, button) {
+            const input = document.getElementById(inputId);
+            input.select();
+            document.execCommand('copy');
+            
+            const originalText = button.textContent;
+            button.textContent = '✓ Copied';
+            button.classList.add('copied');
+            
+            setTimeout(() => {
+                button.textContent = originalText;
+                button.classList.remove('copied');
+            }, 2000);
+        }
+        
+        function closeModal() {
+            document.getElementById('linksModal').classList.remove('active');
+        }
+        
+        // ================================
+        // FORM SUBMISSION
+        // ================================
+        
+        document.getElementById('referForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const mobile = document.getElementById('mobile').value.trim();
+            const upi = document.getElementById('upi').value.trim();
+            const telegram = document.getElementById('telegram').value.trim();
+            const honeypot = document.querySelector('[name="website"]').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            if (!/^[0-9]{10}$/.test(mobile)) {
+                alert('Please enter a valid 10-digit mobile number');
+                return;
+            }
+            
+            if (!/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
+                alert('Please enter a valid UPI ID');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'GENERATING...';
+            loadingOverlay.classList.add('active');
+            
+            try {
+                const referrerId = generateReferrerId();
+                
+                const data = {
+                    mobile: mobile,
+                    upi: upi,
+                    telegram: telegram || null,
+                    referrerId: referrerId,
+                    campaignSlug: CAMPAIGN_SLUG,
+                    type: 'referrer',
+                    payoutReferrer: PAYOUTS.referrer,
+                    payoutReferee: PAYOUTS.referee,
+                    website: honeypot,
+                    origin: window.location.origin
+                };
+                
+                const response = await fetch(WORKER_API + '/refer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.error || 'Failed to generate links');
+                }
+                
+                loadingOverlay.classList.remove('active');
+                
+                // Use existing referrer ID if UPI already registered
+                const finalReferrerId = result.referrerId || referrerId;
+                
+                const baseUrl = window.location.origin + window.location.pathname.replace('refer.html', '');
+                const referralUrl = baseUrl + 'baja-broking.html?ref=' + finalReferrerId;
+                const trackerUrl = baseUrl + 'refer-tracker.html?ref=' + finalReferrerId;
+                
+                document.getElementById('referralLink').value = referralUrl;
+                document.getElementById('trackerLink').value = trackerUrl;
+                document.getElementById('linksModal').classList.add('active');
+                
+                if (result.isExisting) {
+                    alert('✅ Welcome back! Here are your existing referral links.');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert(error.message || 'Failed to generate links. Please try again.');
+                loadingOverlay.classList.remove('active');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'GENERATE MY REFERRAL LINK';
+            }
+        });
+    </script>
+</body>
+</html>

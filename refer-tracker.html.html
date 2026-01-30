@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Referrals | Baja Broking</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .header-card h1 {
+            font-size: 28px;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+        
+        .header-card p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 16px;
+            color: white;
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .check-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .check-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .check-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .referrals-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: none;
+        }
+        
+        .referrals-card.active {
+            display: block;
+        }
+        
+        .referrals-card h2 {
+            font-size: 20px;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+        
+        .referral-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .referral-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .referral-info {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .referral-date {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+        
+        .referral-upi {
+            font-size: 14px;
+            color: #1f2937;
+            font-weight: 600;
+        }
+        
+        .referral-status {
+            padding: 6px 12px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .status-install {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        
+        .status-kyc {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+        
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .status-paid {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .referral-payout {
+            font-size: 16px;
+            font-weight: 700;
+            color: #10b981;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            opacity: 0.3;
+        }
+        
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .back-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .info-tip {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #1e40af;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header-card">
+            <h1>📊 Track Your Referrals</h1>
+            <p>Monitor your referral earnings and track conversions</p>
+            
+            <div class="stats-grid" id="statsGrid" style="display:none;">
+                <div class="stat-card">
+                    <div class="stat-label">Total Referrals</div>
+                    <div class="stat-value" id="totalReferrals">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Completed</div>
+                    <div class="stat-value" id="completedCount">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Earnings</div>
+                    <div class="stat-value">₹<span id="totalEarnings">0</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-card">
+            <div class="info-tip">
+                💡 <strong>Tip:</strong> Enter the same UPI ID you used when creating your referral link to track all your referrals.
+            </div>
+            
+            <form id="trackerForm">
+                <div class="form-group">
+                    <label for="referrerUpi">Enter Your UPI ID *</label>
+                    <input 
+                        type="text" 
+                        id="referrerUpi" 
+                        placeholder="yourname@paytm" 
+                        required
+                        pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}"
+                    >
+                </div>
+                
+                <button type="submit" class="check-btn" id="checkBtn">
+                    Check My Referrals
+                </button>
+            </form>
+        </div>
+
+        <div class="referrals-card" id="referralsCard">
+            <h2>Your Referrals</h2>
+            <div class="referral-list" id="referralList">
+                <!-- Referrals will be loaded here -->
+            </div>
+            <div class="empty-state" id="emptyState" style="display:none;">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+                </svg>
+                <p>No referrals yet. Share your referral link to start earning!</p>
+            </div>
+        </div>
+
+        <div class="back-link">
+            <a href="refer.html">← Back to Refer Page</a>
+        </div>
+    </div>
+
+    <script>
+        // ================================
+        // ✅ CONFIGURATION - GOOGLE SCRIPT URL
+        // ================================
+        
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXlPc-7KBPggJw9gimJBseal16wgOu1FnIXnZZAxTV2l1ouD1UULW5mGjbLB6qe3qp-A/exec';
+        
+        // ================================
+        // TRACKER FORM
+        // ================================
+        
+        document.getElementById('trackerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const referrerUpi = document.getElementById('referrerUpi').value.trim();
+            const checkBtn = document.getElementById('checkBtn');
+            
+            // Validate UPI format
+            const upiPattern = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
+            if (!upiPattern.test(referrerUpi)) {
+                alert('Please enter a valid UPI ID (e.g., yourname@paytm)');
+                return;
+            }
+            
+            checkBtn.disabled = true;
+            checkBtn.textContent = 'Loading...';
+            
+            try {
+                const url = SCRIPT_URL + '?action=trackReferralsByUpi&upi=' + encodeURIComponent(referrerUpi);
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayReferrals(data);
+                } else {
+                    alert(data.message || 'No referrals found for this UPI ID');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Unable to fetch referrals. Please try again.');
+            } finally {
+                checkBtn.disabled = false;
+                checkBtn.textContent = 'Check My Referrals';
+            }
+        });
+        
+        // ================================
+        // DISPLAY REFERRALS
+        // ================================
+        
+        function displayReferrals(data) {
+            const referralsCard = document.getElementById('referralsCard');
+            const referralList = document.getElementById('referralList');
+            const emptyState = document.getElementById('emptyState');
+            const statsGrid = document.getElementById('statsGrid');
+            
+            // Show stats
+            statsGrid.style.display = 'grid';
+            document.getElementById('totalReferrals').textContent = data.total || 0;
+            document.getElementById('completedCount').textContent = data.completed || 0;
+            document.getElementById('totalEarnings').textContent = data.totalEarnings || 0;
+            
+            // Show referrals card
+            referralsCard.classList.add('active');
+            
+            if (data.referrals && data.referrals.length > 0) {
+                referralList.innerHTML = '';
+                emptyState.style.display = 'none';
+                
+                data.referrals.forEach(referral => {
+                    const item = document.createElement('div');
+                    item.className = 'referral-item';
+                    
+                    // Determine status class and text
+                    let statusClass = 'status-pending';
+                    let statusText = 'PENDING';
+                    
+                    const status = referral.status ? referral.status.toLowerCase() : 'pending';
+                    
+                    if (status === 'install_success' || status === 'installed') {
+                        statusClass = 'status-install';
+                        statusText = 'INSTALLED';
+                    } else if (status === 'kyc_success' || status === 'kyc_completed') {
+                        statusClass = 'status-kyc';
+                        statusText = 'KYC DONE';
+                    } else if (status === 'approved' || status === 'cashback_paid' || status === 'paid') {
+                        statusClass = 'status-approved';
+                        statusText = 'COMPLETED';
+                    }
+                    
+                    // Show payout if status is completed
+                    const showPayout = (status === 'approved' || status === 'cashback_paid' || status === 'paid');
+                    
+                    item.innerHTML = `
+                        <div class="referral-info">
+                            <div class="referral-date">${new Date(referral.date).toLocaleDateString('en-IN', { 
+                                day: '2-digit', 
+                                month: 'short', 
+                                year: 'numeric' 
+                            })}</div>
+                            <div class="referral-upi">${referral.upi}</div>
+                        </div>
+                        <div class="referral-status ${statusClass}">
+                            ${statusText}
+                        </div>
+                        ${showPayout ? `<div class="referral-payout">+₹${referral.payout || '200'}</div>` : ''}
+                    `;
+                    
+                    referralList.appendChild(item);
+                });
+            } else {
+                emptyState.style.display = 'block';
+                referralList.innerHTML = '';
+            }
+        }
+    </script>
+</body>
+</html>
