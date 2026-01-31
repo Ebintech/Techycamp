@@ -452,10 +452,6 @@
                         </button>
                     </form>
 
-                    <div class="tracker-link">
-                        <a href="refer-tracker.html">📊 Track Your Referrals</a>
-                    </div>
-
                     <div class="accordion">
                         <button class="accordion-header" onclick="toggleAccordion(this)">
                             <h3>Terms and Conditions</h3>
@@ -493,14 +489,9 @@
                     <input type="text" class="link-input" id="referralLink" readonly>
                     <button class="copy-btn" onclick="copyToClipboard('referralLink', this)">Copy</button>
                 </div>
-            </div>
-
-            <div class="link-section">
-                <label class="link-label">📈 Your Tracker Link</label>
-                <div class="link-input-wrapper">
-                    <input type="text" class="link-input" id="trackerLink" readonly>
-                    <button class="copy-btn" onclick="copyToClipboard('trackerLink', this)">Copy</button>
-                </div>
+                <p style="margin-top: 12px; font-size: 13px; color: #6b7280;">
+                    💡 <strong>Tip:</strong> Shorten this link using <a href="https://bitly.com" target="_blank" style="color: #6366f1;">Bitly</a> or <a href="https://tinyurl.com" target="_blank" style="color: #6366f1;">TinyURL</a> before sharing!
+                </p>
             </div>
 
             <button class="close-btn" onclick="closeModal()">Close</button>
@@ -534,9 +525,12 @@
         }
         
         function generateReferrerId() {
-            const timestamp = Date.now();
-            const random = Math.random().toString(36).substring(2, 9);
-            return 'REF' + timestamp + random.toUpperCase();
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 8; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
         }
         
         function copyToClipboard(inputId, button) {
@@ -623,10 +617,8 @@
                 
                 const baseUrl = window.location.origin + window.location.pathname.replace('refer.html', '');
                 const referralUrl = baseUrl + 'baja-broking.html?ref=' + finalReferrerId;
-                const trackerUrl = baseUrl + 'refer-tracker.html?ref=' + finalReferrerId;
                 
                 document.getElementById('referralLink').value = referralUrl;
-                document.getElementById('trackerLink').value = trackerUrl;
                 document.getElementById('linksModal').classList.add('active');
                 
                 if (result.isExisting) {
