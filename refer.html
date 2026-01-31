@@ -616,7 +616,7 @@
                 const finalReferrerId = result.referrerId || referrerId;
                 
                 const baseUrl = window.location.origin + window.location.pathname.replace('refer.html', '');
-                const referralUrl = baseUrl + 'baja-broking.html?ref=' + finalReferrerId;
+                const referralUrl = baseUrl + '?ref=' + finalReferrerId;
                 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
