@@ -312,7 +312,7 @@
         </div>
         
         <div class="back-link">
-            <a href="index.html">← Back to Campaign Page</a>
+            <a href="baja-broking.html">← Back to Campaign Page</a>
         </div>
     </div>
     
@@ -376,31 +376,17 @@
             let statusClass = 'status-pending';
             let statusIcon = '⏳';
             let statusTitle = 'Pending Verification';
-            let statusMessage = 'Your submission is under review. Please complete all steps.';
+            let statusMessage = 'Your submission is being processed. Please complete all offer requirements.';
             
-            let installComplete = false;
-            let kycComplete = false;
-            let cashbackPaid = false;
+            let submitted = true;
+            let completed = false;
             
-            if (status === 'install_success' || status === 'installed') {
-                installComplete = true;
-                statusIcon = '📱';
-                statusTitle = 'App Installed Successfully!';
-                statusMessage = 'Great! Now complete your KYC verification.';
-            } else if (status === 'kyc_success' || status === 'kyc_completed') {
-                installComplete = true;
-                kycComplete = true;
-                statusIcon = '✅';
-                statusTitle = 'KYC Verified!';
-                statusMessage = 'Almost done! Complete your first trade to get cashback.';
-            } else if (status === 'cashback_paid' || status === 'approved' || status === 'paid') {
-                installComplete = true;
-                kycComplete = true;
-                cashbackPaid = true;
+            if (status === 'approved' || status === 'paid' || status === 'cashback_paid') {
+                completed = true;
                 statusClass = 'status-success';
                 statusIcon = '🎉';
-                statusTitle = 'Cashback Paid!';
-                statusMessage = 'Congratulations! Your cashback has been credited successfully.';
+                statusTitle = 'Cashback Approved!';
+                statusMessage = 'Congratulations! Your cashback will be credited within 24-48 hours.';
             }
             
             statusResult.innerHTML = `
@@ -412,43 +398,31 @@
                     <div class="progress-section">
                         <div class="progress-title">📋 Your Progress</div>
                         
-                        <div class="progress-step ${installComplete ? 'completed' : 'current'}">
-                            <div class="step-icon ${installComplete ? 'completed' : 'current'}">
-                                ${installComplete ? '✓' : '1'}
-                            </div>
+                        <div class="progress-step completed">
+                            <div class="step-icon completed">✓</div>
                             <div class="step-text">
-                                <strong>Install App</strong>
-                                ${installComplete ? 'Completed ✓' : 'In Progress...'}
+                                <strong>Step 1: Submission</strong>
+                                Completed ✓
                             </div>
                         </div>
                         
-                        <div class="progress-step ${kycComplete ? 'completed' : (installComplete ? 'current' : '')}">
-                            <div class="step-icon ${kycComplete ? 'completed' : (installComplete ? 'current' : 'pending')}">
-                                ${kycComplete ? '✓' : '2'}
+                        <div class="progress-step ${completed ? 'completed' : 'current'}">
+                            <div class="step-icon ${completed ? 'completed' : 'current'}">
+                                ${completed ? '✓' : '2'}
                             </div>
                             <div class="step-text">
-                                <strong>Complete KYC</strong>
-                                ${kycComplete ? 'Completed ✓' : (installComplete ? 'Pending - Complete this now' : 'Locked')}
+                                <strong>Step 2: Complete Offer Requirements</strong>
+                                ${completed ? 'Completed ✓' : 'Please install app, complete KYC, and make first trade'}
                             </div>
                         </div>
                         
-                        <div class="progress-step ${cashbackPaid ? 'completed' : (kycComplete ? 'current' : '')}">
-                            <div class="step-icon ${cashbackPaid ? 'completed' : (kycComplete ? 'current' : 'pending')}">
-                                ${cashbackPaid ? '✓' : '3'}
+                        <div class="progress-step ${completed ? 'completed' : ''}">
+                            <div class="step-icon ${completed ? 'completed' : 'pending'}">
+                                ${completed ? '✓' : '3'}
                             </div>
                             <div class="step-text">
-                                <strong>Complete First Trade</strong>
-                                ${cashbackPaid ? 'Completed ✓' : (kycComplete ? 'Pending - Do your first trade' : 'Locked')}
-                            </div>
-                        </div>
-                        
-                        <div class="progress-step ${cashbackPaid ? 'completed' : ''}">
-                            <div class="step-icon ${cashbackPaid ? 'completed' : 'pending'}">
-                                ${cashbackPaid ? '✓' : '4'}
-                            </div>
-                            <div class="step-text">
-                                <strong>Cashback Credited</strong>
-                                ${cashbackPaid ? 'Paid ₹' + (data.payout || '301') : 'Waiting for trade completion'}
+                                <strong>Step 3: Cashback Payment</strong>
+                                ${completed ? 'Approved - Payment within 24-48 hours' : 'Waiting for offer completion'}
                             </div>
                         </div>
                     </div>
@@ -466,10 +440,14 @@
                             <span class="detail-label">Submitted:</span>
                             <span class="detail-value">${new Date(data.submittedDate).toLocaleDateString()}</span>
                         </div>
-                        ${data.conversionDate && data.conversionDate !== 'Not yet converted' ? `
+                        ${completed ? `
                         <div class="detail-row">
-                            <span class="detail-label">Completed:</span>
-                            <span class="detail-value">${new Date(data.conversionDate).toLocaleDateString()}</span>
+                            <span class="detail-label">Approved:</span>
+                            <span class="detail-value">${data.conversionDate !== 'Not yet converted' ? new Date(data.conversionDate).toLocaleDateString() : 'Recently'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Payout:</span>
+                            <span class="detail-value" style="color: #10b981; font-weight: 700;">₹${data.payout || '301'}</span>
                         </div>
                         ` : ''}
                     </div>
