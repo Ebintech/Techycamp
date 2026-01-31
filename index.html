@@ -533,9 +533,9 @@
         const refId = urlParams.get('ref');
         
         function generateClickId() {
-            const timestamp = Date.now();
-            const random = Math.random().toString(36).substring(2, 11);
-            return 'CL' + timestamp + random.toUpperCase();
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            return 'C' + timestamp + random;
         }
         
         // ================================
