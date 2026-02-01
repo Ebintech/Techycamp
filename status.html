@@ -318,10 +318,10 @@
     
     <script>
         // ================================
-        // ✅ CONFIGURATION - GOOGLE SCRIPT URL
+        // ✅ CONFIGURATION - CLOUDFLARE WORKER (HIDDEN GOOGLE SCRIPT)
         // ================================
         
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwXlPc-7KBPggJw9gimJBseal16wgOu1FnIXnZZAxTV2l1ouD1UULW5mGjbLB6qe3qp-A/exec';
+        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
         
         // ================================
         // STATUS CHECKER
@@ -345,7 +345,7 @@
             statusResult.classList.remove('show');
             
             try {
-                const url = SCRIPT_URL + '?action=check&upi=' + encodeURIComponent(upiId);
+                const url = WORKER_API + '/status?upi=' + encodeURIComponent(upiId);
                 const response = await fetch(url);
                 const data = await response.json();
                 
