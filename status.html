@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check Your Status | Baja Broking</title>
+    <title>Check Your Status</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -287,7 +287,7 @@
         </div>
         
         <div class="info-box">
-            <p><strong>ℹ️ Note:</strong> It may take 24-48 hours for conversions to be tracked after completing all steps. Please check back later if status shows as pending.</p>
+            <p><strong>ℹ️ Note:</strong> It may take 24-48 hours for conversions to be tracked after completing all steps.</p>
         </div>
         
         <form id="statusForm">
@@ -307,25 +307,16 @@
             </button>
         </form>
         
-        <div class="status-result" id="statusResult">
-            <!-- Results will be displayed here -->
-        </div>
+        <div class="status-result" id="statusResult"></div>
         
         <div class="back-link">
-            <a href="baja-broking.html">← Back to Campaign Page</a>
+            <a href="/">← Back to Home</a>
         </div>
     </div>
     
     <script>
-        // ================================
         // ✅ CONFIGURATION - CLOUDFLARE WORKER (HIDDEN GOOGLE SCRIPT)
-        // ================================
-        
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        
-        // ================================
-        // STATUS CHECKER
-        // ================================
         
         document.getElementById('statusForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -363,10 +354,6 @@
                 checkBtn.textContent = 'Check Status';
             }
         });
-        
-        // ================================
-        // DISPLAY STATUS
-        // ================================
         
         function displayStatus(data) {
             const statusResult = document.getElementById('statusResult');
@@ -434,7 +421,7 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Campaign:</span>
-                            <span class="detail-value">${data.campaign || 'Baja Broking'}</span>
+                            <span class="detail-value">${data.campaign || 'Campaign'}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Submitted:</span>
