@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Refer & Earn | Baja Broking</title>
+    <title>Refer & Earn</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -187,24 +187,6 @@
             pointer-events: none;
         }
         
-        .tracker-link {
-            text-align: center;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #e5e7eb;
-        }
-        
-        .tracker-link a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        
-        .tracker-link a:hover {
-            text-decoration: underline;
-        }
-        
         .modal {
             display: none;
             position: fixed;
@@ -382,6 +364,22 @@
             color: #6366f1;
             font-weight: bold;
         }
+        
+        .tip-note {
+            margin-top: 12px;
+            font-size: 13px;
+            color: #6b7280;
+        }
+        
+        .tip-note a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .tip-note a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -479,7 +477,7 @@
     <div class="modal" id="linksModal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>🎉 Your Links are Ready!</h2>
+                <h2>🎉 Your Link is Ready!</h2>
                 <p>Share your referral link and start earning</p>
             </div>
 
@@ -489,8 +487,8 @@
                     <input type="text" class="link-input" id="referralLink" readonly>
                     <button class="copy-btn" onclick="copyToClipboard('referralLink', this)">Copy</button>
                 </div>
-                <p style="margin-top: 12px; font-size: 13px; color: #6b7280;">
-                    💡 <strong>Tip:</strong> Shorten this link using <a href="https://bitly.com" target="_blank" style="color: #6366f1;">Bitly</a> or <a href="https://tinyurl.com" target="_blank" style="color: #6366f1;">TinyURL</a> before sharing!
+                <p class="tip-note">
+                    💡 <strong>Tip:</strong> Shorten this link using <a href="https://bitly.com" target="_blank">Bitly</a> or <a href="https://tinyurl.com" target="_blank">TinyURL</a> before sharing!
                 </p>
             </div>
 
@@ -499,10 +497,7 @@
     </div>
 
     <script>
-        // ================================
-        // ✅ CONFIGURATION - ALL URLS SET!
-        // ================================
-        
+        // ✅ CONFIGURATION
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
         const CAMPAIGN_SLUG = 'baja-broking';
         
@@ -512,10 +507,6 @@
         };
         
         document.getElementById('totalPayout').textContent = PAYOUTS.referrer + PAYOUTS.referee;
-        
-        // ================================
-        // FUNCTIONS
-        // ================================
         
         function toggleAccordion(button) {
             const content = button.nextElementSibling;
@@ -551,10 +542,6 @@
         function closeModal() {
             document.getElementById('linksModal').classList.remove('active');
         }
-        
-        // ================================
-        // FORM SUBMISSION
-        // ================================
         
         document.getElementById('referForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -612,7 +599,6 @@
                 
                 loadingOverlay.classList.remove('active');
                 
-                // Use existing referrer ID if UPI already registered
                 const finalReferrerId = result.referrerId || referrerId;
                 
                 const baseUrl = window.location.origin + window.location.pathname.replace('refer.html', '');
