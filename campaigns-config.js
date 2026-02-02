@@ -1,7 +1,7 @@
+// campaigns-config.js
 // ========================================
 // CAMPAIGNS CONFIGURATION DATABASE
 // ========================================
-
 const CAMPAIGNS = {
   // Baja Broking Campaign
   'bww4yubb': {
@@ -9,11 +9,11 @@ const CAMPAIGNS = {
     name: 'Baja Broking',
     slug: 'baja-broking',
     payout: 301,
-    type: 'online', // online or offline
+    type: 'online',
     active: true,
     logo: 'https://campguruji.in/img/app-logo.png',
     description: 'Earn ₹301 Rewards',
-    offerUrl: 'https://track.panel.com/baja?offer=123',
+    offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
     steps: [
       'Submit your UPI ID above',
       'Download & Install the Baja Broking App',
@@ -30,7 +30,11 @@ const CAMPAIGNS = {
       'Merchant verifies all transactions for duplicate/fraudulent activity',
       'Cashback credited after successful first trade completion',
       'Any suspicious activity will result in reward rejection'
-    ]
+    ],
+    referralPayout: {
+      referrer: 200,
+      referee: 101
+    }
   },
 
   // Angel One Campaign
@@ -43,7 +47,7 @@ const CAMPAIGNS = {
     active: true,
     logo: 'https://campguruji.in/img/app-logo.png',
     description: 'Earn ₹500 Rewards',
-    offerUrl: 'https://track.panel.com/angel?offer=456',
+    offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
     steps: [
       'Submit your UPI ID above',
       'Download & Install Angel One App',
@@ -58,7 +62,11 @@ const CAMPAIGNS = {
       'Complete KYC within 7 days',
       'Minimum deposit ₹100 required',
       'Cashback after first trade completion'
-    ]
+    ],
+    referralPayout: {
+      referrer: 300,
+      referee: 200
+    }
   },
 
   // Axis Mutual Fund Campaign
@@ -71,7 +79,7 @@ const CAMPAIGNS = {
     active: true,
     logo: 'https://campguruji.in/img/app-logo.png',
     description: 'Earn ₹500 Cashback',
-    offerUrl: 'https://track.panel.com/axis?offer=789',
+    offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
     steps: [
       'Submit your UPI ID above',
       'Complete KYC verification',
@@ -84,35 +92,45 @@ const CAMPAIGNS = {
       'Minimum investment ₹5000',
       'KYC must be completed',
       'Verification takes 48-72 hours'
-    ]
-  },
+    ],
+    referralPayout: {
+      referrer: 300,
+      referee: 200
+    }
+  }
 
-  // Upstox Campaign
-  'upstx001': {
-    id: 'upstx001',
-    name: 'Upstox',
-    slug: 'upstox',
+  // ========================================
+  // 🆕 ADD NEW CAMPAIGNS BELOW THIS LINE
+  // ========================================
+  
+  // Template for new campaign:
+  /*
+  'YOUR_CAMPAIGN_ID': {
+    id: 'YOUR_CAMPAIGN_ID',
+    name: 'Campaign Name',
+    slug: 'campaign-slug',
     payout: 400,
-    type: 'online',
+    type: 'online', // or 'offline'
     active: true,
-    logo: 'https://campguruji.in/img/app-logo.png',
+    logo: 'https://your-logo-url.com/logo.png',
     description: 'Earn ₹400 Rewards',
-    offerUrl: 'https://track.panel.com/upstox?offer=999',
+    offerUrl: 'https://your-tracking-url.com',
     steps: [
       'Submit your UPI ID above',
-      'Download Upstox App',
-      'Complete KYC with Aadhaar',
-      'Activate your Demat account',
-      'Make first trade',
-      'Get ₹400 cashback within 48 hours!'
+      'Step 2',
+      'Step 3',
+      'Get cashback!'
     ],
     terms: [
-      'One submission per user only',
-      'Valid Indian UPI required',
-      'Complete KYC mandatory',
-      'First trade must be completed'
-    ]
+      'Valid once per user',
+      'Other terms'
+    ],
+    referralPayout: {
+      referrer: 200,
+      referee: 200
+    }
   }
+  */
 };
 
 // Helper function to get campaign by ID
@@ -126,7 +144,12 @@ function isCampaignActive(campaignId) {
   return campaign && campaign.active;
 }
 
+// Helper function to get all active campaigns
+function getActiveCampaigns() {
+  return Object.values(CAMPAIGNS).filter(c => c.active);
+}
+
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = { CAMPAIGNS, getCampaign, isCampaignActive };
+  module.exports = { CAMPAIGNS, getCampaign, isCampaignActive, getActiveCampaigns };
 }
