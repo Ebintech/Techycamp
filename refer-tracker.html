@@ -254,7 +254,7 @@
 <body>
     <div class="container">
         <div class="header-card">
-            <h1>📊 Track Your Referrals</h1>
+            <h1 id="pageTitle">📊 Track Your Referrals</h1>
             <p>Monitor your referral earnings and track conversions</p>
             
             <div class="stats-grid" id="statsGrid" style="display:none;">
@@ -308,13 +308,33 @@
         </div>
 
         <div class="back-link">
-            <a href="refer.html">← Back to Refer Page</a>
+            <a href="#" id="backLink">← Back to Refer Page</a>
         </div>
     </div>
 
+    <!-- Load campaigns config -->
+    <script src="campaigns-config.js"></script>
+    
     <script>
-        // ✅ CONFIGURATION - CLOUDFLARE WORKER (HIDDEN GOOGLE SCRIPT)
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        
+        // Get campaign ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaignId = urlParams.get('id') || 'bww4yubb';
+        
+        let currentCampaign = null;
+        
+        // Initialize
+        function init() {
+            currentCampaign = getCampaign(campaignId);
+            
+            if (currentCampaign) {
+                document.getElementById('pageTitle').innerHTML = `📊 Track Your ${currentCampaign.name} Referrals`;
+                document.title = `Track Referrals - ${currentCampaign.name}`;
+            }
+            
+            document.getElementById('backLink').href = `refer.html?id=${campaignId}`;
+        }
         
         document.getElementById('trackerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -390,6 +410,8 @@
                     
                     const showPayout = (status === 'approved' || status === 'cashback_paid' || status === 'paid');
                     
+                    const defaultPayout = currentCampaign?.referralPayout?.referrer || 200;
+                    
                     item.innerHTML = `
                         <div class="referral-info">
                             <div class="referral-date">${new Date(referral.date).toLocaleDateString('en-IN', { 
@@ -402,7 +424,7 @@
                         <div class="referral-status ${statusClass}">
                             ${statusText}
                         </div>
-                        ${showPayout ? `<div class="referral-payout">+₹${referral.payout || '200'}</div>` : ''}
+                        ${showPayout ? `<div class="referral-payout">+₹${referral.payout || defaultPayout}</div>` : ''}
                     `;
                     
                     referralList.appendChild(item);
@@ -412,6 +434,8 @@
                 referralList.innerHTML = '';
             }
         }
+        
+        init();
     </script>
 </body>
 </html>
