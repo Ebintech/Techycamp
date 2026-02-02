@@ -363,17 +363,18 @@
             let statusClass = 'status-pending';
             let statusIcon = '⏳';
             let statusTitle = 'Pending Verification';
-            let statusMessage = 'Your submission is being processed. Please complete all offer requirements.';
-            
-            let submitted = true;
-            let completed = false;
+            let statusMessage = 'Your submission is being verified. Please complete all offer requirements to get your cashback.';
             
             if (status === 'approved' || status === 'paid' || status === 'cashback_paid') {
-                completed = true;
                 statusClass = 'status-success';
                 statusIcon = '🎉';
                 statusTitle = 'Cashback Approved!';
-                statusMessage = 'Congratulations! Your cashback will be credited within 24-48 hours.';
+                statusMessage = 'Congratulations! Your cashback will be credited to your UPI within 24-48 hours.';
+            } else if (status === 'install_success' || status === 'installed' || status === 'kyc_success' || status === 'kyc_completed') {
+                statusClass = 'status-pending';
+                statusIcon = '✓';
+                statusTitle = 'Install Tracked!';
+                statusMessage = 'Great! Your installation has been tracked. Please complete the remaining steps (KYC and first trade) to receive your cashback.';
             }
             
             statusResult.innerHTML = `
@@ -381,38 +382,6 @@
                     <div class="status-icon">${statusIcon}</div>
                     <div class="status-title">${statusTitle}</div>
                     <div class="status-message">${statusMessage}</div>
-                    
-                    <div class="progress-section">
-                        <div class="progress-title">📋 Your Progress</div>
-                        
-                        <div class="progress-step completed">
-                            <div class="step-icon completed">✓</div>
-                            <div class="step-text">
-                                <strong>Step 1: Submission</strong>
-                                Completed ✓
-                            </div>
-                        </div>
-                        
-                        <div class="progress-step ${completed ? 'completed' : 'current'}">
-                            <div class="step-icon ${completed ? 'completed' : 'current'}">
-                                ${completed ? '✓' : '2'}
-                            </div>
-                            <div class="step-text">
-                                <strong>Step 2: Complete Offer Requirements</strong>
-                                ${completed ? 'Completed ✓' : 'Please install app, complete KYC, and make first trade'}
-                            </div>
-                        </div>
-                        
-                        <div class="progress-step ${completed ? 'completed' : ''}">
-                            <div class="step-icon ${completed ? 'completed' : 'pending'}">
-                                ${completed ? '✓' : '3'}
-                            </div>
-                            <div class="step-text">
-                                <strong>Step 3: Cashback Payment</strong>
-                                ${completed ? 'Approved - Payment within 24-48 hours' : 'Waiting for offer completion'}
-                            </div>
-                        </div>
-                    </div>
                     
                     <div class="detail-section">
                         <div class="detail-row">
@@ -427,13 +396,15 @@
                             <span class="detail-label">Submitted:</span>
                             <span class="detail-value">${new Date(data.submittedDate).toLocaleDateString()}</span>
                         </div>
-                        ${completed ? `
                         <div class="detail-row">
-                            <span class="detail-label">Approved:</span>
-                            <span class="detail-value">${data.conversionDate !== 'Not yet converted' ? new Date(data.conversionDate).toLocaleDateString() : 'Recently'}</span>
+                            <span class="detail-label">Status:</span>
+                            <span class="detail-value" style="color: ${status === 'approved' || status === 'paid' || status === 'cashback_paid' ? '#10b981' : '#f59e0b'}; font-weight: 700;">
+                                ${status === 'approved' || status === 'paid' || status === 'cashback_paid' ? 'APPROVED ✓' : 'PENDING'}
+                            </span>
                         </div>
+                        ${(status === 'approved' || status === 'paid' || status === 'cashback_paid') ? `
                         <div class="detail-row">
-                            <span class="detail-label">Payout:</span>
+                            <span class="detail-label">Cashback:</span>
                             <span class="detail-value" style="color: #10b981; font-weight: 700;">₹${data.payout || '301'}</span>
                         </div>
                         ` : ''}
