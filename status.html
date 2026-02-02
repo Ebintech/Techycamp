@@ -282,7 +282,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Check Your Status</h1>
+            <h1 id="pageTitle">📊 Check Your Status</h1>
             <p>Enter your UPI ID to track your conversion progress</p>
         </div>
         
@@ -310,13 +310,33 @@
         <div class="status-result" id="statusResult"></div>
         
         <div class="back-link">
-            <a href="/">← Back to Home</a>
+            <a href="#" id="backLink">← Back to Campaign</a>
         </div>
     </div>
     
+    <!-- Load campaigns config -->
+    <script src="campaigns-config.js"></script>
+    
     <script>
-        // ✅ CONFIGURATION - CLOUDFLARE WORKER (HIDDEN GOOGLE SCRIPT)
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        
+        // Get campaign ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaignId = urlParams.get('id') || 'bww4yubb';
+        
+        let currentCampaign = null;
+        
+        // Initialize
+        function init() {
+            currentCampaign = getCampaign(campaignId);
+            
+            if (currentCampaign) {
+                document.getElementById('pageTitle').textContent = `📊 Check Your ${currentCampaign.name} Status`;
+                document.title = `Check Status - ${currentCampaign.name}`;
+            }
+            
+            document.getElementById('backLink').href = `camp.html?id=${campaignId}`;
+        }
         
         document.getElementById('statusForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -363,25 +383,63 @@
             let statusClass = 'status-pending';
             let statusIcon = '⏳';
             let statusTitle = 'Pending Verification';
-            let statusMessage = 'Your submission is being verified. Please complete all offer requirements to get your cashback.';
+            let statusMessage = 'Your submission is being processed. Please complete all offer requirements.';
+            
+            let submitted = true;
+            let completed = false;
             
             if (status === 'approved' || status === 'paid' || status === 'cashback_paid') {
+                completed = true;
                 statusClass = 'status-success';
                 statusIcon = '🎉';
                 statusTitle = 'Cashback Approved!';
-                statusMessage = 'Congratulations! Your cashback will be credited to your UPI within 24-48 hours.';
+                statusMessage = 'Congratulations! Your cashback will be credited within 24-48 hours.';
             } else if (status === 'install_success' || status === 'installed' || status === 'kyc_success' || status === 'kyc_completed') {
                 statusClass = 'status-pending';
                 statusIcon = '✓';
-                statusTitle = 'Install Tracked!';
-                statusMessage = 'Great! Your installation has been tracked. Please complete the remaining steps (KYC and first trade) to receive your cashback.';
+                statusTitle = 'Progress Tracked!';
+                statusMessage = 'Great! Your progress has been tracked. Please complete the remaining steps to receive your cashback.';
             }
+            
+            const campaignName = currentCampaign ? currentCampaign.name : (data.campaign || 'Campaign');
             
             statusResult.innerHTML = `
                 <div class="status-card ${statusClass}">
                     <div class="status-icon">${statusIcon}</div>
                     <div class="status-title">${statusTitle}</div>
                     <div class="status-message">${statusMessage}</div>
+                    
+                    <div class="progress-section">
+                        <div class="progress-title">📋 Your Progress</div>
+                        
+                        <div class="progress-step completed">
+                            <div class="step-icon completed">✓</div>
+                            <div class="step-text">
+                                <strong>Step 1: Submission</strong>
+                                Completed ✓
+                            </div>
+                        </div>
+                        
+                        <div class="progress-step ${completed ? 'completed' : 'current'}">
+                            <div class="step-icon ${completed ? 'completed' : 'current'}">
+                                ${completed ? '✓' : '2'}
+                            </div>
+                            <div class="step-text">
+                                <strong>Step 2: Complete Offer Requirements</strong>
+                                ${completed ? 'Completed ✓' : 'In Progress'}
+                            </div>
+                        </div>
+                        
+                        <div class="progress-step ${completed ? 'completed' : ''}">
+                            <div class="step-icon ${completed ? 'completed' : 'pending'}">
+                                ${completed ? '✓' : '3'}
+                            </div>
+                            <div class="step-text">
+                                <strong>Step 3: Cashback Payment</strong>
+                                ${completed ? 'Approved - Payment within 24-48 hours' : 'Waiting for offer completion'}
+                            </div>
+                        </div>
+                    </div>
                     
                     <div class="detail-section">
                         <div class="detail-row">
@@ -390,22 +448,20 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Campaign:</span>
-                            <span class="detail-value">${data.campaign || 'Campaign'}</span>
+                            <span class="detail-value">${campaignName}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Submitted:</span>
                             <span class="detail-value">${new Date(data.submittedDate).toLocaleDateString()}</span>
                         </div>
+                        ${completed ? `
                         <div class="detail-row">
-                            <span class="detail-label">Status:</span>
-                            <span class="detail-value" style="color: ${status === 'approved' || status === 'paid' || status === 'cashback_paid' ? '#10b981' : '#f59e0b'}; font-weight: 700;">
-                                ${status === 'approved' || status === 'paid' || status === 'cashback_paid' ? 'APPROVED ✓' : 'PENDING'}
-                            </span>
+                            <span class="detail-label">Approved:</span>
+                            <span class="detail-value">${data.conversionDate && data.conversionDate !== 'Not yet converted' ? new Date(data.conversionDate).toLocaleDateString() : 'Recently'}</span>
                         </div>
-                        ${(status === 'approved' || status === 'paid' || status === 'cashback_paid') ? `
                         <div class="detail-row">
-                            <span class="detail-label">Cashback:</span>
-                            <span class="detail-value" style="color: #10b981; font-weight: 700;">₹${data.payout || '301'}</span>
+                            <span class="detail-label">Payout:</span>
+                            <span class="detail-value" style="color: #10b981; font-weight: 700;">₹${data.payout || (currentCampaign ? currentCampaign.payout : '301')}</span>
                         </div>
                         ` : ''}
                     </div>
@@ -428,6 +484,8 @@
             
             statusResult.classList.add('show');
         }
+        
+        init();
     </script>
 </body>
 </html>
