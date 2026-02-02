@@ -295,6 +295,26 @@
             background: #e5e7eb;
         }
         
+        .telegram-modal-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(90deg, #0088cc, #0099dd);
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            margin-top: 16px;
+            transition: all 0.2s;
+        }
+        
+        .telegram-modal-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+        }
+        
         .accordion {
             background: rgba(255, 255, 255, 0.5);
             border: 1px solid #e5e7eb;
@@ -491,6 +511,11 @@
                     💡 <strong>Tip:</strong> Shorten this link using <a href="https://bitly.com" target="_blank">Bitly</a> or <a href="https://tinyurl.com" target="_blank">TinyURL</a> before sharing!
                 </p>
             </div>
+            
+            <!-- Telegram Button (shown if telegram was added) -->
+            <a href="#" id="telegramLinkBtn" class="telegram-modal-btn" target="_blank" style="display:none;">
+                📢 Join My Telegram Channel
+            </a>
 
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
@@ -606,6 +631,13 @@
                 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
+                
+                // Show Telegram button if telegram URL was provided
+                if (telegram && telegram.trim() !== '') {
+                    const telegramBtn = document.getElementById('telegramLinkBtn');
+                    telegramBtn.href = telegram;
+                    telegramBtn.style.display = 'block';
+                }
                 
                 if (result.isExisting) {
                     alert('✅ Welcome back! Here are your existing referral links.');
