@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check Your Status</title>
+    <title>Loading Campaign...</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #f5f3ff 0%, #fce7f3 50%, #dbeafe 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -17,446 +17,673 @@
             padding: 20px;
         }
         
-        .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            padding: 40px;
-            max-width: 550px;
-            width: 100%;
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 50;
+            align-items: center;
+            justify-content: center;
         }
+        
+        .loading-overlay.active { display: flex; }
+        
+        .loading-dots div {
+            width: 14px;
+            height: 14px;
+            background: #6366f1;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 5px;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+        
+        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .container { max-width: 500px; width: 100%; }
+        
+        .card {
+            position: relative;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            padding: 8px;
+        }
+        
+        .gradient-border {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
+            border-radius: 24px 24px 0 0;
+        }
+        
+        .card-content { padding: 40px 32px; }
         
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 28px;
+        }
+        
+        .logo {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background: white;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         
         .header h1 {
-            color: #333;
-            font-size: 28px;
-            margin-bottom: 10px;
+            color: #1f2937;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
         
         .header p {
-            color: #666;
-            font-size: 14px;
+            color: #6b7280;
+            font-size: 16px;
         }
         
-        .info-box {
-            background: #f0f4ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 25px;
+        .campaign-ended {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
         }
         
-        .info-box p {
-            color: #555;
-            font-size: 13px;
-            line-height: 1.6;
+        .campaign-ended.active { display: block; }
+        
+        .campaign-ended h2 {
+            color: #dc2626;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .campaign-ended p {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+        
+        .telegram-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #0088cc, #0099dd);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        
+        .telegram-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .error-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .error-message.active { display: block; }
+        
+        .error-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+        }
+        
+        .error-message h2 {
+            color: #dc2626;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
         }
         
         .form-group {
-            margin-bottom: 25px;
-        }
-        
-        .form-group label {
-            display: block;
-            color: #333;
-            font-weight: 600;
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 16px;
         }
         
         .form-group input {
             width: 100%;
-            padding: 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: all 0.3s;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.2s;
+            color: #374151;
+        }
+        
+        .form-group input::placeholder {
+            color: #9ca3af;
         }
         
         .form-group input:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #6366f1;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
         
-        .check-btn {
+        .submit-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 9999px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            margin-top: 8px;
         }
         
-        .check-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        .submit-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
         
-        .check-btn:disabled {
-            opacity: 0.6;
+        .submit-btn:disabled {
+            opacity: 0.7;
             cursor: not-allowed;
+            transform: none;
         }
         
-        .status-result {
-            margin-top: 30px;
-            display: none;
+        .hp-field {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
         }
         
-        .status-result.show {
-            display: block;
+        .steps-section {
+            margin-top: 24px;
+            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+            border: 2px solid #e0e7ff;
+            border-radius: 14px;
+            padding: 20px;
         }
         
-        .status-card {
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-        }
-        
-        .status-success {
-            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-            border: 2px solid #28a745;
-        }
-        
-        .status-pending {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
-            border: 2px solid #ffc107;
-        }
-        
-        .status-error {
-            background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
-            border: 2px solid #dc3545;
-        }
-        
-        .status-icon {
-            font-size: 48px;
-            text-align: center;
-            margin-bottom: 15px;
-        }
-        
-        .status-title {
-            font-size: 20px;
+        .steps-title {
+            color: #4338ca;
+            font-size: 16px;
             font-weight: 700;
-            text-align: center;
-            margin-bottom: 10px;
-            color: #333;
-        }
-        
-        .status-message {
-            text-align: center;
-            line-height: 1.6;
-            font-size: 14px;
-            color: #555;
-            margin-bottom: 20px;
-        }
-        
-        .progress-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px dashed rgba(0,0,0,0.1);
-        }
-        
-        .progress-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 15px;
-            text-align: center;
-        }
-        
-        .progress-step {
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
+            gap: 8px;
+        }
+        
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 12px;
             padding: 12px;
-            margin-bottom: 10px;
             background: white;
             border-radius: 10px;
-            border-left: 4px solid #e0e0e0;
+            border-left: 4px solid #6366f1;
         }
         
-        .progress-step.completed {
-            border-left-color: #28a745;
-            background: #f0fff4;
-        }
-        
-        .progress-step.current {
-            border-left-color: #ffc107;
-            background: #fffbf0;
-        }
-        
-        .step-icon {
-            width: 36px;
-            height: 36px;
+        .step-number {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
             margin-right: 12px;
-            font-size: 18px;
-            flex-shrink: 0;
-        }
-        
-        .step-icon.completed {
-            background: #28a745;
-            color: white;
-        }
-        
-        .step-icon.current {
-            background: #ffc107;
-            color: white;
-        }
-        
-        .step-icon.pending {
-            background: #e0e0e0;
-            color: #999;
         }
         
         .step-text {
             flex: 1;
+            color: #374151;
             font-size: 14px;
-            color: #555;
+            line-height: 1.5;
+            padding-top: 3px;
         }
         
-        .step-text strong {
-            color: #333;
-            display: block;
-            margin-bottom: 2px;
-        }
-        
-        .detail-section {
+        .accordion {
             margin-top: 20px;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.6);
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
         }
         
-        .detail-row {
+        .accordion-header {
+            width: 100%;
+            padding: 16px;
+            background: none;
+            border: none;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s;
+        }
+        
+        .accordion-header:hover {
+            background: rgba(99, 102, 241, 0.05);
+        }
+        
+        .accordion-header h3 {
+            color: #1f2937;
+            font-size: 15px;
+            font-weight: 600;
+        }
+        
+        .accordion-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s;
+            color: #6b7280;
+        }
+        
+        .accordion-icon.open {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .accordion-content.open {
+            max-height: 600px;
+        }
+        
+        .accordion-body {
+            padding: 0 16px 16px;
+            color: #4b5563;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+        
+        .accordion-body ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .accordion-body li {
             padding: 8px 0;
-            font-size: 14px;
-            border-bottom: 1px solid #f0f0f0;
+            padding-left: 24px;
+            position: relative;
         }
         
-        .detail-row:last-child {
-            border-bottom: none;
+        .accordion-body li:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #6366f1;
+            font-weight: bold;
         }
         
-        .detail-label {
-            font-weight: 600;
-            color: #555;
+        .navigation-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
         }
         
-        .detail-value {
-            color: #333;
-            text-align: right;
-        }
-        
-        .back-link {
+        .nav-link {
+            flex: 1;
             text-align: center;
-            margin-top: 25px;
-            padding-top: 25px;
-            border-top: 1px solid #e0e0e0;
-        }
-        
-        .back-link a {
-            color: #667eea;
+            padding: 12px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 10px;
             text-decoration: none;
+            color: #374151;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
+            transition: all 0.2s;
         }
         
-        .back-link a:hover {
-            text-decoration: underline;
+        .nav-link:hover {
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .success-message.active {
+            display: block;
+        }
+        
+        .checkmark {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .success-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+        
+        .success-subtext {
+            font-size: 14px;
+            color: #6b7280;
+            line-height: 1.6;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📊 Check Your Status</h1>
-            <p>Enter your UPI ID to track your conversion progress</p>
-        </div>
-        
-        <div class="info-box">
-            <p><strong>ℹ️ Note:</strong> It may take 24-48 hours for conversions to be tracked after completing all steps.</p>
-        </div>
-        
-        <form id="statusForm">
-            <div class="form-group">
-                <label for="upiCheck">Your UPI ID *</label>
-                <input 
-                    type="text" 
-                    id="upiCheck" 
-                    placeholder="yourname@paytm" 
-                    required
-                    pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}"
-                >
-            </div>
-            
-            <button type="submit" class="check-btn" id="checkBtn">
-                Check Status
-            </button>
-        </form>
-        
-        <div class="status-result" id="statusResult"></div>
-        
-        <div class="back-link">
-            <a href="/">← Back to Home</a>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-dots">
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
     </div>
-    
+
+    <div class="container">
+        <div class="card">
+            <div class="gradient-border"></div>
+            <div class="card-content">
+                <!-- Error Message View -->
+                <div class="error-message" id="errorView">
+                    <div class="error-icon">❌</div>
+                    <h2>Campaign Not Found</h2>
+                    <p>The campaign you're looking for doesn't exist or has been removed.</p>
+                </div>
+
+                <!-- Campaign Ended View -->
+                <div class="campaign-ended" id="campaignEnded">
+                    <div class="checkmark">⏰</div>
+                    <h2>Campaign Ended</h2>
+                    <p>This campaign has ended. Join our Telegram channel for new offers!</p>
+                    <a href="https://t.me/YOUR_CHANNEL" class="telegram-btn" target="_blank">
+                        📢 Join Telegram Channel
+                    </a>
+                </div>
+
+                <!-- Active Campaign View -->
+                <div id="formView">
+                    <div class="header">
+                        <div class="logo">
+                            <img id="campaignLogo" src="" alt="Logo">
+                        </div>
+                        <h1 id="campaignName">Loading...</h1>
+                        <p id="campaignDescription">Please wait...</p>
+                    </div>
+
+                    <form id="campaignForm">
+                        <div class="form-group">
+                            <input 
+                                type="text" 
+                                id="upi" 
+                                placeholder="Your UPI ID *" 
+                                required
+                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}"
+                            >
+                        </div>
+                        
+                        <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
+                        
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            Submit & Get Offer
+                        </button>
+                    </form>
+
+                    <!-- How to Complete Steps -->
+                    <div class="steps-section">
+                        <div class="steps-title">
+                            📋 How to Complete Offer
+                        </div>
+                        <div id="stepsContainer">
+                            <!-- Steps will be dynamically loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Terms and Conditions Accordion -->
+                    <div class="accordion">
+                        <button class="accordion-header" onclick="toggleAccordion(this)">
+                            <h3>Terms and Conditions</h3>
+                            <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul id="termsContainer">
+                                    <!-- Terms will be dynamically loaded here -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <div class="navigation-links">
+                        <a href="#" id="statusLink" class="nav-link">📊 Check Status</a>
+                        <a href="#" id="referLink" class="nav-link">💰 Refer & Earn</a>
+                    </div>
+                </div>
+
+                <!-- Success View -->
+                <div class="success-message" id="successView">
+                    <div class="checkmark">✅</div>
+                    <div class="success-text">Submission Successful!</div>
+                    <div class="success-subtext">
+                        Redirecting you to the offer page...<br>
+                        Complete all steps to get your cashback!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Load campaigns config -->
+    <script src="campaigns-config.js"></script>
+
     <script>
-        // ✅ CONFIGURATION - CLOUDFLARE WORKER (HIDDEN GOOGLE SCRIPT)
-        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        // ================================
+        // CONFIGURATION
+        // ================================
         
-        document.getElementById('statusForm').addEventListener('submit', async function(e) {
+        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        const TELEGRAM_CHANNEL = 'https://t.me/YOUR_CHANNEL';  // ← CHANGE THIS TO YOUR TELEGRAM
+        
+        // Get campaign ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaignId = urlParams.get('id') || 'bww4yubb'; // Default to Baja Broking
+        const clickId = urlParams.get('click_id') || urlParams.get('source');
+        const refId = urlParams.get('ref');
+        
+        let currentCampaign = null;
+        
+        // ================================
+        // INITIALIZE CAMPAIGN
+        // ================================
+        
+        function initializeCampaign() {
+            currentCampaign = getCampaign(campaignId);
+            
+            if (!currentCampaign) {
+                showError();
+                return;
+            }
+            
+            if (!currentCampaign.active) {
+                showCampaignEnded();
+                return;
+            }
+            
+            loadCampaignData();
+        }
+        
+        function showError() {
+            document.getElementById('formView').style.display = 'none';
+            document.getElementById('errorView').classList.add('active');
+            document.title = 'Campaign Not Found';
+        }
+        
+        function showCampaignEnded() {
+            document.getElementById('formView').style.display = 'none';
+            document.getElementById('campaignEnded').classList.add('active');
+            document.querySelector('.telegram-btn').href = TELEGRAM_CHANNEL;
+            document.title = 'Campaign Ended - ' + currentCampaign.name;
+        }
+        
+        function loadCampaignData() {
+            // Update page title
+            document.title = currentCampaign.name + ' - ' + currentCampaign.description;
+            
+            // Update logo
+            document.getElementById('campaignLogo').src = currentCampaign.logo;
+            document.getElementById('campaignLogo').alt = currentCampaign.name + ' Logo';
+            
+            // Update header
+            document.getElementById('campaignName').textContent = currentCampaign.name;
+            document.getElementById('campaignDescription').textContent = currentCampaign.description;
+            
+            // Load steps
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = '';
+            currentCampaign.steps.forEach((step, index) => {
+                const stepHtml = `
+                    <div class="step-item">
+                        <div class="step-number">${index + 1}</div>
+                        <div class="step-text">${step}</div>
+                    </div>
+                `;
+                stepsContainer.innerHTML += stepHtml;
+            });
+            
+            // Load terms
+            const termsContainer = document.getElementById('termsContainer');
+            termsContainer.innerHTML = '';
+            currentCampaign.terms.forEach(term => {
+                const termHtml = `<li>${term}</li>`;
+                termsContainer.innerHTML += termHtml;
+            });
+            
+            // Update navigation links
+            document.getElementById('statusLink').href = `status.html?id=${campaignId}`;
+            document.getElementById('referLink').href = `refer.html?id=${campaignId}`;
+        }
+        
+        // ================================
+        // FUNCTIONS
+        // ================================
+        
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const icon = button.querySelector('.accordion-icon');
+            content.classList.toggle('open');
+            icon.classList.toggle('open');
+        }
+        
+        function generateClickId() {
+            const timestamp = Date.now().toString(36).toUpperCase();
+            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+            return 'C' + timestamp + random;
+        }
+        
+        // ================================
+        // FORM SUBMISSION
+        // ================================
+        
+        document.getElementById('campaignForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const upiId = document.getElementById('upiCheck').value.trim();
-            const checkBtn = document.getElementById('checkBtn');
-            const statusResult = document.getElementById('statusResult');
+            const upi = document.getElementById('upi').value.trim();
+            const honeypot = document.querySelector('[name="website"]').value;
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            const formView = document.getElementById('formView');
+            const successView = document.getElementById('successView');
             
-            const upiPattern = /^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/;
-            if (!upiPattern.test(upiId)) {
+            if (!/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
                 alert('Please enter a valid UPI ID (e.g., yourname@paytm)');
                 return;
             }
             
-            checkBtn.disabled = true;
-            checkBtn.textContent = 'Checking...';
-            statusResult.classList.remove('show');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Processing...';
+            loadingOverlay.classList.add('active');
             
             try {
-                const url = WORKER_API + '/status?upi=' + encodeURIComponent(upiId);
-                const response = await fetch(url);
-                const data = await response.json();
+                const uniqueClickId = clickId || generateClickId();
                 
-                if (data.found) {
-                    displayStatus(data);
-                } else {
-                    showError('No record found for this UPI ID. Please make sure you have submitted correctly.');
+                const data = {
+                    upi: upi,
+                    clickId: uniqueClickId,
+                    campaignId: campaignId,
+                    campaignSlug: currentCampaign.slug,
+                    referrerId: refId || null,
+                    website: honeypot,
+                    origin: window.location.origin
+                };
+                
+                const response = await fetch(WORKER_API, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                const result = await response.json();
+                
+                if (!result.success) {
+                    throw new Error(result.error || 'Submission failed');
                 }
+                
+                loadingOverlay.classList.remove('active');
+                formView.style.display = 'none';
+                successView.classList.add('active');
+                
+                setTimeout(() => {
+                    window.location.replace(result.redirectUrl);
+                }, 2500);
                 
             } catch (error) {
                 console.error('Error:', error);
-                showError('Unable to check status. Please try again later.');
-            } finally {
-                checkBtn.disabled = false;
-                checkBtn.textContent = 'Check Status';
+                alert(error.message || 'Submission failed. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit & Get Offer';
+                loadingOverlay.classList.remove('active');
             }
         });
         
-        function displayStatus(data) {
-            const statusResult = document.getElementById('statusResult');
-            
-            const status = data.status || 'pending';
-            
-            let statusClass = 'status-pending';
-            let statusIcon = '⏳';
-            let statusTitle = 'Pending Verification';
-            let statusMessage = 'Your submission is being processed. Please complete all offer requirements.';
-            
-            let submitted = true;
-            let completed = false;
-            
-            if (status === 'approved' || status === 'paid' || status === 'cashback_paid') {
-                completed = true;
-                statusClass = 'status-success';
-                statusIcon = '🎉';
-                statusTitle = 'Cashback Approved!';
-                statusMessage = 'Congratulations! Your cashback will be credited within 24-48 hours.';
-            }
-            
-            statusResult.innerHTML = `
-                <div class="status-card ${statusClass}">
-                    <div class="status-icon">${statusIcon}</div>
-                    <div class="status-title">${statusTitle}</div>
-                    <div class="status-message">${statusMessage}</div>
-                    
-                    <div class="progress-section">
-                        <div class="progress-title">📋 Your Progress</div>
-                        
-                        <div class="progress-step completed">
-                            <div class="step-icon completed">✓</div>
-                            <div class="step-text">
-                                <strong>Step 1: Submission</strong>
-                                Completed ✓
-                            </div>
-                        </div>
-                        
-                        <div class="progress-step ${completed ? 'completed' : 'current'}">
-                            <div class="step-icon ${completed ? 'completed' : 'current'}">
-                                ${completed ? '✓' : '2'}
-                            </div>
-                            <div class="step-text">
-                                <strong>Step 2: Complete Offer Requirements</strong>
-                                ${completed ? 'Completed ✓' : 'Please install app, complete KYC, and make first trade'}
-                            </div>
-                        </div>
-                        
-                        <div class="progress-step ${completed ? 'completed' : ''}">
-                            <div class="step-icon ${completed ? 'completed' : 'pending'}">
-                                ${completed ? '✓' : '3'}
-                            </div>
-                            <div class="step-text">
-                                <strong>Step 3: Cashback Payment</strong>
-                                ${completed ? 'Approved - Payment within 24-48 hours' : 'Waiting for offer completion'}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="detail-section">
-                        <div class="detail-row">
-                            <span class="detail-label">UPI ID:</span>
-                            <span class="detail-value">${data.upiId}</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Campaign:</span>
-                            <span class="detail-value">${data.campaign || 'Campaign'}</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Submitted:</span>
-                            <span class="detail-value">${new Date(data.submittedDate).toLocaleDateString()}</span>
-                        </div>
-                        ${completed ? `
-                        <div class="detail-row">
-                            <span class="detail-label">Approved:</span>
-                            <span class="detail-value">${data.conversionDate !== 'Not yet converted' ? new Date(data.conversionDate).toLocaleDateString() : 'Recently'}</span>
-                        </div>
-                        <div class="detail-row">
-                            <span class="detail-label">Payout:</span>
-                            <span class="detail-value" style="color: #10b981; font-weight: 700;">₹${data.payout || '301'}</span>
-                        </div>
-                        ` : ''}
-                    </div>
-                </div>
-            `;
-            
-            statusResult.classList.add('show');
-        }
-        
-        function showError(message) {
-            const statusResult = document.getElementById('statusResult');
-            
-            statusResult.innerHTML = `
-                <div class="status-card status-error">
-                    <div class="status-icon">❌</div>
-                    <div class="status-title">Not Found</div>
-                    <div class="status-message">${message}</div>
-                </div>
-            `;
-            
-            statusResult.classList.add('show');
-        }
+        // Initialize on page load
+        initializeCampaign();
     </script>
 </body>
 </html>
