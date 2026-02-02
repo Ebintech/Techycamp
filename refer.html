@@ -400,6 +400,32 @@
         .tip-note a:hover {
             text-decoration: underline;
         }
+        
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .nav-link {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 10px;
+            text-decoration: none;
+            color: #374151;
+            font-weight: 600;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        
+        .nav-link:hover {
+            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
+            transform: translateY(-2px);
+        }
     </style>
 </head>
 <body>
@@ -418,11 +444,11 @@
                 <div id="formView">
                     <div class="header">
                         <div class="logo">
-                            <img src="https://campguruji.in/img/app-logo.png" alt="Logo">
+                            <img id="campaignLogo" src="" alt="Logo">
                         </div>
                         <h1>Refer & Earn</h1>
                         <div class="reward-badge">
-                            Earn up to ₹<span id="totalPayout">400</span>
+                            Earn up to ₹<span id="totalPayout">0</span>
                         </div>
                     </div>
 
@@ -482,12 +508,17 @@
                                 <ul>
                                     <li>Valid only once per user/UPI/IP/Device</li>
                                     <li>Duplicate accounts will not be rewarded</li>
-                                    <li>Payout after referee completes first trade</li>
+                                    <li>Payout after referee completes all requirements</li>
                                     <li>Merchant verifies all transactions</li>
                                     <li>Fraudulent activity leads to rejection</li>
                                 </ul>
                             </div>
                         </div>
+                    </div>
+                    
+                    <div class="nav-links">
+                        <a href="#" id="campLink" class="nav-link">🏠 Campaign</a>
+                        <a href="#" id="trackerLink" class="nav-link">📊 Track Referrals</a>
                     </div>
                 </div>
             </div>
@@ -512,7 +543,6 @@
                 </p>
             </div>
             
-            <!-- Telegram Button (shown if telegram was added) -->
             <a href="#" id="telegramLinkBtn" class="telegram-modal-btn" target="_blank" style="display:none;">
                 📢 Join My Telegram Channel
             </a>
@@ -521,17 +551,36 @@
         </div>
     </div>
 
+    <!-- Load campaigns config -->
+    <script src="campaigns-config.js"></script>
+
     <script>
-        // ✅ CONFIGURATION
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        const CAMPAIGN_SLUG = 'baja-broking';
         
-        const PAYOUTS = {
-            referrer: 200,
-            referee: 200
-        };
+        // Get campaign ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaignId = urlParams.get('id') || 'bww4yubb';
         
-        document.getElementById('totalPayout').textContent = PAYOUTS.referrer + PAYOUTS.referee;
+        let currentCampaign = null;
+        
+        // Initialize
+        function init() {
+            currentCampaign = getCampaign(campaignId);
+            
+            if (currentCampaign) {
+                document.getElementById('campaignLogo').src = currentCampaign.logo;
+                document.title = `Refer & Earn - ${currentCampaign.name}`;
+                
+                // Calculate total payout
+                const referrerPayout = currentCampaign.referralPayout?.referrer || 200;
+                const refereePayout = currentCampaign.referralPayout?.referee || 200;
+                document.getElementById('totalPayout').textContent = referrerPayout + refereePayout;
+            }
+            
+            // Set navigation links
+            document.getElementById('campLink').href = `camp.html?id=${campaignId}`;
+            document.getElementById('trackerLink').href = `refer-tracker.html?id=${campaignId}`;
+        }
         
         function toggleAccordion(button) {
             const content = button.nextElementSibling;
@@ -595,15 +644,18 @@
             try {
                 const referrerId = generateReferrerId();
                 
+                const referrerPayout = currentCampaign?.referralPayout?.referrer || 200;
+                const refereePayout = currentCampaign?.referralPayout?.referee || 200;
+                
                 const data = {
                     mobile: mobile,
                     upi: upi,
                     telegram: telegram || null,
                     referrerId: referrerId,
-                    campaignSlug: CAMPAIGN_SLUG,
+                    campaignSlug: currentCampaign?.slug || 'baja-broking',
                     type: 'referrer',
-                    payoutReferrer: PAYOUTS.referrer,
-                    payoutReferee: PAYOUTS.referee,
+                    payoutReferrer: referrerPayout,
+                    payoutReferee: refereePayout,
                     website: honeypot,
                     origin: window.location.origin
                 };
@@ -625,14 +677,12 @@
                 loadingOverlay.classList.remove('active');
                 
                 const finalReferrerId = result.referrerId || referrerId;
-                
                 const baseUrl = window.location.origin + window.location.pathname.replace('refer.html', '');
-                const referralUrl = baseUrl + '?ref=' + finalReferrerId;
+                const referralUrl = baseUrl + `camp.html?id=${campaignId}&ref=` + finalReferrerId;
                 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
                 
-                // Show Telegram button if telegram URL was provided
                 if (telegram && telegram.trim() !== '') {
                     const telegramBtn = document.getElementById('telegramLinkBtn');
                     telegramBtn.href = telegram;
@@ -652,6 +702,8 @@
                 submitBtn.textContent = 'GENERATE MY REFERRAL LINK';
             }
         });
+        
+        init();
     </script>
 </body>
 </html>
