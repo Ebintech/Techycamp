@@ -356,7 +356,7 @@
             statusResult.classList.remove('show');
             
             try {
-                const url = WORKER_API + '/status?upi=' + encodeURIComponent(upiId);
+                const url = WORKER_API + '/status?upi=' + encodeURIComponent(upiId) + '&campaign=' + campaignId;
                 const response = await fetch(url);
                 const data = await response.json();
                 
