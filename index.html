@@ -318,6 +318,33 @@
             font-weight: bold;
         }
         
+        .telegram-section {
+            display: none;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .telegram-section.active {
+            display: block;
+        }
+        
+        .telegram-btn {
+            display: inline-block;
+            background: linear-gradient(90deg, #0088cc, #0099dd);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 15px;
+        }
+        
+        .telegram-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
+        }
+        
         .success-message {
             display: none;
             text-align: center;
@@ -428,6 +455,13 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Telegram Section (Only shows if ref param AND referrer has Telegram) -->
+                    <div class="telegram-section" id="telegramSection">
+                        <a href="#" id="telegramBtn" class="telegram-btn" target="_blank">
+                            📢 Join Telegram Channel for More Offers
+                        </a>
+                    </div>
                 </div>
 
                 <!-- Success View -->
@@ -479,6 +513,11 @@
             }
             
             loadCampaignData();
+            
+            // Check if this is a referral link
+            if (refId) {
+                fetchReferrerTelegram(refId);
+            }
         }
         
         function showError() {
@@ -520,6 +559,25 @@
                 const termHtml = `<li>${term}</li>`;
                 termsContainer.innerHTML += termHtml;
             });
+        }
+        
+        // ================================
+        // FETCH REFERRER TELEGRAM
+        // ================================
+        async function fetchReferrerTelegram(referrerId) {
+            try {
+                const response = await fetch(`${WORKER_API}/get-referrer-telegram?ref=${encodeURIComponent(referrerId)}`);
+                const data = await response.json();
+                
+                if (data.success && data.telegram && data.telegram.trim() !== '') {
+                    // Show Telegram button
+                    document.getElementById('telegramBtn').href = data.telegram;
+                    document.getElementById('telegramSection').classList.add('active');
+                }
+            } catch (error) {
+                console.error('Error fetching referrer telegram:', error);
+                // Silently fail - don't show telegram button
+            }
         }
         
         // ================================
