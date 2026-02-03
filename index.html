@@ -125,21 +125,6 @@
             margin-bottom: 24px;
         }
         
-        .telegram-btn {
-            display: inline-block;
-            background: linear-gradient(90deg, #0088cc, #0099dd);
-            color: white;
-            padding: 14px 28px;
-            border-radius: 9999px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-        
-        .telegram-btn:hover {
-            transform: scale(1.05);
-        }
-        
         .error-message {
             display: none;
             text-align: center;
@@ -238,36 +223,21 @@
         }
         
         .step-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 12px;
-            padding: 12px;
-            background: white;
-            border-radius: 10px;
-            border-left: 4px solid #6366f1;
-        }
-        
-        .step-number {
-            flex-shrink: 0;
-            width: 28px;
-            height: 28px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            margin-right: 12px;
-        }
-        
-        .step-text {
-            flex: 1;
+            padding: 8px 0;
             color: #374151;
             font-size: 14px;
-            line-height: 1.5;
-            padding-top: 3px;
+            line-height: 1.6;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .step-item:before {
+            content: "•";
+            position: absolute;
+            left: 8px;
+            color: #6366f1;
+            font-weight: bold;
+            font-size: 18px;
         }
         
         .accordion {
@@ -348,32 +318,6 @@
             font-weight: bold;
         }
         
-        .navigation-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-        }
-        
-        .nav-link {
-            flex: 1;
-            text-align: center;
-            padding: 12px;
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            border-radius: 10px;
-            text-decoration: none;
-            color: #374151;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.2s;
-        }
-        
-        .nav-link:hover {
-            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-            transform: translateY(-2px);
-        }
-        
         .success-message {
             display: none;
             text-align: center;
@@ -427,10 +371,7 @@
                 <div class="campaign-ended" id="campaignEnded">
                     <div class="checkmark">⏰</div>
                     <h2>Campaign Ended</h2>
-                    <p>This campaign has ended. Join our Telegram channel for new offers!</p>
-                    <a href="https://t.me/YOUR_CHANNEL" class="telegram-btn" target="_blank">
-                        📢 Join Telegram Channel
-                    </a>
+                    <p>This campaign has ended. Thank you for your interest!</p>
                 </div>
 
                 <!-- Active Campaign View -->
@@ -461,7 +402,7 @@
                         </button>
                     </form>
 
-                    <!-- How to Complete Steps -->
+                    <!-- How to Complete Steps (Simple Design) -->
                     <div class="steps-section">
                         <div class="steps-title">
                             📋 How to Complete Offer
@@ -487,12 +428,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Navigation Links -->
-                    <div class="navigation-links">
-                        <a href="#" id="statusLink" class="nav-link">📊 Check Status</a>
-                        <a href="#" id="referLink" class="nav-link">💰 Refer & Earn</a>
-                    </div>
                 </div>
 
                 <!-- Success View -->
@@ -517,7 +452,6 @@
         // ================================
         
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        const TELEGRAM_CHANNEL = 'https://t.me/YOUR_CHANNEL';  // ← CHANGE THIS TO YOUR TELEGRAM
         
         // Get campaign ID from URL
         const urlParams = new URLSearchParams(window.location.search);
@@ -556,7 +490,6 @@
         function showCampaignEnded() {
             document.getElementById('formView').style.display = 'none';
             document.getElementById('campaignEnded').classList.add('active');
-            document.querySelector('.telegram-btn').href = TELEGRAM_CHANNEL;
             document.title = 'Campaign Ended - ' + currentCampaign.name;
         }
         
@@ -572,16 +505,11 @@
             document.getElementById('campaignName').textContent = currentCampaign.name;
             document.getElementById('campaignDescription').textContent = currentCampaign.description;
             
-            // Load steps
+            // Load steps (simple bullet points)
             const stepsContainer = document.getElementById('stepsContainer');
             stepsContainer.innerHTML = '';
-            currentCampaign.steps.forEach((step, index) => {
-                const stepHtml = `
-                    <div class="step-item">
-                        <div class="step-number">${index + 1}</div>
-                        <div class="step-text">${step}</div>
-                    </div>
-                `;
+            currentCampaign.steps.forEach((step) => {
+                const stepHtml = `<div class="step-item">${step}</div>`;
                 stepsContainer.innerHTML += stepHtml;
             });
             
@@ -592,10 +520,6 @@
                 const termHtml = `<li>${term}</li>`;
                 termsContainer.innerHTML += termHtml;
             });
-            
-            // Update navigation links
-            document.getElementById('statusLink').href = `status.html?id=${campaignId}`;
-            document.getElementById('referLink').href = `refer.html?id=${campaignId}`;
         }
         
         // ================================
