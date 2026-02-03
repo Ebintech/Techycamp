@@ -295,26 +295,6 @@
             background: #e5e7eb;
         }
         
-        .telegram-modal-btn {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(90deg, #0088cc, #0099dd);
-            color: white;
-            text-align: center;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 15px;
-            font-weight: 600;
-            margin-top: 16px;
-            transition: all 0.2s;
-        }
-        
-        .telegram-modal-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 136, 204, 0.3);
-        }
-        
         .accordion {
             background: rgba(255, 255, 255, 0.5);
             border: 1px solid #e5e7eb;
@@ -401,25 +381,18 @@
             text-decoration: underline;
         }
         
-        .nav-links {
-            display: flex;
-            gap: 12px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
-        }
-        
         .nav-link {
-            flex: 1;
+            display: block;
             text-align: center;
-            padding: 10px;
+            padding: 12px;
             background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
             border-radius: 10px;
             text-decoration: none;
             color: #374151;
             font-weight: 600;
-            font-size: 12px;
+            font-size: 13px;
             transition: all 0.2s;
+            margin-top: 20px;
         }
         
         .nav-link:hover {
@@ -516,10 +489,8 @@
                         </div>
                     </div>
                     
-                    <div class="nav-links">
-                        <a href="#" id="campLink" class="nav-link">🏠 Campaign</a>
-                        <a href="#" id="trackerLink" class="nav-link">📊 Track Referrals</a>
-                    </div>
+                    <!-- Only Track Referrals Button -->
+                    <a href="#" id="trackerLink" class="nav-link">📊 Track Referrals</a>
                 </div>
             </div>
         </div>
@@ -542,10 +513,6 @@
                     💡 <strong>Tip:</strong> Shorten this link using <a href="https://bitly.com" target="_blank">Bitly</a> or <a href="https://tinyurl.com" target="_blank">TinyURL</a> before sharing!
                 </p>
             </div>
-            
-            <a href="#" id="telegramLinkBtn" class="telegram-modal-btn" target="_blank" style="display:none;">
-                📢 Join My Telegram Channel
-            </a>
 
             <button class="close-btn" onclick="closeModal()">Close</button>
         </div>
@@ -577,8 +544,7 @@
                 document.getElementById('totalPayout').textContent = referrerPayout + refereePayout;
             }
             
-            // Set navigation links
-            document.getElementById('campLink').href = `camp.html?id=${campaignId}`;
+            // Set navigation link
             document.getElementById('trackerLink').href = `refer-tracker.html?id=${campaignId}`;
         }
         
@@ -678,16 +644,10 @@
                 
                 const finalReferrerId = result.referrerId || referrerId;
                 const baseUrl = window.location.origin + window.location.pathname.replace('refer.html', '');
-                const referralUrl = baseUrl + `camp.html?id=${campaignId}&ref=` + finalReferrerId;
+                const referralUrl = baseUrl + `index.html?id=${campaignId}&ref=` + finalReferrerId;
                 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
-                
-                if (telegram && telegram.trim() !== '') {
-                    const telegramBtn = document.getElementById('telegramLinkBtn');
-                    telegramBtn.href = telegram;
-                    telegramBtn.style.display = 'block';
-                }
                 
                 if (result.isExisting) {
                     alert('✅ Welcome back! Here are your existing referral links.');
