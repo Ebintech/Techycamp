@@ -335,7 +335,7 @@
                 document.title = `Check Status - ${currentCampaign.name}`;
             }
             
-            document.getElementById('backLink').href = `camp.html?id=${campaignId}`;
+            document.getElementById('backLink').href = `index.html?id=${campaignId}`;
         }
         
         document.getElementById('statusForm').addEventListener('submit', async function(e) {
@@ -363,7 +363,7 @@
                 if (data.found) {
                     displayStatus(data);
                 } else {
-                    showError('No record found for this UPI ID. Please make sure you have submitted correctly.');
+                    showError('No record found for this UPI ID in this campaign. Please make sure you have submitted correctly.');
                 }
                 
             } catch (error) {
