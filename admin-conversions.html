@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Conversion Updater</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            color: #1f2937;
+            margin-bottom: 8px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 24px;
+        }
+
+        .upload-section {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 24px;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f9fafb;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .file-info {
+            margin-top: 16px;
+            color: #4b5563;
+            font-size: 14px;
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            color: #374151;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .process-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .process-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+        }
+
+        .process-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .results {
+            display: none;
+            margin-top: 24px;
+        }
+
+        .results.active {
+            display: block;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0369a1;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .log {
+            background: #f9fafb;
+            border-radius: 8px;
+            padding: 16px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 13px;
+        }
+
+        .log-item {
+            padding: 8px;
+            margin-bottom: 4px;
+            border-radius: 4px;
+        }
+
+        .log-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .log-error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .log-info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .instructions {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .instructions h3 {
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+            color: #78350f;
+        }
+
+        .instructions li {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🎯 Conversion Updater</h1>
+            <p class="subtitle">Upload brand conversion reports to update submission statuses</p>
+
+            <div class="instructions">
+                <h3>📋 How to Use:</h3>
+                <ol>
+                    <li>Get conversion report from brand (CSV/Excel with UPI IDs)</li>
+                    <li>Select campaign and set payout amount</li>
+                    <li>Upload the CSV file</li>
+                    <li>Click "Process Conversions"</li>
+                    <li>System will automatically update statuses and referral payouts</li>
+                </ol>
+            </div>
+
+            <div class="settings">
+                <div class="form-group">
+                    <label>Campaign</label>
+                    <select id="campaign">
+                        <option value="baja-broking">Baja Broking</option>
+                        <option value="angel-one">Angel One</option>
+                        <option value="axis-mf">Axis Mutual Fund</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Payout Amount (₹)</label>
+                    <input type="number" id="payout" value="301" min="0">
+                </div>
+            </div>
+
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-icon">📄</div>
+                <label for="csvFile" class="upload-btn">
+                    Choose CSV File
+                </label>
+                <input type="file" id="csvFile" accept=".csv,.txt">
+                <div class="file-info" id="fileInfo">No file selected</div>
+            </div>
+
+            <button class="process-btn" id="processBtn" disabled>
+                Process Conversions
+            </button>
+
+            <div class="results" id="results">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="totalCount">0</div>
+                        <div class="stat-label">Total UPIs</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="successCount">0</div>
+                        <div class="stat-label">Updated</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="errorCount">0</div>
+                        <div class="stat-label">Not Found</div>
+                    </div>
+                </div>
+
+                <div class="log" id="log"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        let csvData = [];
+
+        // File upload handling
+        document.getElementById('csvFile').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileInfo').textContent = `Selected: ${file.name}`;
+                document.getElementById('processBtn').disabled = false;
+
+                // Read CSV
+                const reader = new FileReader();
+                reader.onload = function (event) {
+                    const text = event.target.result;
+                    csvData = parseCSV(text);
+                    console.log('Parsed UPIs:', csvData);
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        // Parse CSV - extract UPI IDs
+        function parseCSV(text) {
+            const lines = text.split('\n');
+            const upis = [];
+
+            for (let line of lines) {
+                line = line.trim();
+                if (!line) continue;
+
+                // Split by comma, tab, or semicolon
+                const parts = line.split(/[,;\t]/);
+
+                // Find UPI pattern (xxx@yyy)
+                for (let part of parts) {
+                    part = part.trim().replace(/['"]/g, '');
+                    if (part.includes('@') && part.length > 5) {
+                        upis.push(part);
+                        break; // Take first UPI from each line
+                    }
+                }
+            }
+
+            return upis;
+        }
+
+        // Process conversions
+        document.getElementById('processBtn').addEventListener('click', async function () {
+            if (csvData.length === 0) {
+                alert('No UPIs found in CSV file');
+                return;
+            }
+
+            const campaign = document.getElementById('campaign').value;
+            const payout = document.getElementById('payout').value;
+
+            document.getElementById('results').classList.add('active');
+            document.getElementById('log').innerHTML = '';
+            document.getElementById('totalCount').textContent = csvData.length;
+            document.getElementById('successCount').textContent = '0';
+            document.getElementById('errorCount').textContent = '0';
+
+            this.disabled = true;
+            this.textContent = 'Processing...';
+
+            let successCount = 0;
+            let errorCount = 0;
+
+            addLog('info', `Starting to process ${csvData.length} UPIs...`);
+
+            for (let upi of csvData) {
+                try {
+                    const response = await fetch(`${WORKER_API}/admin/update-conversion`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            upi: upi,
+                            campaign: campaign,
+                            status: 'approved',
+                            payout: payout
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        successCount++;
+                        addLog('success', `✓ ${upi} - Updated successfully`);
+                        document.getElementById('successCount').textContent = successCount;
+                    } else {
+                        errorCount++;
+                        addLog('error', `✗ ${upi} - ${result.message || 'Not found'}`);
+                        document.getElementById('errorCount').textContent = errorCount;
+                    }
+
+                    // Small delay to avoid rate limiting
+                    await new Promise(resolve => setTimeout(resolve, 100));
+
+                } catch (error) {
+                    errorCount++;
+                    addLog('error', `✗ ${upi} - Error: ${error.message}`);
+                    document.getElementById('errorCount').textContent = errorCount;
+                }
+            }
+
+            addLog('info', `✅ Processing complete! ${successCount} updated, ${errorCount} not found.`);
+
+            this.disabled = false;
+            this.textContent = 'Process Conversions';
+        });
+
+        function addLog(type, message) {
+            const log = document.getElementById('log');
+            const item = document.createElement('div');
+            item.className = `log-item log-${type}`;
+            item.textContent = message;
+            log.appendChild(item);
+            log.scrollTop = log.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
