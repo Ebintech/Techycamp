@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Conversion Updater</title>
+    <title>Admin Dashboard - Campaign Manager</title>
     <style>
         * {
             margin: 0;
@@ -14,88 +14,96 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c3aed 100%);
             min-height: 100vh;
             padding: 20px;
         }
 
         .container {
-            max-width: 900px;
+            max-width: 1200px;
             margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            color: #1f2937;
+            font-size: 28px;
+            margin-bottom: 4px;
+        }
+
+        .header p {
+            color: #6b7280;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #6b7280;
+        }
+
+        .tab.active {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .tab:hover:not(.active) {
+            background: #f3f4f6;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         .card {
             background: white;
             border-radius: 16px;
             padding: 32px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
+        .card-title {
+            font-size: 20px;
+            font-weight: 700;
             color: #1f2937;
-            margin-bottom: 8px;
-            font-size: 28px;
-        }
-
-        .subtitle {
-            color: #6b7280;
-            margin-bottom: 24px;
-        }
-
-        .upload-section {
-            border: 2px dashed #d1d5db;
-            border-radius: 12px;
-            padding: 40px;
-            text-align: center;
-            margin-bottom: 24px;
-            transition: all 0.3s;
-        }
-
-        .upload-section:hover {
-            border-color: #667eea;
-            background: #f9fafb;
-        }
-
-        .upload-icon {
-            font-size: 48px;
             margin-bottom: 16px;
         }
 
-        input[type="file"] {
-            display: none;
-        }
-
-        .upload-btn {
-            display: inline-block;
-            padding: 12px 24px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s;
-        }
-
-        .upload-btn:hover {
-            transform: scale(1.05);
-        }
-
-        .file-info {
-            margin-top: 16px;
-            color: #4b5563;
-            font-size: 14px;
-        }
-
-        .settings {
+        .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .form-group {
             margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
         }
 
         label {
@@ -107,7 +115,8 @@
         }
 
         input,
-        select {
+        select,
+        textarea {
             width: 100%;
             padding: 12px;
             border: 2px solid #e5e7eb;
@@ -117,45 +126,119 @@
         }
 
         input:focus,
-        select:focus {
+        select:focus,
+        textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #3b82f6;
         }
 
-        .process-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, #10b981, #059669);
-            color: white;
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: monospace;
+        }
+
+        .btn {
+            padding: 12px 24px;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 14px;
         }
 
-        .process-btn:hover {
+        .btn-primary {
+            background: linear-gradient(90deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 16px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 8px 16px rgba(59, 130, 246, 0.3);
         }
 
-        .process-btn:disabled {
-            background: #9ca3af;
-            cursor: not-allowed;
-            transform: none;
+        .btn-success {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: white;
         }
 
-        .results {
+        .btn-copy {
+            background: #f3f4f6;
+            color: #374151;
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .btn-copy:hover {
+            background: #e5e7eb;
+        }
+
+        .links-section {
             display: none;
+            background: #f9fafb;
+            border-radius: 12px;
+            padding: 24px;
             margin-top: 24px;
         }
 
-        .results.active {
+        .links-section.active {
             display: block;
         }
 
-        .stat-grid {
+        .link-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .link-label {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .link-url {
+            font-family: monospace;
+            font-size: 12px;
+            color: #6b7280;
+            word-break: break-all;
+        }
+
+        .upi-list {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            min-height: 200px;
+        }
+
+        .upi-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .upi-item .remove-btn {
+            background: #fee2e2;
+            color: #991b1b;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 16px;
@@ -163,7 +246,7 @@
         }
 
         .stat-card {
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
@@ -172,7 +255,7 @@
         .stat-number {
             font-size: 32px;
             font-weight: 700;
-            color: #0369a1;
+            color: #1e40af;
             margin-bottom: 4px;
         }
 
@@ -212,78 +295,139 @@
             color: #1e40af;
         }
 
-        .instructions {
-            background: #fef3c7;
-            border-left: 4px solid #f59e0b;
+        .alert {
             padding: 16px;
             border-radius: 8px;
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
-        .instructions h3 {
-            color: #92400e;
-            margin-bottom: 8px;
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid #3b82f6;
         }
 
-        .instructions ol {
-            margin-left: 20px;
-            color: #78350f;
-        }
-
-        .instructions li {
-            margin-bottom: 4px;
+        .copy-all-btn {
+            width: 100%;
+            margin-top: 16px;
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <div class="card">
-            <h1>🎯 Conversion Updater</h1>
-            <p class="subtitle">Upload brand conversion reports to update submission statuses</p>
+        <div class="header">
+            <h1>🎯 Campaign Admin Dashboard</h1>
+            <p>Manage campaigns, track conversions, and update statuses</p>
+        </div>
 
-            <div class="instructions">
-                <h3>📋 How to Use:</h3>
-                <ol>
-                    <li>Get conversion report from brand (CSV/Excel with UPI IDs)</li>
-                    <li>Select campaign and set payout amount</li>
-                    <li>Upload the CSV file</li>
-                    <li>Click "Process Conversions"</li>
-                    <li>System will automatically update statuses and referral payouts</li>
-                </ol>
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('create')">Create Campaign</button>
+            <button class="tab" onclick="switchTab('conversions')">Update Conversions</button>
+            <button class="tab" onclick="switchTab('campaigns')">My Campaigns</button>
+        </div>
+
+        <!-- CREATE CAMPAIGN TAB -->
+        <div class="tab-content active" id="create-tab">
+            <div class="card">
+                <div class="card-title">✨ Create New Campaign</div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Campaign Name</label>
+                        <input type="text" id="campaignName" placeholder="e.g., Upstox">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Campaign ID</label>
+                        <input type="text" id="campaignId" placeholder="e.g., upstx001">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Campaign Type</label>
+                        <select id="campaignType">
+                            <option value="online">Online (Auto-tracking with Postback)</option>
+                            <option value="offline">Offline (Manual CSV Upload)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>User Payout (₹)</label>
+                        <input type="number" id="userPayout" value="301" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Referrer Payout (₹)</label>
+                        <input type="number" id="referrerPayout" value="200" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Referee Payout (₹)</label>
+                        <input type="number" id="refereePayout" value="101" min="0">
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Tracking URL (from CPA Panel)</label>
+                        <input type="text" id="trackingUrl"
+                            placeholder="https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546">
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" onclick="createCampaign()">
+                    🚀 Create Campaign & Generate Links
+                </button>
+
+                <div class="links-section" id="linksSection">
+                    <div class="card-title">📋 Campaign Links - Copy & Use</div>
+
+                    <div class="alert alert-info">
+                        ✅ Campaign created successfully! Copy these links and share with your audience.
+                    </div>
+
+                    <div id="generatedLinks"></div>
+
+                    <button class="btn btn-success copy-all-btn" onclick="copyAllLinks()">
+                        📋 Copy All Links
+                    </button>
+                </div>
             </div>
+        </div>
 
-            <div class="settings">
-                <div class="form-group">
-                    <label>Campaign</label>
-                    <select id="campaign">
-                        <option value="baja-broking">Baja Broking</option>
-                        <option value="angel-one">Angel One</option>
-                        <option value="axis-mf">Axis Mutual Fund</option>
-                    </select>
+        <!-- UPDATE CONVERSIONS TAB -->
+        <div class="tab-content" id="conversions-tab">
+            <div class="card">
+                <div class="card-title">📊 Update Conversions (Offline Campaigns)</div>
+
+                <div class="alert alert-info">
+                    💡 Paste UPI IDs (one per line) from your brand's conversion report. No CSV file needed!
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Select Campaign</label>
+                        <select id="convCampaign">
+                            <option value="">Select campaign...</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Payout Amount (₹)</label>
+                        <input type="number" id="convPayout" value="301" min="0">
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label>Payout Amount (₹)</label>
-                    <input type="number" id="payout" value="301" min="0">
+                    <label>Paste UPI IDs (one per line)</label>
+                    <textarea id="upiTextarea" placeholder="test1@paytm
+test2@phonepe
+test3@googlepay"></textarea>
                 </div>
-            </div>
 
-            <div class="upload-section" id="uploadSection">
-                <div class="upload-icon">📄</div>
-                <label for="csvFile" class="upload-btn">
-                    Choose CSV File
-                </label>
-                <input type="file" id="csvFile" accept=".csv,.txt">
-                <div class="file-info" id="fileInfo">No file selected</div>
-            </div>
+                <button class="btn btn-primary" onclick="processConversions()">
+                    ⚡ Process Conversions
+                </button>
 
-            <button class="process-btn" id="processBtn" disabled>
-                Process Conversions
-            </button>
-
-            <div class="results" id="results">
-                <div class="stat-grid">
+                <div class="stats-grid" id="convStats" style="display:none; margin-top:24px;">
                     <div class="stat-card">
                         <div class="stat-number" id="totalCount">0</div>
                         <div class="stat-label">Total UPIs</div>
@@ -298,92 +442,216 @@
                     </div>
                 </div>
 
-                <div class="log" id="log"></div>
+                <div class="log" id="convLog" style="display:none; margin-top:24px;"></div>
+            </div>
+        </div>
+
+        <!-- MY CAMPAIGNS TAB -->
+        <div class="tab-content" id="campaigns-tab">
+            <div class="card">
+                <div class="card-title">📁 My Campaigns</div>
+                <div id="campaignsList">
+                    <p style="color: #6b7280; text-align: center; padding: 40px;">
+                        No campaigns created yet. Go to "Create Campaign" tab to get started!
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        let csvData = [];
+        const BASE_URL = 'https://yourusername.github.io/camp'; // ⚠️ CHANGE THIS
 
-        // File upload handling
-        document.getElementById('csvFile').addEventListener('change', function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                document.getElementById('fileInfo').textContent = `Selected: ${file.name}`;
-                document.getElementById('processBtn').disabled = false;
+        let campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
 
-                // Read CSV
-                const reader = new FileReader();
-                reader.onload = function (event) {
-                    const text = event.target.result;
-                    csvData = parseCSV(text);
-                    console.log('Parsed UPIs:', csvData);
-                };
-                reader.readAsText(file);
-            }
-        });
+        // Initialize
+        updateCampaignSelectors();
+        displayCampaigns();
 
-        // Parse CSV - extract UPI IDs
-        function parseCSV(text) {
-            const lines = text.split('\n');
-            const upis = [];
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
 
-            for (let line of lines) {
-                line = line.trim();
-                if (!line) continue;
-
-                // Split by comma, tab, or semicolon
-                const parts = line.split(/[,;\t]/);
-
-                // Find UPI pattern (xxx@yyy)
-                for (let part of parts) {
-                    part = part.trim().replace(/['"]/g, '');
-                    if (part.includes('@') && part.length > 5) {
-                        upis.push(part);
-                        break; // Take first UPI from each line
-                    }
-                }
-            }
-
-            return upis;
+            event.target.classList.add('active');
+            document.getElementById(tab + '-tab').classList.add('active');
         }
 
-        // Process conversions
-        document.getElementById('processBtn').addEventListener('click', async function () {
-            if (csvData.length === 0) {
-                alert('No UPIs found in CSV file');
+        function createCampaign() {
+            const name = document.getElementById('campaignName').value.trim();
+            const id = document.getElementById('campaignId').value.trim();
+            const type = document.getElementById('campaignType').value;
+            const trackingUrl = document.getElementById('trackingUrl').value.trim();
+            const userPayout = document.getElementById('userPayout').value;
+            const referrerPayout = document.getElementById('referrerPayout').value;
+            const refereePayout = document.getElementById('refereePayout').value;
+
+            if (!name || !id || !trackingUrl) {
+                alert('Please fill in Campaign Name, ID, and Tracking URL');
                 return;
             }
 
-            const campaign = document.getElementById('campaign').value;
-            const payout = document.getElementById('payout').value;
+            const campaign = {
+                name,
+                id,
+                type,
+                trackingUrl,
+                userPayout,
+                referrerPayout,
+                refereePayout,
+                createdAt: new Date().toISOString()
+            };
 
-            document.getElementById('results').classList.add('active');
-            document.getElementById('log').innerHTML = '';
-            document.getElementById('totalCount').textContent = csvData.length;
+            campaigns.push(campaign);
+            localStorage.setItem('campaigns', JSON.stringify(campaigns));
+
+            generateLinks(campaign);
+            updateCampaignSelectors();
+            displayCampaigns();
+
+            // Clear form
+            document.getElementById('campaignName').value = '';
+            document.getElementById('campaignId').value = '';
+            document.getElementById('trackingUrl').value = '';
+        }
+
+        function generateLinks(campaign) {
+            const links = {
+                'Landing Page': `${BASE_URL}/index.html?id=${campaign.id}`,
+                'Referral Generator': `${BASE_URL}/refer.html?id=${campaign.id}`,
+                'Status Checker': `${BASE_URL}/status.html?id=${campaign.id}`,
+                'Referral Tracker': `${BASE_URL}/refer-tracker.html?id=${campaign.id}`
+            };
+
+            let html = '';
+            for (const [label, url] of Object.entries(links)) {
+                html += `
+                    <div class="link-item">
+                        <div>
+                            <div class="link-label">${label}</div>
+                            <div class="link-url">${url}</div>
+                        </div>
+                        <button class="btn btn-copy" onclick="copyLink('${url}')">📋 Copy</button>
+                    </div>
+                `;
+            }
+
+            document.getElementById('generatedLinks').innerHTML = html;
+            document.getElementById('linksSection').classList.add('active');
+
+            // Store links for copy all
+            window.currentLinks = links;
+        }
+
+        function copyLink(url) {
+            navigator.clipboard.writeText(url);
+            alert('Link copied to clipboard!');
+        }
+
+        function copyAllLinks() {
+            const text = Object.entries(window.currentLinks)
+                .map(([label, url]) => `${label}: ${url}`)
+                .join('\n');
+
+            navigator.clipboard.writeText(text);
+            alert('All links copied to clipboard!');
+        }
+
+        function updateCampaignSelectors() {
+            const select = document.getElementById('convCampaign');
+            select.innerHTML = '<option value="">Select campaign...</option>';
+
+            campaigns.forEach(c => {
+                select.innerHTML += `<option value="${c.id}">${c.name} (${c.id})</option>`;
+            });
+        }
+
+        function displayCampaigns() {
+            const container = document.getElementById('campaignsList');
+
+            if (campaigns.length === 0) {
+                container.innerHTML = '<p style="color: #6b7280; text-align: center; padding: 40px;">No campaigns created yet.</p>';
+                return;
+            }
+
+            let html = '';
+            campaigns.forEach((c, index) => {
+                html += `
+                    <div class="link-item" style="margin-bottom: 16px;">
+                        <div>
+                            <div class="link-label">${c.name}</div>
+                            <div class="link-url">ID: ${c.id} | Type: ${c.type} | User: ₹${c.userPayout} | Referrer: ₹${c.referrerPayout}</div>
+                        </div>
+                        <button class="btn btn-copy" onclick="deleteCampaign(${index})">🗑️ Delete</button>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function deleteCampaign(index) {
+            if (confirm('Are you sure you want to delete this campaign?')) {
+                campaigns.splice(index, 1);
+                localStorage.setItem('campaigns', JSON.stringify(campaigns));
+                displayCampaigns();
+                updateCampaignSelectors();
+            }
+        }
+
+        async function processConversions() {
+            const campaignId = document.getElementById('convCampaign').value;
+            const payout = document.getElementById('convPayout').value;
+            const upiText = document.getElementById('upiTextarea').value.trim();
+
+            if (!campaignId) {
+                alert('Please select a campaign');
+                return;
+            }
+
+            if (!upiText) {
+                alert('Please paste UPI IDs');
+                return;
+            }
+
+            // Parse UPIs
+            const upis = upiText.split('\n')
+                .map(line => line.trim())
+                .filter(line => line && line.includes('@'));
+
+            if (upis.length === 0) {
+                alert('No valid UPI IDs found');
+                return;
+            }
+
+            // Find campaign
+            const campaign = campaigns.find(c => c.id === campaignId);
+            if (!campaign) {
+                alert('Campaign not found');
+                return;
+            }
+
+            // Show stats
+            document.getElementById('convStats').style.display = 'grid';
+            document.getElementById('convLog').style.display = 'block';
+            document.getElementById('totalCount').textContent = upis.length;
             document.getElementById('successCount').textContent = '0';
             document.getElementById('errorCount').textContent = '0';
-
-            this.disabled = true;
-            this.textContent = 'Processing...';
+            document.getElementById('convLog').innerHTML = '';
 
             let successCount = 0;
             let errorCount = 0;
 
-            addLog('info', `Starting to process ${csvData.length} UPIs...`);
+            addLog('info', `Starting to process ${upis.length} UPIs...`);
 
-            for (let upi of csvData) {
+            for (const upi of upis) {
                 try {
                     const response = await fetch(`${WORKER_API}/admin/update-conversion`, {
                         method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             upi: upi,
-                            campaign: campaign,
+                            campaign: campaign.id,
                             status: 'approved',
                             payout: payout
                         })
@@ -401,7 +669,6 @@
                         document.getElementById('errorCount').textContent = errorCount;
                     }
 
-                    // Small delay to avoid rate limiting
                     await new Promise(resolve => setTimeout(resolve, 100));
 
                 } catch (error) {
@@ -412,13 +679,10 @@
             }
 
             addLog('info', `✅ Processing complete! ${successCount} updated, ${errorCount} not found.`);
-
-            this.disabled = false;
-            this.textContent = 'Process Conversions';
-        });
+        }
 
         function addLog(type, message) {
-            const log = document.getElementById('log');
+            const log = document.getElementById('convLog');
             const item = document.createElement('div');
             item.className = `log-item log-${type}`;
             item.textContent = message;
