@@ -391,7 +391,7 @@
             // Progress steps
             const step1Complete = true; // Submission always complete
             const step2Complete = status === 'approved' || status === 'paid' || status === 'cashback_paid';
-            const step3Complete = status === 'paid' || status === 'cashback_paid';
+            const step3Complete = status === 'approved' || status === 'paid' || status === 'cashback_paid';  // ✅ FIXED: Include 'approved'
 
             progressSteps = `
                 <div class="progress-section">
