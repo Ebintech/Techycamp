@@ -475,7 +475,7 @@ test3@googlepay"></textarea>
 
         <script>
             const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-            const BASE_URL = 'https://ebintech.github.io/Techycamp'; // ⚠️ CHANGE THIS
+            const BASE_URL = 'https://yourusername.github.io/camp'; // ⚠️ CHANGE THIS
 
             let campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
 
@@ -704,6 +704,32 @@ test3@googlepay"></textarea>
                 log.scrollTop = log.scrollHeight;
             }
         </script>
+    </div>
+    <!-- END MAIN DASHBOARD -->
+
+    <!-- LOGIN AUTHENTICATION SCRIPT -->
+    <script>
+        // Password protection
+        const ADMIN_PASSWORD = 'conjuringcampoli';
+
+        function login() {
+            const password = document.getElementById('loginPassword').value;
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('mainDashboard').style.display = 'block';
+                sessionStorage.setItem('adminLoggedIn', 'true');
+            } else {
+                document.getElementById('loginError').style.display = 'block';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+
+        // Check if already logged in
+        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainDashboard').style.display = 'block';
+        }
+    </script>
 </body>
 
 </html>
