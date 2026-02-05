@@ -426,16 +426,10 @@
             `;
 
             // Cashback button
-            if (status === 'paid' || status === 'cashback_paid') {
+            if (status === 'paid' || status === 'cashback_paid' || status === 'approved') {
                 cashbackButton = `
                     <button class="cashback-btn released">
                         💰 Cashback Released: ₹${payout}
-                    </button>
-                `;
-            } else if (status === 'approved') {
-                cashbackButton = `
-                    <button class="cashback-btn">
-                        ⏳ Cashback Pending: ₹${payout}
                     </button>
                 `;
             }
