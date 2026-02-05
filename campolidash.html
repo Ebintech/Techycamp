@@ -354,24 +354,21 @@
                         </div>
 
                         <div class="form-group">
-                            <label>User Payout (₹)</label>
-                            <input type="number" id="userPayout" value="301" min="0">
+                            <label>User Payout (₹) <span style="color: #64748b; font-size: 12px;">- for reference
+                                    only</span></label>
+                            <input type="number" id="userPayout" value="250" min="0">
                         </div>
 
                         <div class="form-group">
-                            <label>Referrer Payout (₹)</label>
-                            <input type="number" id="referrerPayout" value="200" min="0">
+                            <label>Referrer Payout (₹) <span style="color: #64748b; font-size: 12px;">- for reference
+                                    only</span></label>
+                            <input type="number" id="referrerPayout" value="100" min="0">
                         </div>
 
                         <div class="form-group">
-                            <label>Referee Payout (₹)</label>
-                            <input type="number" id="refereePayout" value="101" min="0">
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label>Tracking URL (from CPA Panel)</label>
-                            <input type="text" id="trackingUrl"
-                                placeholder="https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546">
+                            <label>Referee Payout (₹) <span style="color: #64748b; font-size: 12px;">- for reference
+                                    only</span></label>
+                            <input type="number" id="refereePayout" value="0" min="0">
                         </div>
                     </div>
 
@@ -406,10 +403,13 @@
 
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>Select Campaign</label>
-                            <select id="convCampaign">
-                                <option value="">Select campaign...</option>
-                            </select>
+                            <label>Campaign Slug <span style="color: #64748b; font-size: 12px;">(e.g.,
+                                    baja-broking)</span></label>
+                            <input type="text" id="convCampaign" list="campaignSuggestions"
+                                placeholder="Type campaign slug: baja-broking">
+                            <datalist id="campaignSuggestions">
+                                <!-- Suggestions will be populated here -->
+                            </datalist>
                         </div>
 
                         <div class="form-group">
@@ -463,7 +463,7 @@ test3@googlepay"></textarea>
 
         <script>
             const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-            const BASE_URL = 'https://yourusername.github.io/camp'; // ⚠️ CHANGE THIS
+            const BASE_URL = 'https://ebintech.github.io/Techycamp'; // ✅ YOUR GITHUB PAGES URL
 
             let campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
 
@@ -483,13 +483,12 @@ test3@googlepay"></textarea>
                 const name = document.getElementById('campaignName').value.trim();
                 const id = document.getElementById('campaignId').value.trim();
                 const type = document.getElementById('campaignType').value;
-                const trackingUrl = document.getElementById('trackingUrl').value.trim();
                 const userPayout = document.getElementById('userPayout').value;
                 const referrerPayout = document.getElementById('referrerPayout').value;
                 const refereePayout = document.getElementById('refereePayout').value;
 
-                if (!name || !id || !trackingUrl) {
-                    alert('Please fill in Campaign Name, ID, and Tracking URL');
+                if (!name || !id) {
+                    alert('⚠️ Please enter Campaign Name and Campaign ID');
                     return;
                 }
 
@@ -497,7 +496,7 @@ test3@googlepay"></textarea>
                     name,
                     id,
                     type,
-                    trackingUrl,
+                    trackingUrl: '',  // Not needed anymore
                     userPayout,
                     referrerPayout,
                     refereePayout,
@@ -514,7 +513,6 @@ test3@googlepay"></textarea>
                 // Clear form
                 document.getElementById('campaignName').value = '';
                 document.getElementById('campaignId').value = '';
-                document.getElementById('trackingUrl').value = '';
             }
 
             function generateLinks(campaign) {
@@ -560,11 +558,18 @@ test3@googlepay"></textarea>
             }
 
             function updateCampaignSelectors() {
-                const select = document.getElementById('convCampaign');
-                select.innerHTML = '<option value="">Select campaign...</option>';
+                const datalist = document.getElementById('campaignSuggestions');
+                datalist.innerHTML = '';
 
+                // Add common campaign slugs as suggestions
+                const commonCampaigns = ['baja-broking', 'angel-one', 'axis-mf'];
+                commonCampaigns.forEach(slug => {
+                    datalist.innerHTML += `<option value="${slug}">`;
+                });
+
+                // Add user-created campaigns
                 campaigns.forEach(c => {
-                    select.innerHTML += `<option value="${c.id}">${c.name} (${c.id})</option>`;
+                    datalist.innerHTML += `<option value="${c.id}">${c.name}</option>`;
                 });
             }
 
@@ -666,7 +671,7 @@ test3@googlepay"></textarea>
                 const upiText = document.getElementById('upiTextarea').value.trim();
 
                 if (!campaignId) {
-                    alert('Please select a campaign');
+                    alert('Please enter a campaign slug (e.g., baja-broking)');
                     return;
                 }
 
@@ -685,12 +690,8 @@ test3@googlepay"></textarea>
                     return;
                 }
 
-                // Find campaign
-                const campaign = campaigns.find(c => c.id === campaignId);
-                if (!campaign) {
-                    alert('Campaign not found');
-                    return;
-                }
+                // ✅ REMOVED: No need to validate campaign exists locally
+                // Just send it to the server - server will validate
 
                 // Show stats
                 document.getElementById('convStats').style.display = 'grid';
@@ -715,7 +716,7 @@ test3@googlepay"></textarea>
                             },
                             body: JSON.stringify({
                                 upi: upi,
-                                campaign: campaign.id,
+                                campaign: campaignId,  // ✅ FIXED: Use campaignId directly
                                 status: 'approved',
                                 payout: payout
                             })
