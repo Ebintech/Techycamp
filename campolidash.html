@@ -315,20 +315,8 @@
 </head>
 
 <body>
-    <!-- LOGIN SCREEN -->
-    <div id="loginScreen" style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
-        <div class="card" style="max-width: 400px; width: 100%; text-align: center;">
-            <h1 style="margin-bottom: 8px;">🔐 Admin Login</h1>
-            <p style="color: #6b7280; margin-bottom: 32px;">Enter password to access dashboard</p>
-            <input type="password" id="loginPassword" placeholder="Enter password" style="margin-bottom: 16px;"
-                onkeypress="if(event.key==='Enter') login()">
-            <button class="btn btn-primary" style="width: 100%;" onclick="login()">Login</button>
-            <p id="loginError" style="color: #dc2626; margin-top: 16px; display: none;">Incorrect password</p>
-        </div>
-    </div>
-
     <!-- MAIN DASHBOARD -->
-    <div id="mainDashboard" style="display: none;">
+    <div id="mainDashboard">
         <div class="container">
             <div class="header">
                 <h1>🎯 Campaign Admin Dashboard</h1>
@@ -590,18 +578,69 @@ test3@googlepay"></textarea>
 
                 let html = '';
                 campaigns.forEach((c, index) => {
+                    const links = {
+                        'Landing Page': `${BASE_URL}/index.html?id=${c.id}`,
+                        'Referral Generator': `${BASE_URL}/refer.html?id=${c.id}`,
+                        'Status Checker': `${BASE_URL}/status.html?id=${c.id}`,
+                        'Referral Tracker': `${BASE_URL}/refer-tracker.html?id=${c.id}`
+                    };
+
                     html += `
-                    <div class="link-item" style="margin-bottom: 16px;">
-                        <div>
-                            <div class="link-label">${c.name}</div>
-                            <div class="link-url">ID: ${c.id} | Type: ${c.type} | User: ₹${c.userPayout} | Referrer: ₹${c.referrerPayout}</div>
+                    <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                            <div>
+                                <div class="link-label">${c.name}</div>
+                                <div class="link-url">ID: ${c.id} | Type: ${c.type} | User: ₹${c.userPayout} | Referrer: ₹${c.referrerPayout}</div>
+                            </div>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-primary" onclick="showCampaignLinks(${index})" style="padding: 8px 16px; font-size: 12px;">📋 View Links</button>
+                                <button class="btn btn-copy" onclick="deleteCampaign(${index})" style="background: #fee2e2; color: #991b1b;">🗑️ Delete</button>
+                            </div>
                         </div>
-                        <button class="btn btn-copy" onclick="deleteCampaign(${index})">🗑️ Delete</button>
+                        
+                        <div id="campaignLinks${index}" style="display: none; background: #f9fafb; border-radius: 8px; padding: 16px; margin-top: 12px;">
+                            ${Object.entries(links).map(([label, url]) => `
+                                <div class="link-item" style="margin-bottom: 8px;">
+                                    <div>
+                                        <div style="font-size: 12px; font-weight: 600; color: #374151;">${label}</div>
+                                        <div class="link-url">${url}</div>
+                                    </div>
+                                    <button class="btn btn-copy" onclick="copyLink('${url}')">📋 Copy</button>
+                                </div>
+                            `).join('')}
+                            <button class="btn btn-success" style="width: 100%; margin-top: 8px;" onclick="copyAllCampaignLinks(${index})">📋 Copy All Links</button>
+                        </div>
                     </div>
                 `;
                 });
 
                 container.innerHTML = html;
+            }
+
+            function showCampaignLinks(index) {
+                const linksDiv = document.getElementById('campaignLinks' + index);
+                if (linksDiv.style.display === 'none') {
+                    linksDiv.style.display = 'block';
+                } else {
+                    linksDiv.style.display = 'none';
+                }
+            }
+
+            function copyAllCampaignLinks(index) {
+                const campaign = campaigns[index];
+                const links = {
+                    'Landing Page': `${BASE_URL}/index.html?id=${campaign.id}`,
+                    'Referral Generator': `${BASE_URL}/refer.html?id=${campaign.id}`,
+                    'Status Checker': `${BASE_URL}/status.html?id=${campaign.id}`,
+                    'Referral Tracker': `${BASE_URL}/refer-tracker.html?id=${campaign.id}`
+                };
+
+                const text = Object.entries(links)
+                    .map(([label, url]) => `${label}: ${url}`)
+                    .join('\n');
+
+                navigator.clipboard.writeText(text);
+                alert('All links copied to clipboard!');
             }
 
             function deleteCampaign(index) {
@@ -614,6 +653,14 @@ test3@googlepay"></textarea>
             }
 
             async function processConversions() {
+                // 🔒 STEP 1: ASK FOR API KEY
+                const apiKey = prompt('🔐 Enter Admin API Key to update conversions:');
+
+                if (!apiKey || apiKey.trim() === '') {
+                    alert('❌ API key required to update conversions');
+                    return;
+                }
+
                 const campaignId = document.getElementById('convCampaign').value;
                 const payout = document.getElementById('convPayout').value;
                 const upiText = document.getElementById('upiTextarea').value.trim();
@@ -629,7 +676,7 @@ test3@googlepay"></textarea>
                 }
 
                 // Parse UPIs
-                const upis = upiText.split('\n')
+                const upis = upiText.split('\\n')
                     .map(line => line.trim())
                     .filter(line => line && line.includes('@'));
 
@@ -662,7 +709,10 @@ test3@googlepay"></textarea>
                     try {
                         const response = await fetch(`${WORKER_API}/admin/update-conversion`, {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-API-Key': apiKey  // ← SEND API KEY
+                            },
                             body: JSON.stringify({
                                 upi: upi,
                                 campaign: campaign.id,
@@ -707,29 +757,7 @@ test3@googlepay"></textarea>
     </div>
     <!-- END MAIN DASHBOARD -->
 
-    <!-- LOGIN AUTHENTICATION SCRIPT -->
-    <script>
-        // Password protection
-        const ADMIN_PASSWORD = 'conjuringcampoli';
 
-        function login() {
-            const password = document.getElementById('loginPassword').value;
-            if (password === ADMIN_PASSWORD) {
-                document.getElementById('loginScreen').style.display = 'none';
-                document.getElementById('mainDashboard').style.display = 'block';
-                sessionStorage.setItem('adminLoggedIn', 'true');
-            } else {
-                document.getElementById('loginError').style.display = 'block';
-                document.getElementById('loginPassword').value = '';
-            }
-        }
-
-        // Check if already logged in
-        if (sessionStorage.getItem('adminLoggedIn') === 'true') {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainDashboard').style.display = 'block';
-        }
-    </script>
 </body>
 
 </html>
