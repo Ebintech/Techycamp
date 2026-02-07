@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Campaign...</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: linear-gradient(135deg, #f5f3ff 0%, #fce7f3 50%, #dbeafe 100%);
@@ -16,7 +21,7 @@
             justify-content: center;
             padding: 20px;
         }
-        
+
         .loading-overlay {
             display: none;
             position: fixed;
@@ -27,9 +32,11 @@
             align-items: center;
             justify-content: center;
         }
-        
-        .loading-overlay.active { display: flex; }
-        
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
         .loading-dots div {
             width: 14px;
             height: 14px;
@@ -39,26 +46,43 @@
             margin: 0 5px;
             animation: pulse 1.4s ease-in-out infinite;
         }
-        
-        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
+
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
         }
-        
-        .container { max-width: 500px; width: 100%; }
-        
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        .container {
+            max-width: 500px;
+            width: 100%;
+        }
+
         .card {
             position: relative;
             background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(20px);
             border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             padding: 8px;
         }
-        
+
         .gradient-border {
             position: absolute;
             top: 0;
@@ -68,87 +92,93 @@
             background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
             border-radius: 24px 24px 0 0;
         }
-        
-        .card-content { padding: 40px 32px; }
-        
+
+        .card-content {
+            padding: 40px 32px;
+        }
+
         .header {
             text-align: center;
             margin-bottom: 28px;
         }
-        
+
         .logo {
             width: 96px;
             height: 96px;
             margin: 0 auto 16px;
             border-radius: 50%;
             border: 4px solid white;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
             overflow: hidden;
             background: white;
         }
-        
+
         .logo img {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
-        
+
         .header h1 {
             color: #1f2937;
             font-size: 32px;
             font-weight: 700;
             margin-bottom: 8px;
         }
-        
+
         .header p {
             color: #6b7280;
             font-size: 16px;
         }
-        
+
         .campaign-ended {
             display: none;
             text-align: center;
             padding: 40px 20px;
         }
-        
-        .campaign-ended.active { display: block; }
-        
+
+        .campaign-ended.active {
+            display: block;
+        }
+
         .campaign-ended h2 {
             color: #dc2626;
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 12px;
         }
-        
+
         .campaign-ended p {
             color: #6b7280;
             margin-bottom: 24px;
         }
-        
+
         .error-message {
             display: none;
             text-align: center;
             padding: 40px 20px;
         }
-        
-        .error-message.active { display: block; }
-        
+
+        .error-message.active {
+            display: block;
+        }
+
         .error-icon {
             font-size: 64px;
             margin-bottom: 16px;
         }
-        
+
         .error-message h2 {
             color: #dc2626;
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 12px;
         }
-        
+
         .form-group {
             margin-bottom: 16px;
         }
-        
+
         .form-group input {
             width: 100%;
             padding: 16px;
@@ -159,18 +189,18 @@
             transition: all 0.2s;
             color: #374151;
         }
-        
+
         .form-group input::placeholder {
             color: #9ca3af;
         }
-        
+
         .form-group input:focus {
             outline: none;
             border-color: #6366f1;
             background: white;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
-        
+
         .submit-btn {
             width: 100%;
             padding: 16px;
@@ -185,25 +215,25 @@
             box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
             margin-top: 8px;
         }
-        
+
         .submit-btn:hover {
             transform: scale(1.02);
             box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
         }
-        
+
         .submit-btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         .hp-field {
             position: absolute;
             left: -9999px;
             opacity: 0;
             pointer-events: none;
         }
-        
+
         .steps-section {
             margin-top: 24px;
             background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
@@ -211,7 +241,7 @@
             border-radius: 14px;
             padding: 20px;
         }
-        
+
         .steps-title {
             color: #4338ca;
             font-size: 16px;
@@ -221,7 +251,7 @@
             align-items: center;
             gap: 8px;
         }
-        
+
         .step-item {
             padding: 8px 0;
             color: #374151;
@@ -230,7 +260,7 @@
             padding-left: 24px;
             position: relative;
         }
-        
+
         .step-item:before {
             content: "•";
             position: absolute;
@@ -239,7 +269,7 @@
             font-weight: bold;
             font-size: 18px;
         }
-        
+
         .accordion {
             margin-top: 20px;
             background: rgba(255, 255, 255, 0.6);
@@ -247,7 +277,7 @@
             border-radius: 12px;
             overflow: hidden;
         }
-        
+
         .accordion-header {
             width: 100%;
             padding: 16px;
@@ -260,56 +290,56 @@
             text-align: left;
             transition: background 0.2s;
         }
-        
+
         .accordion-header:hover {
             background: rgba(99, 102, 241, 0.05);
         }
-        
+
         .accordion-header h3 {
             color: #1f2937;
             font-size: 15px;
             font-weight: 600;
         }
-        
+
         .accordion-icon {
             width: 20px;
             height: 20px;
             transition: transform 0.3s;
             color: #6b7280;
         }
-        
+
         .accordion-icon.open {
             transform: rotate(180deg);
         }
-        
+
         .accordion-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-        
+
         .accordion-content.open {
             max-height: 600px;
         }
-        
+
         .accordion-body {
             padding: 0 16px 16px;
             color: #4b5563;
             font-size: 13px;
             line-height: 1.7;
         }
-        
+
         .accordion-body ul {
             list-style: none;
             padding: 0;
         }
-        
+
         .accordion-body li {
             padding: 8px 0;
             padding-left: 24px;
             position: relative;
         }
-        
+
         .accordion-body li:before {
             content: "•";
             position: absolute;
@@ -317,7 +347,7 @@
             color: #6366f1;
             font-weight: bold;
         }
-        
+
         /* FIXED FLOATING TELEGRAM BUTTON */
         .floating-telegram {
             position: fixed;
@@ -326,23 +356,24 @@
             z-index: 1000;
             display: none;
         }
-        
+
         .floating-telegram.active {
             display: block;
             animation: slideInUp 0.5s ease-out;
         }
-        
+
         @keyframes slideInUp {
             from {
                 transform: translateY(100px);
                 opacity: 0;
             }
+
             to {
                 transform: translateY(0);
                 opacity: 1;
             }
         }
-        
+
         .telegram-float-btn {
             display: flex;
             align-items: center;
@@ -357,22 +388,22 @@
             text-decoration: none;
             position: relative;
         }
-        
+
         .telegram-float-btn:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 30px rgba(0, 136, 204, 0.6);
         }
-        
+
         .telegram-float-btn:active {
             transform: scale(0.95);
         }
-        
+
         .telegram-float-btn svg {
             width: 32px;
             height: 32px;
             fill: white;
         }
-        
+
         /* Pulse animation */
         .telegram-float-btn::before {
             content: '';
@@ -383,40 +414,41 @@
             background: rgba(0, 136, 204, 0.4);
             animation: pulse-ring 2s infinite;
         }
-        
+
         @keyframes pulse-ring {
             0% {
                 transform: scale(1);
                 opacity: 1;
             }
+
             100% {
                 transform: scale(1.5);
                 opacity: 0;
             }
         }
-        
+
         .success-message {
             display: none;
             text-align: center;
             padding: 40px 20px;
         }
-        
+
         .success-message.active {
             display: block;
         }
-        
+
         .checkmark {
             font-size: 80px;
             margin-bottom: 20px;
         }
-        
+
         .success-text {
             font-size: 20px;
             font-weight: 700;
             color: #1f2937;
             margin-bottom: 12px;
         }
-        
+
         .success-subtext {
             font-size: 14px;
             color: #6b7280;
@@ -424,6 +456,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-dots">
@@ -435,9 +468,11 @@
 
     <!-- FLOATING TELEGRAM BUTTON -->
     <div class="floating-telegram" id="floatingTelegram">
-        <a href="#" id="floatingTelegramBtn" class="telegram-float-btn" target="_blank" title="Join Telegram for More Offers">
+        <a href="#" id="floatingTelegramBtn" class="telegram-float-btn" target="_blank"
+            title="Join Telegram for More Offers">
             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                <path
+                    d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
             </svg>
         </a>
     </div>
@@ -472,17 +507,12 @@
 
                     <form id="campaignForm">
                         <div class="form-group">
-                            <input 
-                                type="text" 
-                                id="upi" 
-                                placeholder="Your UPI ID *" 
-                                required
-                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}"
-                            >
+                            <input type="text" id="upi" placeholder="Your UPI ID *" required
+                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}">
                         </div>
-                        
+
                         <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
-                        
+
                         <button type="submit" class="submit-btn" id="submitBtn">
                             Submit & Get Offer
                         </button>
@@ -503,7 +533,8 @@
                         <button class="accordion-header" onclick="toggleAccordion(this)">
                             <h3>Terms and Conditions</h3>
                             <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
                             </svg>
                         </button>
                         <div class="accordion-content">
@@ -536,66 +567,71 @@
         // ================================
         // CONFIGURATION
         // ================================
-        
+
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        
+
+        // ⚠️ IMPORTANT: Replace this with your actual Google Apps Script URL
+        // Get it from: script.google.com → Deploy → Manage deployments → Web app URL
+        const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+        // Example: 'https://script.google.com/macros/s/XXXXXXXXXXXXXXXXXXXXXXXX/exec'
+
         // Get campaign ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb'; // Default to Baja Broking
         const clickId = urlParams.get('click_id') || urlParams.get('source');
         const refId = urlParams.get('ref');
-        
+
         let currentCampaign = null;
-        
+
         // ================================
         // INITIALIZE CAMPAIGN
         // ================================
-        
+
         function initializeCampaign() {
             currentCampaign = getCampaign(campaignId);
-            
+
             if (!currentCampaign) {
                 showError();
                 return;
             }
-            
+
             if (!currentCampaign.active) {
                 showCampaignEnded();
                 return;
             }
-            
+
             loadCampaignData();
-            
+
             // Check if this is a referral link
             if (refId) {
                 fetchReferrerTelegram(refId);
             }
         }
-        
+
         function showError() {
             document.getElementById('formView').style.display = 'none';
             document.getElementById('errorView').classList.add('active');
             document.title = 'Campaign Not Found';
         }
-        
+
         function showCampaignEnded() {
             document.getElementById('formView').style.display = 'none';
             document.getElementById('campaignEnded').classList.add('active');
             document.title = 'Campaign Ended - ' + currentCampaign.name;
         }
-        
+
         function loadCampaignData() {
             // Update page title
             document.title = currentCampaign.name + ' - ' + currentCampaign.description;
-            
+
             // Update logo
             document.getElementById('campaignLogo').src = currentCampaign.logo;
             document.getElementById('campaignLogo').alt = currentCampaign.name + ' Logo';
-            
+
             // Update header
             document.getElementById('campaignName').textContent = currentCampaign.name;
             document.getElementById('campaignDescription').textContent = currentCampaign.description;
-            
+
             // Load steps (simple bullet points)
             const stepsContainer = document.getElementById('stepsContainer');
             stepsContainer.innerHTML = '';
@@ -603,7 +639,7 @@
                 const stepHtml = `<div class="step-item">${step}</div>`;
                 stepsContainer.innerHTML += stepHtml;
             });
-            
+
             // Load terms
             const termsContainer = document.getElementById('termsContainer');
             termsContainer.innerHTML = '';
@@ -612,69 +648,89 @@
                 termsContainer.innerHTML += termHtml;
             });
         }
-        
+
         // ================================
         // FETCH REFERRER TELEGRAM
         // ================================
         async function fetchReferrerTelegram(referrerId) {
+            console.log('🔍 Fetching Telegram for Referrer ID:', referrerId);
+
             try {
-                const response = await fetch(`${WORKER_API}/get-referrer-telegram?ref=${encodeURIComponent(referrerId)}`);
+                // ✅ FIX: Use direct Google Apps Script URL to bypass Cloudflare Worker
+                const url = GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE')
+                    ? `${WORKER_API}/get-referrer-telegram?ref=${encodeURIComponent(referrerId)}`
+                    : `${GOOGLE_SCRIPT_URL}?ref=${encodeURIComponent(referrerId)}`;
+
+                console.log('📡 API URL:', url);
+
+                const response = await fetch(url);
+                console.log('📥 Response status:', response.status);
+
                 const data = await response.json();
-                
+                console.log('📦 Response data:', data);
+
                 if (data.success && data.telegram && data.telegram.trim() !== '') {
+                    console.log('✅ Telegram URL found:', data.telegram);
+                    console.log('🎯 Showing Telegram icon...');
+
                     // Show floating Telegram button
                     document.getElementById('floatingTelegramBtn').href = data.telegram;
                     document.getElementById('floatingTelegram').classList.add('active');
+
+                    console.log('✅ Telegram icon activated!');
+                } else {
+                    console.log('❌ No Telegram URL found or invalid response');
+                    console.log('   - success:', data.success);
+                    console.log('   - telegram:', data.telegram);
                 }
             } catch (error) {
-                console.error('Error fetching referrer telegram:', error);
-                // Silently fail - don't show telegram button
+                console.error('❌ Error fetching referrer telegram:', error);
             }
         }
-        
+
         // ================================
         // FUNCTIONS
         // ================================
-        
+
         function toggleAccordion(button) {
             const content = button.nextElementSibling;
             const icon = button.querySelector('.accordion-icon');
             content.classList.toggle('open');
             icon.classList.toggle('open');
         }
-        
+
         function generateClickId() {
             const timestamp = Date.now().toString(36).toUpperCase();
             const random = Math.random().toString(36).substring(2, 6).toUpperCase();
             return 'C' + timestamp + random;
         }
-        
+
         // ================================
         // FORM SUBMISSION
         // ================================
-        
-        document.getElementById('campaignForm').addEventListener('submit', async function(e) {
+
+        document.getElementById('campaignForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const upi = document.getElementById('upi').value.trim();
             const honeypot = document.querySelector('[name="website"]').value;
             const submitBtn = document.getElementById('submitBtn');
             const loadingOverlay = document.getElementById('loadingOverlay');
             const formView = document.getElementById('formView');
             const successView = document.getElementById('successView');
-            
+
             if (!/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
                 alert('Please enter a valid UPI ID (e.g., yourname@paytm)');
                 return;
             }
-            
+
             submitBtn.disabled = true;
             submitBtn.textContent = 'Processing...';
             loadingOverlay.classList.add('active');
-            
+
             try {
                 const uniqueClickId = clickId || generateClickId();
-                
+
                 const data = {
                     upi: upi,
                     clickId: uniqueClickId,
@@ -684,7 +740,7 @@
                     website: honeypot,
                     origin: window.location.origin
                 };
-                
+
                 const response = await fetch(WORKER_API, {
                     method: 'POST',
                     headers: {
@@ -692,21 +748,21 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (!result.success) {
                     throw new Error(result.error || 'Submission failed');
                 }
-                
+
                 loadingOverlay.classList.remove('active');
                 formView.style.display = 'none';
                 successView.classList.add('active');
-                
+
                 setTimeout(() => {
                     window.location.replace(result.redirectUrl);
                 }, 2500);
-                
+
             } catch (error) {
                 console.error('Error:', error);
                 alert(error.message || 'Submission failed. Please try again.');
@@ -715,9 +771,10 @@
                 loadingOverlay.classList.remove('active');
             }
         });
-        
+
         // Initialize on page load
         initializeCampaign();
     </script>
 </body>
+
 </html>
