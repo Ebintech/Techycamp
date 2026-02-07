@@ -235,39 +235,123 @@
         }
 
         .steps-section {
-            margin-top: 24px;
-            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
-            border: 2px solid #e0e7ff;
-            border-radius: 14px;
-            padding: 20px;
+            margin-top: 20px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 16px;
         }
 
         .steps-title {
-            color: #4338ca;
+            color: #1f2937;
             font-size: 16px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .step-item {
-            padding: 8px 0;
+            padding: 4px 0;
             color: #374151;
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 13px;
+            line-height: 1.5;
             padding-left: 24px;
             position: relative;
+            counter-increment: step-counter;
         }
 
         .step-item:before {
-            content: "•";
+            content: counter(step-counter) ". ";
             position: absolute;
-            left: 8px;
-            color: #6366f1;
-            font-weight: bold;
-            font-size: 18px;
+            left: 0;
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        #stepsContainer {
+            counter-reset: step-counter;
+        }
+
+        /* Warning Box */
+        .warning-box {
+            margin-top: 16px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            padding: 14px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .warning-icon {
+            color: #dc2626;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .warning-text {
+            color: #991b1b;
+            font-size: 13px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* Track Leads Button */
+        .track-leads-btn {
+            margin-top: 16px;
+            width: 100%;
+            background: #8b5cf6;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .track-leads-btn:hover {
+            background: #7c3aed;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .track-leads-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Telegram Buttons */
+        .telegram-btn-campaign {
+            margin-top: 12px;
+            width: 100%;
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .telegram-btn-campaign:hover {
+            background: #0099dd;
+            transform: translateY(-1px);
         }
 
         .accordion {
@@ -502,13 +586,18 @@
                             <img id="campaignLogo" src="" alt="Logo">
                         </div>
                         <h1 id="campaignName">Loading...</h1>
+                        <!-- BIG PAYOUT DISPLAY -->
+                        <div
+                            style="font-size: 48px; font-weight: 700; background: linear-gradient(90deg, #ff6b35, #ff8555); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 16px 0;">
+                            <span id="campaignPayout">₹0</span>
+                        </div>
                         <p id="campaignDescription">Please wait...</p>
                     </div>
 
                     <form id="campaignForm">
-                        <div class="form-group">
-                            <input type="text" id="upi" placeholder="Your UPI ID *" required
-                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()">
+                        <!-- Dynamic form fields will be inserted here -->
+                        <div id="formFieldsContainer">
+                            <!-- Fields will be dynamically loaded based on campaign.requiredFields -->
                         </div>
 
                         <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
@@ -518,13 +607,23 @@
                         </button>
                     </form>
 
+
                     <!-- How to Complete Steps (Simple Design) -->
                     <div class="steps-section">
                         <div class="steps-title">
-                            📋 How to Complete Offer
+                            📋 How to complete offer
                         </div>
                         <div id="stepsContainer">
                             <!-- Steps will be dynamically loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Warning Box -->
+                    <div class="warning-box">
+                        <div class="warning-icon">⚠️</div>
+                        <div class="warning-text">
+                            Complete this Offer Carefully, Don't USE WIFI, Offer Reward will Only be Tracked with Mobile
+                            Internet and You must be a New User in the Partner Website/App
                         </div>
                     </div>
 
@@ -545,6 +644,24 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Track Leads Button -->
+                    <button class="track-leads-btn" onclick="window.location.href='/status?campaign=' + campaignId">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        Track Leads
+                    </button>
+
+                    <!-- Join Telegram Button -->
+                    <a href="https://t.me/yourchannel" target="_blank" class="telegram-btn-campaign">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+                        </svg>
+                        Join Our Telegram Channel
+                    </a>
                 </div>
 
                 <!-- Success View -->
@@ -632,6 +749,63 @@
             document.getElementById('campaignName').textContent = currentCampaign.name;
             document.getElementById('campaignDescription').textContent = currentCampaign.description;
 
+            // Update BIG PAYOUT DISPLAY
+            document.getElementById('campaignPayout').textContent = currentCampaign.displayPayout || `₹${currentCampaign.payout}`;
+
+            // ========================================
+            // DYNAMIC FORM FIELDS RENDERING
+            // ========================================
+            const formFieldsContainer = document.getElementById('formFieldsContainer');
+            formFieldsContainer.innerHTML = ''; // Clear existing fields
+
+            const requiredFields = currentCampaign.requiredFields || ['upi']; // Default to UPI only
+
+            requiredFields.forEach(field => {
+                const formGroup = document.createElement('div');
+                formGroup.className = 'form-group';
+
+                let inputHtml = '';
+
+                if (field === 'name') {
+                    inputHtml = `
+                        <input 
+                            type="text" 
+                            id="name" 
+                            placeholder="Name *" 
+                            required
+                            pattern="[a-zA-Z\\s]{2,50}"
+                            oninput="this.value = this.value.replace(/[^a-zA-Z\\s]/g, '')"
+                        >
+                    `;
+                } else if (field === 'mobile') {
+                    inputHtml = `
+                        <input 
+                            type="tel" 
+                            id="mobile" 
+                            placeholder="Mobile Number (10 digits) *" 
+                            required
+                            pattern="[6-9][0-9]{9}"
+                            maxlength="10"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                        >
+                    `;
+                } else if (field === 'upi') {
+                    inputHtml = `
+                        <input 
+                            type="text" 
+                            id="upi" 
+                            placeholder="UPI ID (e.g. name@upi) *" 
+                            required
+                            pattern="[a-zA-Z0-9.\\-_]{2,}@[a-zA-Z]{2,}"
+                            oninput="this.value = this.value.trim()"
+                        >
+                    `;
+                }
+
+                formGroup.innerHTML = inputHtml;
+                formFieldsContainer.appendChild(formGroup);
+            });
+
             // Load steps (simple bullet points)
             const stepsContainer = document.getElementById('stepsContainer');
             stepsContainer.innerHTML = '';
@@ -712,17 +886,48 @@
         document.getElementById('campaignForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
-            const upi = document.getElementById('upi').value.trim();
+            // Collect form data dynamically based on requiredFields
+            const requiredFields = currentCampaign.requiredFields || ['upi'];
+            const formData = {};
+
+            // Collect each required field
+            requiredFields.forEach(field => {
+                const element = document.getElementById(field);
+                if (element) {
+                    formData[field] = element.value.trim();
+                }
+            });
+
+            // Get UPI (required for all campaigns)
+            const upi = formData.upi || document.getElementById('upi')?.value.trim();
+            if (!upi) {
+                alert('Please enter your UPI ID');
+                return;
+            }
+
+            // Validate UPI format
+            if (!/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
+                alert('Please enter a valid UPI ID (e.g., yourname@paytm)');
+                return;
+            }
+
+            // Validate mobile if present
+            if (formData.mobile && !/^[6-9][0-9]{9}$/.test(formData.mobile)) {
+                alert('Please enter a valid 10-digit mobile number');
+                return;
+            }
+
+            // Validate name if present
+            if (formData.name && formData.name.length < 2) {
+                alert('Please enter a valid name');
+                return;
+            }
+
             const honeypot = document.querySelector('[name="website"]').value;
             const submitBtn = document.getElementById('submitBtn');
             const loadingOverlay = document.getElementById('loadingOverlay');
             const formView = document.getElementById('formView');
             const successView = document.getElementById('successView');
-
-            if (!/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
-                alert('Please enter a valid UPI ID (e.g., yourname@paytm)');
-                return;
-            }
 
             submitBtn.disabled = true;
             submitBtn.textContent = 'Processing...';
@@ -733,6 +938,8 @@
 
                 const data = {
                     upi: upi,
+                    name: formData.name || null,
+                    mobile: formData.mobile || null,
                     clickId: uniqueClickId,
                     campaignId: campaignId,
                     campaignSlug: currentCampaign.slug,
