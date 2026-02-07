@@ -519,7 +519,7 @@
     </div>
 
     <!-- Load campaigns config -->
-    <script src="campaigns-config.js"></script>
+    <script src="../campaigns-config.js"></script>
 
     <script>
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
@@ -544,8 +544,8 @@
                 document.getElementById('totalPayout').textContent = referrerPayout + refereePayout;
             }
             
-            // Set navigation link
-            document.getElementById('trackerLink').href = `refer-tracker.html?id=${campaignId}`;
+            // ✅ UPDATED: Use clean URL for tracker
+            document.getElementById('trackerLink').href = `/refer-tracker?id=${campaignId}`;
         }
         
         function toggleAccordion(button) {
@@ -643,8 +643,9 @@
                 loadingOverlay.classList.remove('active');
                 
                 const finalReferrerId = result.referrerId || referrerId;
-                const baseUrl = window.location.origin + window.location.pathname.replace('refer.html', '');
-                const referralUrl = baseUrl + `index.html?id=${campaignId}&ref=` + finalReferrerId;
+                
+                // ✅ UPDATED: Use clean URL format /c/?o=
+                const referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${finalReferrerId}`;
                 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
