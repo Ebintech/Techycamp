@@ -561,7 +561,7 @@
     </div>
 
     <!-- Load campaigns config -->
-    <script src="campaigns-config.js"></script>
+    <script src="../campaigns-config.js"></script>
 
     <script>
         // ================================
@@ -577,7 +577,7 @@
 
         // Get campaign ID from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const campaignId = urlParams.get('id') || 'bww4yubb'; // Default to Baja Broking
+        const campaignId = urlParams.get('o') || urlParams.get('v') || urlParams.get('id') || 'bww4yubb'; // Support ?o=, ?v=, and ?id=
         const clickId = urlParams.get('click_id') || urlParams.get('source');
         const refId = urlParams.get('ref');
 
@@ -772,8 +772,13 @@
             }
         });
 
-        // Initialize on page load
-        initializeCampaign();
+        // Initialize on page load - wait for DOM and scripts to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeCampaign);
+        } else {
+            // DOM already loaded, but wait a tiny bit for campaigns-config.js
+            setTimeout(initializeCampaign, 100);
+        }
     </script>
 </body>
 
