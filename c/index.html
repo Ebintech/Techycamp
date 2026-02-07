@@ -508,7 +508,7 @@
                     <form id="campaignForm">
                         <div class="form-group">
                             <input type="text" id="upi" placeholder="Your UPI ID *" required
-                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}">
+                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()">
                         </div>
 
                         <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
