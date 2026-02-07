@@ -1,723 +1,588 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading Campaign...</title>
+    <title>Earn Money Online - India's Trusted Platform</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f5f3ff 0%, #fce7f3 50%, #dbeafe 100%);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            z-index: 50;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .loading-overlay.active { display: flex; }
-        
-        .loading-dots div {
-            width: 14px;
-            height: 14px;
-            background: #6366f1;
-            border-radius: 50%;
-            display: inline-block;
-            margin: 0 5px;
-            animation: pulse 1.4s ease-in-out infinite;
-        }
-        
-        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        
-        .container { max-width: 500px; width: 100%; }
-        
-        .card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            padding: 8px;
-        }
-        
-        .gradient-border {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
-            border-radius: 24px 24px 0 0;
-        }
-        
-        .card-content { padding: 40px 32px; }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-        
-        .logo {
-            width: 96px;
-            height: 96px;
-            margin: 0 auto 16px;
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            overflow: hidden;
-            background: white;
-        }
-        
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        
-        .header h1 {
-            color: #1f2937;
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        
-        .header p {
-            color: #6b7280;
-            font-size: 16px;
-        }
-        
-        .campaign-ended {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        
-        .campaign-ended.active { display: block; }
-        
-        .campaign-ended h2 {
-            color: #dc2626;
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        
-        .campaign-ended p {
-            color: #6b7280;
-            margin-bottom: 24px;
-        }
-        
-        .error-message {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        
-        .error-message.active { display: block; }
-        
-        .error-icon {
-            font-size: 64px;
-            margin-bottom: 16px;
-        }
-        
-        .error-message h2 {
-            color: #dc2626;
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        
-        .form-group {
-            margin-bottom: 16px;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid #e5e7eb;
-            background: #f9fafb;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.2s;
-            color: #374151;
-        }
-        
-        .form-group input::placeholder {
-            color: #9ca3af;
-        }
-        
-        .form-group input:focus {
-            outline: none;
-            border-color: #6366f1;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-        
-        .submit-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 9999px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-            margin-top: 8px;
-        }
-        
-        .submit-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
-        }
-        
-        .submit-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .hp-field {
-            position: absolute;
-            left: -9999px;
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        .steps-section {
-            margin-top: 24px;
-            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
-            border: 2px solid #e0e7ff;
-            border-radius: 14px;
-            padding: 20px;
-        }
-        
-        .steps-title {
-            color: #4338ca;
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .step-item {
-            padding: 8px 0;
-            color: #374151;
-            font-size: 14px;
+            background: #1a1a1a;
+            color: #ffffff;
             line-height: 1.6;
-            padding-left: 24px;
-            position: relative;
         }
-        
-        .step-item:before {
-            content: "•";
-            position: absolute;
-            left: 8px;
-            color: #6366f1;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .accordion {
-            margin-top: 20px;
-            background: rgba(255, 255, 255, 0.6);
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-        }
-        
-        .accordion-header {
-            width: 100%;
-            padding: 16px;
-            background: none;
-            border: none;
+
+        /* Header */
+        .header {
+            background: #2a2a2a;
+            padding: 16px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b35;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .menu-btn {
+            background: #3a3a3a;
+            border: 2px solid #555;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #fff;
             cursor: pointer;
-            text-align: left;
-            transition: background 0.2s;
+            font-size: 24px;
         }
-        
-        .accordion-header:hover {
-            background: rgba(99, 102, 241, 0.05);
-        }
-        
-        .accordion-header h3 {
-            color: #1f2937;
-            font-size: 15px;
-            font-weight: 600;
-        }
-        
-        .accordion-icon {
-            width: 20px;
-            height: 20px;
-            transition: transform 0.3s;
-            color: #6b7280;
-        }
-        
-        .accordion-icon.open {
-            transform: rotate(180deg);
-        }
-        
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        
-        .accordion-content.open {
-            max-height: 600px;
-        }
-        
-        .accordion-body {
-            padding: 0 16px 16px;
-            color: #4b5563;
-            font-size: 13px;
-            line-height: 1.7;
-        }
-        
-        .accordion-body ul {
-            list-style: none;
-            padding: 0;
-        }
-        
-        .accordion-body li {
-            padding: 8px 0;
-            padding-left: 24px;
-            position: relative;
-        }
-        
-        .accordion-body li:before {
-            content: "•";
+
+        /* Mobile Menu Dropdown */
+        .mobile-menu {
             position: absolute;
-            left: 8px;
-            color: #6366f1;
-            font-weight: bold;
-        }
-        
-        /* FIXED FLOATING TELEGRAM BUTTON */
-        .floating-telegram {
-            position: fixed;
-            bottom: 80px;
+            top: 70px;
             right: 20px;
-            z-index: 1000;
+            background: #2a2a2a;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            min-width: 200px;
             display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #3a3a3a;
         }
-        
-        .floating-telegram.active {
-            display: block;
-            animation: slideInUp 0.5s ease-out;
+
+        .mobile-menu.active {
+            display: flex;
         }
-        
-        @keyframes slideInUp {
-            from {
-                transform: translateY(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+
+        .mobile-menu a {
+            padding: 16px 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 16px;
+            transition: all 0.3s;
+            border-bottom: 1px solid #3a3a3a;
         }
-        
-        .telegram-float-btn {
+
+        .mobile-menu a:last-child {
+            border-bottom: none;
+        }
+
+        .mobile-menu a:hover {
+            background: #3a3a3a;
+            padding-left: 24px;
+        }
+
+        .telegram-btn {
+            background: #0088cc;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            margin: 0 auto;
+        }
+
+        .telegram-btn:hover {
+            background: #0099dd;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 136, 204, 0.4);
+        }
+
+        .telegram-section {
+            text-align: center;
+            padding: 60px 20px;
+            background: #2a2a2a;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .telegram-section h3 {
+            font-size: 28px;
+            margin-bottom: 16px;
+            color: #fff;
+        }
+
+        .telegram-section p {
+            color: #b0b0b0;
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 18px;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-btn {
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-btn:hover {
+            background: #ff8555;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        /* Section */
+        .section {
+            padding: 60px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 36px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+            font-size: 16px;
+        }
+
+        /* Campaign Cards */
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+        }
+
+        .campaign-card {
+            background: #2a2a2a;
+            border-radius: 16px;
+            padding: 24px;
+            border: 1px solid #3a3a3a;
+            transition: all 0.3s;
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
+        }
+
+        .campaign-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .campaign-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            background: #3a3a3a;
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #0088cc 0%, #0099dd 100%);
-            border-radius: 50%;
-            box-shadow: 0 4px 20px rgba(0, 136, 204, 0.4);
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            position: relative;
+            font-size: 32px;
         }
-        
-        .telegram-float-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(0, 136, 204, 0.6);
-        }
-        
-        .telegram-float-btn:active {
-            transform: scale(0.95);
-        }
-        
-        .telegram-float-btn svg {
-            width: 32px;
-            height: 32px;
-            fill: white;
-        }
-        
-        /* Pulse animation */
-        .telegram-float-btn::before {
-            content: '';
-            position: absolute;
+
+        .campaign-logo img {
             width: 100%;
             height: 100%;
-            border-radius: 50%;
-            background: rgba(0, 136, 204, 0.4);
-            animation: pulse-ring 2s infinite;
+            object-fit: cover;
+            border-radius: 12px;
         }
-        
-        @keyframes pulse-ring {
-            0% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            100% {
-                transform: scale(1.5);
-                opacity: 0;
-            }
-        }
-        
-        .success-message {
-            display: none;
-            text-align: center;
-            padding: 40px 20px;
-        }
-        
-        .success-message.active {
-            display: block;
-        }
-        
-        .checkmark {
-            font-size: 80px;
-            margin-bottom: 20px;
-        }
-        
-        .success-text {
-            font-size: 20px;
+
+        .campaign-name {
+            font-size: 22px;
             font-weight: 700;
-            color: #1f2937;
+            color: #ffffff;
+        }
+
+        .campaign-description {
+            color: #b0b0b0;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            min-height: 60px;
+        }
+
+        .campaign-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .campaign-expiry {
+            color: #888;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .campaign-payout {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ff6b35;
+        }
+
+        .campaign-btn {
+            width: 100%;
+            background: #ff6b35;
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .campaign-btn:hover {
+            background: #ff8555;
+            transform: scale(1.02);
+        }
+
+        /* Features Section */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 32px;
+            margin-top: 40px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 32px 20px;
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: #2a2a2a;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 40px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
             margin-bottom: 12px;
         }
-        
-        .success-subtext {
-            font-size: 14px;
-            color: #6b7280;
+
+        .feature-description {
+            color: #b0b0b0;
+            font-size: 15px;
             line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2a2a2a;
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid #3a3a3a;
+        }
+
+        .footer-tagline {
+            color: #888;
+            margin-bottom: 24px;
+            font-size: 16px;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        .social-link {
+            width: 48px;
+            height: 48px;
+            background: #3a3a3a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 24px;
+            transition: all 0.3s;
+        }
+
+        .social-link:hover {
+            background: #ff6b35;
+            transform: scale(1.1);
+        }
+
+        .copyright {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .section-title {
+                font-size: 28px;
+            }
+
+            .campaigns-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-dots">
-            <div></div>
-            <div></div>
-            <div></div>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <img src="https://campguruji.in/img/app-logo.png" alt="Logo"
+                onerror="this.style.display='none'; this.parentElement.textContent='CampGuruji'">
+        </div>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+        <!-- Mobile Menu Dropdown -->
+        <div class="mobile-menu" id="mobileMenu">
+            <a href="#active-offers">Offers</a>
+            <a href="/refer">Refer & Earn</a>
+            <a href="/status">Lead Tracker</a>
+            <a href="#why-us">Why Us</a>
+            <a href="https://t.me/yourchannel" target="_blank" class="telegram-btn"
+                style="margin: 12px; padding: 12px 20px;">
+                📱 Join Now
+            </a>
         </div>
     </div>
 
-    <!-- FLOATING TELEGRAM BUTTON -->
-    <div class="floating-telegram" id="floatingTelegram">
-        <a href="#" id="floatingTelegramBtn" class="telegram-float-btn" target="_blank" title="Join Telegram for More Offers">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
-            </svg>
-        </a>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Earn Money Online with</h1>
+        <p>India's trusted platform for earning through simple tasks, referrals, and high-paying campaigns directly from
+            your smartphone.</p>
+        <button class="cta-btn" onclick="document.getElementById('active-offers').scrollIntoView({behavior: 'smooth'})">
+            🚀 View Live Offers
+        </button>
+    </section>
 
-    <div class="container">
-        <div class="card">
-            <div class="gradient-border"></div>
-            <div class="card-content">
-                <!-- Error Message View -->
-                <div class="error-message" id="errorView">
-                    <div class="error-icon">❌</div>
-                    <h2>Campaign Not Found</h2>
-                    <p>The campaign you're looking for doesn't exist or has been removed.</p>
-                </div>
+    <!-- Active Offers Section -->
+    <section class="section" id="active-offers">
+        <h2 class="section-title">Active Offers</h2>
+        <p class="section-subtitle">Start earning immediately with these opportunities. New offers are added daily!</p>
 
-                <!-- Campaign Ended View -->
-                <div class="campaign-ended" id="campaignEnded">
-                    <div class="checkmark">⏰</div>
-                    <h2>Campaign Ended</h2>
-                    <p>This campaign has ended. Thank you for your interest!</p>
-                </div>
+        <div class="campaigns-grid" id="campaignsGrid">
+            <!-- Campaign cards will be loaded here dynamically -->
+        </div>
+    </section>
 
-                <!-- Active Campaign View -->
-                <div id="formView">
-                    <div class="header">
-                        <div class="logo">
-                            <img id="campaignLogo" src="" alt="Logo">
-                        </div>
-                        <h1 id="campaignName">Loading...</h1>
-                        <p id="campaignDescription">Please wait...</p>
-                    </div>
+    <!-- Why Choose Us Section -->
+    <section class="section" id="why-us">
+        <h2 class="section-title">Why Choose Us?</h2>
+        <p class="section-subtitle">We are dedicated to providing a transparent, reliable, and rewarding earning
+            experience for everyone.</p>
 
-                    <form id="campaignForm">
-                        <div class="form-group">
-                            <input 
-                                type="text" 
-                                id="upi" 
-                                placeholder="Your UPI ID *" 
-                                required
-                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}"
-                            >
-                        </div>
-                        
-                        <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
-                        
-                        <button type="submit" class="submit-btn" id="submitBtn">
-                            Submit & Get Offer
-                        </button>
-                    </form>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Instant Payouts</h3>
+                <p class="feature-description">Complete tasks and get paid instantly. No waiting periods for your
+                    hard-earned money.</p>
+            </div>
 
-                    <!-- How to Complete Steps (Simple Design) -->
-                    <div class="steps-section">
-                        <div class="steps-title">
-                            📋 How to Complete Offer
-                        </div>
-                        <div id="stepsContainer">
-                            <!-- Steps will be dynamically loaded here -->
-                        </div>
-                    </div>
+            <div class="feature-card">
+                <div class="feature-icon">₹</div>
+                <h3 class="feature-title">High Payouts</h3>
+                <p class="feature-description">We partner with top brands to bring you the highest-paying campaigns in
+                    the market.</p>
+            </div>
 
-                    <!-- Terms and Conditions Accordion -->
-                    <div class="accordion">
-                        <button class="accordion-header" onclick="toggleAccordion(this)">
-                            <h3>Terms and Conditions</h3>
-                            <svg class="accordion-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="accordion-body">
-                                <ul id="termsContainer">
-                                    <!-- Terms will be dynamically loaded here -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Success View -->
-                <div class="success-message" id="successView">
-                    <div class="checkmark">✅</div>
-                    <div class="success-text">Submission Successful!</div>
-                    <div class="success-subtext">
-                        Redirecting you to the offer page...<br>
-                        Complete all steps to get your cashback!
-                    </div>
-                </div>
+            <div class="feature-card">
+                <div class="feature-icon">🛡️</div>
+                <h3 class="feature-title">Trusted & Secure</h3>
+                <p class="feature-description">With over 10K+ happy users and ₹5M+ paid out, we are India's most trusted
+                    platform.</p>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Telegram Section -->
+    <section class="telegram-section">
+        <h3>📱 Join Our Telegram Channel</h3>
+        <p>Get instant updates on new offers, payouts, and exclusive deals!</p>
+        <a href="https://t.me/yourchannel" target="_blank" class="telegram-btn">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                <path
+                    d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+            </svg>
+            Join Telegram Channel
+        </a>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-tagline">Your reliable partner in online earning.</p>
+
+        <div class="social-links">
+            <a href="https://t.me/yourchannel" class="social-link" target="_blank" title="Telegram">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+                </svg>
+            </a>
+            <a href="https://instagram.com/yourpage" class="social-link" target="_blank" title="Instagram">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                </svg>
+            </a>
+            <a href="mailto:support@campguruji.in" class="social-link" title="Email">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                </svg>
+            </a>
+        </div>
+
+        <p class="copyright">© 2026 . All rights reserved.</p>
+    </footer>
 
     <!-- Load campaigns config -->
     <script src="campaigns-config.js"></script>
 
     <script>
-        // ================================
-        // CONFIGURATION
-        // ================================
-        
-        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        
-        // Get campaign ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const campaignId = urlParams.get('id') || 'bww4yubb'; // Default to Baja Broking
-        const clickId = urlParams.get('click_id') || urlParams.get('source');
-        const refId = urlParams.get('ref');
-        
-        let currentCampaign = null;
-        
-        // ================================
-        // INITIALIZE CAMPAIGN
-        // ================================
-        
-        function initializeCampaign() {
-            currentCampaign = getCampaign(campaignId);
-            
-            if (!currentCampaign) {
-                showError();
+        // Load and display active campaigns
+        function loadCampaigns() {
+            const grid = document.getElementById('campaignsGrid');
+            const activeCampaigns = Object.values(CAMPAIGNS).filter(c => c.active);
+
+            if (activeCampaigns.length === 0) {
+                grid.innerHTML = '<p style="text-align: center; color: #888; grid-column: 1/-1;">No active campaigns at the moment. Check back soon!</p>';
                 return;
             }
-            
-            if (!currentCampaign.active) {
-                showCampaignEnded();
-                return;
-            }
-            
-            loadCampaignData();
-            
-            // Check if this is a referral link
-            if (refId) {
-                fetchReferrerTelegram(refId);
-            }
-        }
-        
-        function showError() {
-            document.getElementById('formView').style.display = 'none';
-            document.getElementById('errorView').classList.add('active');
-            document.title = 'Campaign Not Found';
-        }
-        
-        function showCampaignEnded() {
-            document.getElementById('formView').style.display = 'none';
-            document.getElementById('campaignEnded').classList.add('active');
-            document.title = 'Campaign Ended - ' + currentCampaign.name;
-        }
-        
-        function loadCampaignData() {
-            // Update page title
-            document.title = currentCampaign.name + ' - ' + currentCampaign.description;
-            
-            // Update logo
-            document.getElementById('campaignLogo').src = currentCampaign.logo;
-            document.getElementById('campaignLogo').alt = currentCampaign.name + ' Logo';
-            
-            // Update header
-            document.getElementById('campaignName').textContent = currentCampaign.name;
-            document.getElementById('campaignDescription').textContent = currentCampaign.description;
-            
-            // Load steps (simple bullet points)
-            const stepsContainer = document.getElementById('stepsContainer');
-            stepsContainer.innerHTML = '';
-            currentCampaign.steps.forEach((step) => {
-                const stepHtml = `<div class="step-item">${step}</div>`;
-                stepsContainer.innerHTML += stepHtml;
-            });
-            
-            // Load terms
-            const termsContainer = document.getElementById('termsContainer');
-            termsContainer.innerHTML = '';
-            currentCampaign.terms.forEach(term => {
-                const termHtml = `<li>${term}</li>`;
-                termsContainer.innerHTML += termHtml;
+
+            activeCampaigns.forEach(campaign => {
+                const card = document.createElement('div');
+                card.className = 'campaign-card';
+
+                const logoHtml = campaign.logo
+                    ? `<img src="${campaign.logo}" alt="${campaign.name}">`
+                    : (campaign.icon || '🎁');
+
+                card.innerHTML = `
+                    <div class="campaign-header">
+                        <div class="campaign-logo">${logoHtml}</div>
+                        <div class="campaign-name">${campaign.name}</div>
+                    </div>
+                    <div class="campaign-description">${campaign.description}</div>
+                    <div class="campaign-footer">
+                        <div class="campaign-expiry">
+                            📅 Expires: 15 Jun 2050
+                        </div>
+                        <div class="campaign-payout">₹ ${campaign.payout}</div>
+                    </div>
+                    <button class="campaign-btn" onclick="window.location.href='/c/?o=${campaign.id}'">
+                        Complete Now →
+                    </button>
+                `;
+
+                grid.appendChild(card);
             });
         }
-        
-        // ================================
-        // FETCH REFERRER TELEGRAM
-        // ================================
-        async function fetchReferrerTelegram(referrerId) {
-            try {
-                const response = await fetch(`${WORKER_API}/get-referrer-telegram?ref=${encodeURIComponent(referrerId)}`);
-                const data = await response.json();
-                
-                if (data.success && data.telegram && data.telegram.trim() !== '') {
-                    // Show floating Telegram button
-                    document.getElementById('floatingTelegramBtn').href = data.telegram;
-                    document.getElementById('floatingTelegram').classList.add('active');
-                }
-            } catch (error) {
-                console.error('Error fetching referrer telegram:', error);
-                // Silently fail - don't show telegram button
-            }
+
+        // Load campaigns when page loads
+        if (typeof CAMPAIGNS !== 'undefined') {
+            loadCampaigns();
+        } else {
+            console.error('campaigns-config.js not loaded');
         }
-        
-        // ================================
-        // FUNCTIONS
-        // ================================
-        
-        function toggleAccordion(button) {
-            const content = button.nextElementSibling;
-            const icon = button.querySelector('.accordion-icon');
-            content.classList.toggle('open');
-            icon.classList.toggle('open');
+
+        // Toggle mobile menu
+        function toggleMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('active');
         }
-        
-        function generateClickId() {
-            const timestamp = Date.now().toString(36).toUpperCase();
-            const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-            return 'C' + timestamp + random;
-        }
-        
-        // ================================
-        // FORM SUBMISSION
-        // ================================
-        
-        document.getElementById('campaignForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const upi = document.getElementById('upi').value.trim();
-            const honeypot = document.querySelector('[name="website"]').value;
-            const submitBtn = document.getElementById('submitBtn');
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            const formView = document.getElementById('formView');
-            const successView = document.getElementById('successView');
-            
-            if (!/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
-                alert('Please enter a valid UPI ID (e.g., yourname@paytm)');
-                return;
-            }
-            
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Processing...';
-            loadingOverlay.classList.add('active');
-            
-            try {
-                const uniqueClickId = clickId || generateClickId();
-                
-                const data = {
-                    upi: upi,
-                    clickId: uniqueClickId,
-                    campaignId: campaignId,
-                    campaignSlug: currentCampaign.slug,
-                    referrerId: refId || null,
-                    website: honeypot,
-                    origin: window.location.origin
-                };
-                
-                const response = await fetch(WORKER_API, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
-                
-                const result = await response.json();
-                
-                if (!result.success) {
-                    throw new Error(result.error || 'Submission failed');
-                }
-                
-                loadingOverlay.classList.remove('active');
-                formView.style.display = 'none';
-                successView.classList.add('active');
-                
-                setTimeout(() => {
-                    window.location.replace(result.redirectUrl);
-                }, 2500);
-                
-            } catch (error) {
-                console.error('Error:', error);
-                alert(error.message || 'Submission failed. Please try again.');
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Submit & Get Offer';
-                loadingOverlay.classList.remove('active');
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function (event) {
+            const menu = document.getElementById('mobileMenu');
+            const menuBtn = document.querySelector('.menu-btn');
+
+            if (!menu.contains(event.target) && !menuBtn.contains(event.target)) {
+                menu.classList.remove('active');
             }
         });
-        
-        // Initialize on page load
-        initializeCampaign();
     </script>
 </body>
+
 </html>
