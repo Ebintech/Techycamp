@@ -556,16 +556,22 @@
     </div>
 
     <!-- Load campaigns config -->
-    <script src="../campaigns-config.js"></script>
+    <script src="/campaigns-config.js"></script>
 
     <script>
-        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-
         // Get campaign ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
 
         let currentCampaign = null;
+
+        // Fallback getCampaign function
+        function getCampaign(id) {
+            if (typeof window.getCampaign === 'function') {
+                return window.getCampaign(id);
+            }
+            return null;
+        }
 
         // Initialize
         function init() {
@@ -573,17 +579,15 @@
 
             if (currentCampaign) {
                 document.title = `Refer & Earn - ${currentCampaign.name}`;
-
-                // Set campaign name
                 document.getElementById('campaignName').textContent = currentCampaign.name;
 
-                // Display referrer payout
                 const referrerPayout = currentCampaign.referralPayout?.referrer || 200;
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
+            } else {
+                document.getElementById('campaignName').textContent = 'Refer & Earn';
             }
 
-            // Set tracker link - use correct path
-            document.getElementById('trackEarningsLink').href = `../refer-tracker/index.html?id=${campaignId}`;
+            document.getElementById('trackEarningsLink').href = `/refer-tracker/index.html?id=${campaignId}`;
         }
 
         function toggleAccordion(button) {
@@ -593,13 +597,11 @@
             icon.classList.toggle('open');
         }
 
+        // Generate unique referrer ID
         function generateReferrerId() {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-            let result = '';
-            for (let i = 0; i < 8; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
+            const timestamp = Date.now().toString(36);
+            const random = Math.random().toString(36).substring(2, 6);
+            return (timestamp + random).toUpperCase().substring(0, 8);
         }
 
         function copyToClipboard(inputId, button) {
@@ -631,6 +633,11 @@
             const submitBtn = document.getElementById('submitBtn');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
+            // Honeypot check
+            if (honeypot) {
+                return;
+            }
+
             if (!/^[6-9][0-9]{9}$/.test(mobile)) {
                 alert('Please enter a valid 10-digit mobile number');
                 return;
@@ -646,58 +653,38 @@
             loadingOverlay.classList.add('active');
 
             try {
+                // Generate UNIQUE referrer ID (timestamp + random)
                 const referrerId = generateReferrerId();
 
-                const referrerPayout = currentCampaign?.referralPayout?.referrer || 200;
-                const refereePayout = currentCampaign?.referralPayout?.referee || 200;
-
-                // Use default Telegram link if not provided
+                // Use default Telegram if not provided
                 const finalTelegram = telegram || 'https://t.me/camptechy';
 
-                const data = {
-                    mobile: mobile,
+                // Store referrer data locally
+                const referrerData = {
                     upi: upi,
+                    mobile: mobile,
                     telegram: finalTelegram,
                     referrerId: referrerId,
-                    campaignSlug: currentCampaign?.slug || 'baja-broking',
-                    type: 'referrer',
-                    payoutReferrer: referrerPayout,
-                    payoutReferee: refereePayout,
-                    website: honeypot,
-                    origin: window.location.origin
+                    campaignId: campaignId,
+                    createdAt: new Date().toISOString()
                 };
 
-                const response = await fetch(WORKER_API + '/refer', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(data)
-                });
+                localStorage.setItem(`referrer_${referrerId}`, JSON.stringify(referrerData));
 
-                const result = await response.json();
-
-                if (!result.success) {
-                    throw new Error(result.error || 'Failed to generate links');
-                }
+                // Small delay for UX
+                await new Promise(resolve => setTimeout(resolve, 800));
 
                 loadingOverlay.classList.remove('active');
 
-                const finalReferrerId = result.referrerId || referrerId;
-
                 // Generate referral URL
-                const referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${finalReferrerId}`;
+                const referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${referrerId}`;
 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
 
-                if (result.isExisting) {
-                    alert('✅ Welcome back! Here are your existing referral links.');
-                }
-
             } catch (error) {
                 console.error('Error:', error);
-                alert(error.message || 'Failed to generate links. Please try again.');
+                alert('Failed to generate link. Please try again.');
                 loadingOverlay.classList.remove('active');
             } finally {
                 submitBtn.disabled = false;
