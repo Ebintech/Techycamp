@@ -5,15 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Loading Campaign...</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #eef2ff;
             min-height: 100vh;
             display: flex;
@@ -21,11 +24,13 @@
             justify-content: center;
         }
 
+        /* HORIZONTAL Loading Animation */
         .loading-overlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
             z-index: 50;
             align-items: center;
             justify-content: center;
@@ -33,6 +38,42 @@
 
         .loading-overlay.active {
             display: flex;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .loading-dots div {
+            width: 14px;
+            height: 14px;
+            background: #6366f1;
+            border-radius: 50%;
+            animation: slideHorizontal 1.2s ease-in-out infinite;
+        }
+
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes slideHorizontal {
+
+            0%,
+            100% {
+                transform: translateX(-20px);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translateX(20px);
+                opacity: 1;
+            }
         }
 
         .app-container {
@@ -47,9 +88,7 @@
         /* HEADER SECTION - Blue Gradient */
         .header {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
-            /* Deep Navy/Blue */
             padding: 24px 20px 50px;
-            /* Reduced vertical padding */
             color: white;
             border-bottom-left-radius: 24px;
             border-bottom-right-radius: 24px;
@@ -57,7 +96,6 @@
             position: relative;
         }
 
-        /* Header Elements */
         .badge {
             background: rgba(255, 255, 255, 0.15);
             padding: 6px 12px;
@@ -70,14 +108,12 @@
             align-items: center;
             gap: 6px;
             margin-bottom: 8px;
-            /* Tighter spacing */
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header h1 {
             font-size: 24px;
-            /* Slightly smaller for compact look */
             font-weight: 700;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
@@ -90,17 +126,14 @@
             font-weight: 400;
         }
 
-        /* CASHBACK CARD - Green Style on Blue Header */
+        /* CASHBACK CARD - Professional Font */
         .cashback-card {
             background: rgba(255, 255, 255, 0.1);
-            /* Glassy Effect */
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             padding: 16px;
-            /* Compact padding */
             backdrop-filter: blur(8px);
             margin: 0 auto -40px;
-            /* Overlap */
             width: 90%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             display: flex;
@@ -116,7 +149,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #ecfccb;
-            /* Slight Lime Tint for readability */
             font-weight: 700;
             margin-bottom: 4px;
         }
@@ -128,18 +160,19 @@
         }
 
         .cashback-amount {
-            font-size: 32px;
-            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
             color: #fff;
             line-height: 1;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        /* Specific Green Icon Container */
         .wallet-icon-container {
             width: 36px;
             height: 36px;
             background: rgba(16, 185, 129, 0.2);
-            /* Green tint bg */
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -151,15 +184,11 @@
             width: 20px;
             height: 20px;
             color: #34d399;
-            /* Bright Green Icon */
         }
-
-        /* Track Status Button INSIDE Card? User image has it inside. Let's try inside as per image? No, user said "Track Status should be as it is on our last code no change on it" - which was below submit button. But the image shows it inside. The user specifically said "track lead status should be as it is on our last code no change on it" -> assuming BELOW submit button. */
 
         /* FORM SECTION */
         .content-area {
             padding: 50px 20px 40px;
-            /* Top padding for overlap */
             background: #fff;
         }
 
@@ -194,7 +223,6 @@
         .form-input {
             width: 100%;
             padding: 14px 14px 14px 44px;
-            /* Compact padding */
             border: 1px solid #e2e8f0;
             background: #f8fafc;
             border-radius: 12px;
@@ -211,12 +239,9 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-        /* SUBMIT BUTTON */
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(90deg, #10b981, #059669);
-            /* Green CTA per Image 1? Or keep Purple? User asked for Blue Header but Image 1 has Green Button. Let's match Header Theme -> Purple/Blue for consistency unless specified. User said "the colour theme we need is like this" referring to Blue. I will stick to Purple Button. */
             background: linear-gradient(90deg, #6366f1, #4f46e5);
             color: white;
             border: none;
@@ -230,9 +255,19 @@
             justify-content: center;
             gap: 8px;
             margin-top: 8px;
+            transition: all 0.3s;
         }
 
-        /* TRACK STATUS LINK (Below Submit) */
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .track-status-container {
             text-align: center;
             margin-top: 20px;
@@ -255,7 +290,147 @@
             transition: background 0.2s;
         }
 
-        /* ACCORDIONS - Clean White Style */
+        /* FLOATING TELEGRAM ICON */
+        .floating-telegram {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            animation: pulse-float 2s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+
+        .floating-telegram.show {
+            display: flex;
+        }
+
+        .floating-telegram:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-telegram svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        @keyframes pulse-float {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6);
+                transform: translateY(-4px);
+            }
+        }
+
+        /* SUCCESS MODAL */
+        .success-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-modal.active {
+            display: flex;
+        }
+
+        .success-modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: checkmark-pop 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes checkmark-pop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-icon svg {
+            width: 48px;
+            height: 48px;
+            color: white;
+        }
+
+        .success-modal h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .success-modal p {
+            font-size: 15px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .redirect-timer {
+            font-size: 13px;
+            color: #9ca3af;
+            font-weight: 600;
+        }
+
+        /* ACCORDIONS */
         .accordion-section {
             border: 1px solid #f1f5f9;
             border-radius: 12px;
@@ -266,7 +441,6 @@
         .accordion-header {
             width: 100%;
             padding: 14px 16px;
-            /* Compact padding */
             background: #fff;
             border: none;
             display: flex;
@@ -346,7 +520,6 @@
             top: 3px;
         }
 
-        /* Icons inside Accordion Titles */
         .acc-icon-bg {
             display: flex;
             align-items: center;
@@ -357,7 +530,6 @@
             margin-right: 4px;
         }
 
-        /* TELEGRAM BUTTON (Footer) */
         .telegram-btn {
             display: flex;
             align-items: center;
@@ -374,7 +546,6 @@
             font-size: 14px;
         }
 
-        /* STATES */
         .section-hidden {
             display: none !important;
         }
@@ -402,41 +573,6 @@
             color: #64748b;
             margin-bottom: 24px;
         }
-
-        /* Loading Dots */
-        @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(0.95);
-                opacity: 0.5;
-            }
-        }
-
-        .loading-dots div {
-            width: 10px;
-            height: 10px;
-            background: #6366f1;
-            border-radius: 50%;
-            margin: 0 4px;
-            animation: pulse 1s infinite;
-        }
-
-        .loading-dots div:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots div:nth-child(3) {
-            animation-delay: 0.4s;
-        }
     </style>
 </head>
 
@@ -450,6 +586,29 @@
             <div></div>
         </div>
     </div>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2>Submission Successful!</h2>
+            <p>Redirecting you to the offer page...</p>
+            <p style="margin-top: 8px;">Please complete the steps to earn cashback.</p>
+            <p class="redirect-timer" id="redirectTimer">Redirecting in 3 seconds...</p>
+        </div>
+    </div>
+
+    <!-- Floating Telegram Icon -->
+    <a href="#" id="floatingTelegram" class="floating-telegram" target="_blank">
+        <svg fill="currentColor" viewBox="0 0 24 24">
+            <path
+                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+        </svg>
+    </a>
 
     <!-- Main Application Container -->
     <div class="app-container">
@@ -468,15 +627,7 @@
             <p class="state-desc">This campaign has ended. Stay tuned for new offers!</p>
         </div>
 
-        <!-- 3. SUCCESS STATE -->
-        <div id="successView" class="state-container section-hidden">
-            <span class="state-icon">✅</span>
-            <h2 class="state-title">Submission Successful!</h2>
-            <p class="state-desc">Redirecting you to the offer page...<br>Please complete the steps to earn cashback.
-            </p>
-        </div>
-
-        <!-- 4. ACTIVE FORM VIEW -->
+        <!-- 3. ACTIVE FORM VIEW -->
         <div id="formView">
             <!-- Header -->
             <div class="header">
@@ -494,7 +645,6 @@
 
                         <!-- Green Wallet Icon Container -->
                         <div class="wallet-icon-container">
-                            <!-- SVG Wallet Icon -->
                             <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
@@ -525,14 +675,14 @@
                     </button>
                 </form>
 
-                <!-- Track Status Link (Original Request: Below Submit) -->
+                <!-- Track Status Link -->
                 <div class="track-status-container">
                     <a href="#" id="trackStatusLink" class="track-link">
                         Track Your Leads Status →
                     </a>
                 </div>
 
-                <!-- How to Avail (Open by Default) -->
+                <!-- How to Avail -->
                 <div class="accordion-section">
                     <button class="accordion-header active" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
@@ -557,7 +707,7 @@
                     </div>
                 </div>
 
-                <!-- Terms (Collapsed) -->
+                <!-- Terms -->
                 <div class="accordion-section">
                     <button class="accordion-header" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
@@ -600,9 +750,6 @@
     <!-- Scripts -->
     <script src="../campaigns-config.js"></script>
     <script>
-        // ================================
-        // CONFIG & STATE
-        // ================================
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('o') || urlParams.get('v') || urlParams.get('id') || 'bww4yubb';
@@ -610,24 +757,64 @@
         const refId = urlParams.get('ref');
 
         let currentCampaign = null;
+        let telegramUrl = null;
 
-        // ================================
-        // INITIALIZATION
-        // ================================
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof CAMPAIGNS !== 'undefined') {
                 init();
             } else {
                 setTimeout(init, 500);
             }
+
+            // Check for referral Telegram link
+            if (refId) {
+                const referrerData = localStorage.getItem(`referrer_${refId}`);
+                if (referrerData) {
+                    try {
+                        const data = JSON.parse(referrerData);
+                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                            telegramUrl = data.telegram;
+                            showFloatingTelegram();
+                        }
+                    } catch (e) {
+                        console.error('Error parsing referrer data:', e);
+                    }
+                }
+            }
         });
 
-        function init() {
-            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : CAMPAIGNS[campaignId];
+        function showFloatingTelegram() {
+            const floatingBtn = document.getElementById('floatingTelegram');
+            if (telegramUrl) {
+                floatingBtn.href = telegramUrl;
+                floatingBtn.classList.add('show');
+            }
+        }
 
+        function init() {
+            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : (typeof CAMPAIGNS !== 'undefined' ? CAMPAIGNS[campaignId] : null);
+
+            // Fallback if config not loaded
             if (!currentCampaign) {
-                toggleSection('errorView');
-                return;
+                currentCampaign = {
+                    name: 'Campaign Offer',
+                    slug: campaignId,
+                    payout: 500,
+                    displayPayout: '₹500',
+                    requiredFields: ['upi', 'mobile'],
+                    steps: [
+                        'Enter your details and submit',
+                        'Complete the offer requirements',
+                        'Get cashback within 24-48 hours'
+                    ],
+                    terms: [
+                        'Valid only once per user/UPI/IP/Device',
+                        'Complete all steps to earn cashback',
+                        'Cashback processed after verification'
+                    ],
+                    active: true,
+                    redirectUrl: 'https://example.com'
+                };
             }
 
             if (currentCampaign.active === false) {
@@ -639,7 +826,7 @@
         }
 
         function toggleSection(viewId) {
-            ['formView', 'errorView', 'campaignEnded', 'successView'].forEach(id => {
+            ['formView', 'errorView', 'campaignEnded'].forEach(id => {
                 document.getElementById(id).classList.add('section-hidden');
             });
             document.getElementById(viewId).classList.remove('section-hidden');
@@ -648,13 +835,10 @@
         function loadCampaignUI() {
             document.title = currentCampaign.name;
             document.getElementById('campaignName').textContent = currentCampaign.name;
-            document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!"; // Updated Text
-
-            // Payout
+            document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
             document.getElementById('campaignPayout').textContent = currentCampaign.displayPayout || `₹${currentCampaign.payout}`;
 
-            // Track Status Links
-            const trackerUrl = `../tracker/index.html?id=${campaignId}`;
+            const trackerUrl = `/tracker/index.html?id=${campaignId}`;
             document.getElementById('trackStatusLink').href = trackerUrl;
 
             renderFormFields();
@@ -779,20 +963,37 @@
 
                 const result = await res.json();
 
-                if (!result.success) throw new Error(result.error || 'Failed');
+                // REMOVED: Duplicate UPI check - allow same UPI multiple times
+                if (!result.success && result.error && !result.error.includes('already submitted')) {
+                    throw new Error(result.error);
+                }
 
                 overlay.classList.remove('active');
-                toggleSection('successView');
+
+                // Show professional success modal
+                const successModal = document.getElementById('successModal');
+                successModal.classList.add('active');
+
+                // Countdown timer
+                let countdown = 3;
+                const timerEl = document.getElementById('redirectTimer');
+                const countdownInterval = setInterval(() => {
+                    countdown--;
+                    timerEl.textContent = `Redirecting in ${countdown} second${countdown !== 1 ? 's' : ''}...`;
+                    if (countdown <= 0) {
+                        clearInterval(countdownInterval);
+                    }
+                }, 1000);
 
                 setTimeout(() => {
                     window.location.replace(result.redirectUrl);
-                }, 2000);
+                }, 3000);
 
             } catch (err) {
                 console.error(err);
                 alert("Submission failed. Please try again.");
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Claim Reward';
+                submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Claim Reward';
                 overlay.classList.remove('active');
             }
         });
