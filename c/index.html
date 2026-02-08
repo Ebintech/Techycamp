@@ -602,13 +602,7 @@
         </div>
     </div>
 
-    <!-- Floating Telegram Icon -->
-    <a href="#" id="floatingTelegram" class="floating-telegram" target="_blank">
-        <svg fill="currentColor" viewBox="0 0 24 24">
-            <path
-                d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
-        </svg>
-    </a>
+    <!-- Floating Telegram Removed based on user request -->
 
     <!-- Main Application Container -->
     <div class="app-container">
@@ -734,7 +728,7 @@
                 </div>
 
                 <!-- Telegram Button -->
-                <a href="https://t.me/yourchannel" target="_blank" class="telegram-btn">
+                <a href="https://t.me/yourchannel" target="_blank" class="telegram-btn" id="telegramBtn">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
@@ -755,9 +749,9 @@
         const campaignId = urlParams.get('o') || urlParams.get('v') || urlParams.get('id') || 'bww4yubb';
         const clickId = urlParams.get('click_id') || urlParams.get('source');
         const refId = urlParams.get('ref');
+        const telegramLink = urlParams.get('t'); // Get custom telegram link from URL
 
         let currentCampaign = null;
-        let telegramUrl = null;
 
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof CAMPAIGNS !== 'undefined') {
@@ -773,8 +767,8 @@
                     try {
                         const data = JSON.parse(referrerData);
                         if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
-                            telegramUrl = data.telegram;
-                            showFloatingTelegram();
+                            // This logic was for floating button, now removed.
+                            // The inline button will use `telegramLink` from URL params.
                         }
                     } catch (e) {
                         console.error('Error parsing referrer data:', e);
@@ -783,218 +777,207 @@
             }
         });
 
-        function showFloatingTelegram() {
-            const floatingBtn = document.getElementById('floatingTelegram');
-            if (telegramUrl) {
-                floatingBtn.href = telegramUrl;
-                floatingBtn.classList.add('show');
-            }
-        }
-
-        function init() {
+        async function init() {
             currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : (typeof CAMPAIGNS !== 'undefined' ? CAMPAIGNS[campaignId] : null);
+
+            // Fetch Telegram link from backend if ref ID exists
+            if (refId) {
+                try {
+                    const response = await fetch(`https://campaign-apii.businesstechy04.workers.dev/get-referrer-telegram?ref=${refId}`);
+                    const data = await response.json();
+                    
+                    if (data.success && data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                        const telegramBtn = document.getElementById('telegramBtn');
+                        telegramBtn.href = data.telegram;
+                        telegramBtn.style.display = 'flex';
+                    }
+                } catch (error) {
+                    console.error('Error fetching Telegram link:', error);
+                }
+            }
 
             // Fallback if config not loaded
             if (!currentCampaign) {
                 currentCampaign = {
                     name: 'Campaign Offer',
-                    slug: campaignId,
-                    payout: 500,
-                    displayPayout: '₹500',
-                    requiredFields: ['upi', 'mobile'],
+                    payout: 200,
+                    description: 'Complete the offer to get instant cashback!',
                     steps: [
-                        'Enter your details and submit',
-                        'Complete the offer requirements',
-                        'Get cashback within 24-48 hours'
+                        'Click Claim Reward button below',
+                        'Complete the steps on the next page',
+                        'Get cashback instantly to your UPI'
                     ],
                     terms: [
-                        'Valid only once per user/UPI/IP/Device',
-                        'Complete all steps to earn cashback',
-                        'Cashback processed after verification'
-                    ],
-                    active: true,
-                    redirectUrl: 'https://example.com'
+                        'Valid for new users only',
+                        'Must complete all steps',
+                        'One reward per user'
+                    ]
                 };
             }
 
-            if (currentCampaign.active === false) {
-                toggleSection('campaignEnded');
-                return;
+            if (currentCampaign) {
+                document.title = currentCampaign.name;
+                document.getElementById('campaignName').textContent = currentCampaign.name;
+                document.getElementById('campaignDescription').textContent = currentCampaign.description;
+                document.getElementById('campaignPayout').textContent = `₹${currentCampaign.payout}`;
+
+                // Populate Steps
+                const stepsContainer = document.getElementById('stepsContainer');
+                stepsContainer.innerHTML = '';
+                if (currentCampaign.steps && currentCampaign.steps.length > 0) {
+                    currentCampaign.steps.forEach(step => {
+                        const li = document.createElement('li');
+                        li.textContent = step;
+                        stepsContainer.appendChild(li);
+                    });
+                }
+
+                // Populate Terms
+                const termsContainer = document.getElementById('termsContainer');
+                termsContainer.innerHTML = '';
+                if (currentCampaign.terms && currentCampaign.terms.length > 0) {
+                    currentCampaign.terms.forEach(term => {
+                        const li = document.createElement('li');
+                        li.textContent = term;
+                        termsContainer.appendChild(li);
+                    });
+                }
+
+                // Check active status
+                if (currentCampaign.status === 'ended') {
+                    showView('campaignEnded');
+                } else {
+                    showView('formView');
+                    generateFormFields(currentCampaign.fields);
+                }
+            } else {
+                showView('errorView');
             }
 
-            loadCampaignUI();
+            // Track Link
+            document.getElementById('trackStatusLink').href = `../refer-tracker/index.html?id=${campaignId}&ref=${refId || ''}`;
         }
 
-        function toggleSection(viewId) {
-            ['formView', 'errorView', 'campaignEnded'].forEach(id => {
+        function showView(viewId) {
+            ['errorView', 'campaignEnded', 'formView'].forEach(id => {
                 document.getElementById(id).classList.add('section-hidden');
             });
             document.getElementById(viewId).classList.remove('section-hidden');
         }
 
-        function loadCampaignUI() {
-            document.title = currentCampaign.name;
-            document.getElementById('campaignName').textContent = currentCampaign.name;
-            document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
-            document.getElementById('campaignPayout').textContent = currentCampaign.displayPayout || `₹${currentCampaign.payout}`;
-
-            const trackerUrl = `/tracker/index.html?id=${campaignId}`;
-            document.getElementById('trackStatusLink').href = trackerUrl;
-
-            renderFormFields();
-
-            const stepsContainer = document.getElementById('stepsContainer');
-            stepsContainer.innerHTML = (currentCampaign.steps || []).map(step => `<li>${step}</li>`).join('');
-
-            const termsContainer = document.getElementById('termsContainer');
-            termsContainer.innerHTML = (currentCampaign.terms || []).map(term => `<li>${term}</li>`).join('');
-        }
-
-        function renderFormFields() {
+        function generateFormFields(fields) {
             const container = document.getElementById('formFieldsContainer');
             container.innerHTML = '';
 
-            const fields = currentCampaign.requiredFields || ['upi'];
+            // Default fields if none specified
+            const fieldsToRender = fields || [
+                { id: 'upi', label: 'Enter UPI ID', placeholder: 'example@okaxis', type: 'text', icon: '@' },
+                { id: 'name', label: 'Your Name', placeholder: 'John Doe', type: 'text', icon: '👤' }
+            ];
 
-            fields.forEach(field => {
+            fieldsToRender.forEach(field => {
                 const group = document.createElement('div');
                 group.className = 'form-group';
-
-                let label = '';
-                let placeholder = '';
-                let type = 'text';
-                let icon = '';
-                let validation = '';
-
-                if (field === 'name') {
-                    label = 'Enter Your Name';
-                    placeholder = 'e.g. John Doe';
-                    icon = '👤';
-                    validation = `pattern="[a-zA-Z\\s]{2,50}" oninput="this.value = this.value.replace(/[^a-zA-Z\\s]/g, '')"`;
-                } else if (field === 'mobile') {
-                    label = 'Mobile Number';
-                    placeholder = '10-digit number';
-                    type = 'tel';
-                    icon = '📱';
-                    validation = `pattern="[6-9][0-9]{9}" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"`;
-                } else if (field === 'upi') {
-                    label = 'Your UPI ID';
-                    placeholder = 'e.g. name@upi';
-                    icon = '@';
-                    validation = `pattern="[a-zA-Z0-9.\\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()"`;
-                }
-
+                
                 group.innerHTML = `
-                    <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
+                    <label class="input-label">${field.label}</label>
                     <div class="input-wrapper">
-                        <span class="input-icon">${icon}</span>
-                        <input 
-                            type="${type}" 
-                            id="${field}" 
-                            class="form-input" 
-                            placeholder="${placeholder}" 
-                            required 
-                            ${validation}
-                        >
+                        <span class="input-icon">${field.icon || '✏️'}</span>
+                        <input type="${field.type || 'text'}" 
+                               id="${field.id}" 
+                               class="form-input" 
+                               placeholder="${field.placeholder}"
+                               required>
                     </div>
                 `;
                 container.appendChild(group);
             });
         }
 
-        window.toggleAccordion = function (btn) {
-            const content = btn.nextElementSibling;
-            const isOpen = content.classList.contains('open');
+        function toggleAccordion(button) {
+            const content = button.nextElementSibling;
+            const header = button;
+            content.classList.toggle('open');
+            header.classList.toggle('active');
+        }
 
-            if (isOpen) {
-                content.style.maxHeight = null;
-                content.classList.remove('open');
-                btn.classList.remove('active');
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-                content.classList.add('open');
-                btn.classList.add('active');
-            }
-        };
-
-        document.getElementById('campaignForm').addEventListener('submit', async (e) => {
+        // Form Submission
+        document.getElementById('campaignForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-
+            
             const submitBtn = document.getElementById('submitBtn');
-            const overlay = document.getElementById('loadingOverlay');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            // Collect data
+            const upiInput = document.getElementById('upi');
+            const nameInput = document.getElementById('name');
 
-            const formData = {};
-            const fields = currentCampaign.requiredFields || ['upi'];
-            let isValid = true;
+            const upi = upiInput ? upiInput.value.trim() : '';
+            const name = nameInput ? nameInput.value.trim() : '';
 
-            fields.forEach(f => {
-                const val = document.getElementById(f).value.trim();
-                if (!val) isValid = false;
-                formData[f] = val;
-            });
-
-            if (!isValid) {
-                alert("Please fill all fields correctly.");
+            // Validation
+            if (upi && !/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
+                alert('Please enter a valid UPI ID');
                 return;
             }
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Processing...';
-            overlay.classList.add('active');
+            submitBtn.innerHTML = 'Verifying...';
+            loadingOverlay.classList.add('active');
 
             try {
-                const uniqueClickId = clickId || ('C' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase());
-
-                const payload = {
-                    ...formData,
-                    clickId: uniqueClickId,
-                    campaignId: campaignId,
-                    campaignSlug: currentCampaign.slug,
-                    referrerId: refId || null,
-                    website: document.querySelector('[name="website"]').value,
-                    origin: window.location.origin
-                };
-
-                const res = await fetch(WORKER_API, {
+                // Send to backend
+                const response = await fetch(WORKER_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        campaignId: campaignId,
+                        campaignSlug: currentCampaign?.slug || campaignId,
+                        upi: upi,
+                        name: name,
+                        clickId: clickId || `REF_${Date.now()}`,
+                        referrerId: refId,
+                        website: document.querySelector('[name="website"]').value // Honeypot
+                    })
                 });
 
-                const result = await res.json();
+                const result = await response.json();
 
-                // REMOVED: Duplicate UPI check - allow same UPI multiple times
-                if (!result.success && result.error && !result.error.includes('already submitted')) {
-                    throw new Error(result.error);
+                loadingOverlay.classList.remove('active');
+
+                if (result.success) {
+                    // Show success modal
+                    const modal = document.getElementById('successModal');
+                    modal.classList.add('active');
+                    
+                    // Countdown
+                    let seconds = 3;
+                    const timerEl = document.getElementById('redirectTimer');
+                    const interval = setInterval(() => {
+                        seconds--;
+                        timerEl.textContent = `Redirecting in ${seconds} seconds...`;
+                        if (seconds <= 0) {
+                            clearInterval(interval);
+                            window.location.href = result.redirectUrl || currentCampaign.offerLink;
+                        }
+                    }, 1000);
+                } else {
+                    alert(result.error || 'Submission failed. Please try again.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = `
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        Claim Reward
+                    `;
                 }
-
-                overlay.classList.remove('active');
-
-                // Show professional success modal
-                const successModal = document.getElementById('successModal');
-                successModal.classList.add('active');
-
-                // Countdown timer
-                let countdown = 3;
-                const timerEl = document.getElementById('redirectTimer');
-                const countdownInterval = setInterval(() => {
-                    countdown--;
-                    timerEl.textContent = `Redirecting in ${countdown} second${countdown !== 1 ? 's' : ''}...`;
-                    if (countdown <= 0) {
-                        clearInterval(countdownInterval);
-                    }
-                }, 1000);
-
-                setTimeout(() => {
-                    window.location.replace(result.redirectUrl);
-                }, 3000);
-
-            } catch (err) {
-                console.error(err);
-                alert("Submission failed. Please try again.");
+            } catch (error) {
+                console.error('Error:', error);
+                loadingOverlay.classList.remove('active');
+                alert('Connection error. Please check your internet.');
                 submitBtn.disabled = false;
-                submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Claim Reward';
-                overlay.classList.remove('active');
+                submitBtn.innerHTML = 'Claim Reward';
             }
         });
     </script>
