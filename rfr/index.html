@@ -1,237 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f5f3ff 0%, #fce7f3 50%, #dbeafe 100%);
+            background: #f5f7fa;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
         }
-        
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(4px);
-            z-index: 50;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .loading-overlay.active { display: flex; }
-        
-        .loading-dots div {
-            width: 14px;
-            height: 14px;
-            background: #6366f1;
-            border-radius: 50%;
-            display: inline-block;
-            margin: 0 5px;
-            animation: pulse 1.4s ease-in-out infinite;
-        }
-        
-        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-        
-        .container { max-width: 500px; width: 100%; }
-        
-        .card {
-            position: relative;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-            padding: 8px;
-        }
-        
-        .gradient-border {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(90deg, #6366f1, #a855f7, #ec4899);
-            border-radius: 24px 24px 0 0;
-        }
-        
-        .card-content { padding: 40px 32px; }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
-        .logo {
-            width: 96px;
-            height: 96px;
-            margin: 0 auto 16px;
-            border-radius: 50%;
-            border: 4px solid white;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            overflow: hidden;
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
             background: white;
+            min-height: 100vh;
         }
-        
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+
+        /* Purple Gradient Header */
+        .header {
+            background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 50%, #6d28d9 100%);
+            padding: 24px 20px 28px;
+            text-align: center;
+            color: white;
+            border-bottom-left-radius: 24px;
+            border-bottom-right-radius: 24px;
         }
-        
-        .header h1 {
-            color: #1f2937;
-            font-size: 28px;
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 10px;
             font-weight: 700;
-            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
-        
-        .reward-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+
+        .campaign-name {
+            font-size: 26px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .campaign-subtitle {
+            font-size: 13px;
+            opacity: 0.95;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        /* Single Payout Card */
+        .payout-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 16px;
+            max-width: 240px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .payout-amount {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .payout-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        /* Track Earnings Button */
+        .track-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             color: white;
             padding: 10px 20px;
-            border-radius: 9999px;
-            font-size: 16px;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-        
-        .info-box {
-            background: #f0f9ff;
-            border-left: 4px solid #3b82f6;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            border-radius: 10px;
             font-size: 13px;
-            color: #1e40af;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
         }
-        
+
+        .track-btn:hover {
+            background: rgba(255, 255, 255, 0.35);
+            transform: translateY(-2px);
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 24px 20px;
+        }
+
         .form-group {
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
-        
-        .form-group label {
+
+        .form-label {
             display: block;
             color: #374151;
             font-weight: 600;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        
-        .form-group input {
+
+        .required {
+            color: #ef4444;
+        }
+
+        .form-input {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #e5e7eb;
             background: #f9fafb;
             border-radius: 12px;
-            font-size: 14px;
+            font-size: 15px;
             transition: all 0.2s;
-            color: #374151;
+            color: #1f2937;
+            font-weight: 500;
         }
-        
-        .form-group input::placeholder {
+
+        .form-input::placeholder {
             color: #9ca3af;
         }
-        
-        .form-group input:focus {
+
+        .form-input:focus {
             outline: none;
-            border-color: #6366f1;
+            border-color: #6d28d9;
             background: white;
+            box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.1);
         }
-        
+
+        .input-hint {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 6px;
+        }
+
+        /* Submit Button */
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            background: linear-gradient(90deg, #10b981, #059669);
             color: white;
             border: none;
-            border-radius: 9999px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-            margin-top: 12px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            margin-top: 24px;
         }
-        
+
         .submit-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
         }
-        
+
         .submit-btn:disabled {
             opacity: 0.7;
             cursor: not-allowed;
             transform: none;
         }
-        
-        .hp-field {
-            position: absolute;
-            left: -9999px;
-            opacity: 0;
-            pointer-events: none;
+
+        /* Loading Overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
         }
-        
+
+        .loading-overlay.active {
+            display: flex;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading-dots div {
+            width: 12px;
+            height: 12px;
+            background: #6d28d9;
+            border-radius: 50%;
+            animation: pulse 1.4s ease-in-out infinite;
+        }
+
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.3;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.6);
             backdrop-filter: blur(4px);
-            z-index: 100;
+            z-index: 200;
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
-        
+
         .modal.active {
             display: flex;
         }
-        
+
         .modal-content {
             background: white;
             border-radius: 20px;
             padding: 32px;
             max-width: 500px;
             width: 100%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
-        
+
         .modal-header {
             margin-bottom: 24px;
         }
-        
+
         .modal-header h2 {
             color: #1f2937;
             font-size: 24px;
             font-weight: 700;
             margin-bottom: 8px;
         }
-        
+
         .modal-header p {
             color: #6b7280;
             font-size: 14px;
         }
-        
+
         .link-section {
             margin-bottom: 20px;
         }
-        
+
         .link-label {
             display: block;
             color: #374151;
@@ -239,27 +303,27 @@
             margin-bottom: 8px;
             font-size: 14px;
         }
-        
+
         .link-input-wrapper {
             position: relative;
         }
-        
+
         .link-input {
             width: 100%;
-            padding: 12px 50px 12px 12px;
+            padding: 12px 60px 12px 12px;
             border: 2px solid #e5e7eb;
             border-radius: 10px;
             font-size: 13px;
             color: #4b5563;
             background: #f9fafb;
         }
-        
+
         .copy-btn {
             position: absolute;
             right: 4px;
             top: 50%;
             transform: translateY(-50%);
-            background: #6366f1;
+            background: #6d28d9;
             color: white;
             border: none;
             padding: 8px 12px;
@@ -269,15 +333,15 @@
             font-weight: 600;
             transition: all 0.2s;
         }
-        
+
         .copy-btn:hover {
-            background: #4f46e5;
+            background: #5b21b6;
         }
-        
+
         .copy-btn.copied {
             background: #10b981;
         }
-        
+
         .close-btn {
             width: 100%;
             padding: 12px;
@@ -290,19 +354,27 @@
             cursor: pointer;
             margin-top: 8px;
         }
-        
+
         .close-btn:hover {
             background: #e5e7eb;
         }
-        
+
+        .hp-field {
+            position: absolute;
+            left: -9999px;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Terms Accordion */
         .accordion {
-            background: rgba(255, 255, 255, 0.5);
+            background: #f9fafb;
             border: 1px solid #e5e7eb;
             border-radius: 12px;
-            margin-top: 16px;
+            margin-top: 24px;
             overflow: hidden;
         }
-        
+
         .accordion-header {
             width: 100%;
             padding: 14px;
@@ -314,93 +386,59 @@
             cursor: pointer;
             text-align: left;
         }
-        
+
         .accordion-header h3 {
             color: #1f2937;
             font-size: 14px;
             font-weight: 600;
         }
-        
+
         .accordion-icon {
             transition: transform 0.3s;
         }
-        
+
         .accordion-icon.open {
             transform: rotate(180deg);
         }
-        
+
         .accordion-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-        
+
         .accordion-content.open {
             max-height: 400px;
         }
-        
+
         .accordion-body {
             padding: 0 14px 14px;
             color: #4b5563;
             font-size: 13px;
             line-height: 1.6;
         }
-        
+
         .accordion-body ul {
             list-style: none;
             padding: 0;
         }
-        
+
         .accordion-body li {
             padding: 6px 0;
             padding-left: 20px;
             position: relative;
         }
-        
+
         .accordion-body li:before {
             content: "•";
             position: absolute;
             left: 6px;
-            color: #6366f1;
+            color: #6d28d9;
             font-weight: bold;
-        }
-        
-        .tip-note {
-            margin-top: 12px;
-            font-size: 13px;
-            color: #6b7280;
-        }
-        
-        .tip-note a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        
-        .tip-note a:hover {
-            text-decoration: underline;
-        }
-        
-        .nav-link {
-            display: block;
-            text-align: center;
-            padding: 12px;
-            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
-            border-radius: 10px;
-            text-decoration: none;
-            color: #374151;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.2s;
-            margin-top: 20px;
-        }
-        
-        .nav-link:hover {
-            background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
-            transform: translateY(-2px);
         }
     </style>
 </head>
+
 <body>
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-dots">
@@ -411,91 +449,93 @@
     </div>
 
     <div class="container">
-        <div class="card">
-            <div class="gradient-border"></div>
-            <div class="card-content">
-                <div id="formView">
-                    <div class="header">
-                        <div class="logo">
-                            <img id="campaignLogo" src="" alt="Logo">
-                        </div>
-                        <h1>Refer & Earn</h1>
-                        <div class="reward-badge">
-                            Earn up to ₹<span id="totalPayout">0</span>
-                        </div>
-                    </div>
+        <!-- Header Section -->
+        <div class="header">
+            <div class="header-badge">
+                <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2L2 7v10c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-10-5z" />
+                </svg>
+                REFER & EARN
+            </div>
 
-                    <div class="info-box">
-                        💰 <strong>How it works:</strong> Share your referral link, earn when your referrals complete their first trade!
-                    </div>
+            <h1 class="campaign-name" id="campaignName"></h1>
+            <p class="campaign-subtitle">Share this offer and earn cashback!</p>
 
-                    <form id="referForm">
-                        <div class="form-group">
-                            <label for="mobile">Your Mobile Number *</label>
-                            <input 
-                                type="tel" 
-                                id="mobile" 
-                                placeholder="10-digit mobile number" 
-                                required
-                                pattern="[0-9]{10}"
-                                maxlength="10"
-                            >
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="upi">Your UPI ID *</label>
-                            <input 
-                                type="text" 
-                                id="upi" 
-                                placeholder="yourname@paytm" 
-                                required
-                                pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}"
-                            >
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="telegram">Telegram Channel Link (Optional)</label>
-                            <input 
-                                type="url" 
-                                id="telegram" 
-                                placeholder="https://t.me/yourchannel (optional)"
-                            >
-                        </div>
-                        
-                        <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
-                        
-                        <button type="submit" class="submit-btn" id="submitBtn">
-                            GENERATE MY REFERRAL LINK
-                        </button>
-                    </form>
+            <!-- Single Payout Card -->
+            <div class="payout-card">
+                <div class="payout-amount" id="youEarn">₹0</div>
+                <div class="payout-label">You Earn Per Referral
+                </div>
+            </div>
 
-                    <div class="accordion">
-                        <button class="accordion-header" onclick="toggleAccordion(this)">
-                            <h3>Terms and Conditions</h3>
-                            <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                            </svg>
-                        </button>
-                        <div class="accordion-content">
-                            <div class="accordion-body">
-                                <ul>
-                                    <li>Valid only once per user/UPI/IP/Device</li>
-                                    <li>Duplicate accounts will not be rewarded</li>
-                                    <li>Payout after referee completes all requirements</li>
-                                    <li>Merchant verifies all transactions</li>
-                                    <li>Fraudulent activity leads to rejection</li>
-                                </ul>
-                            </div>
-                        </div>
+            <!-- Track Earnings Button -->
+            <a href="#" id="trackEarningsLink" class="track-btn">
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+                Track Your Earnings
+            </a>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <form id="referForm">
+                <div class="form-group">
+                    <label class="form-label">Your UPI ID <span class="required">*</span></label>
+                    <input type="text" id="upi" class="form-input" placeholder="yourname@paytm" required
+                        pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}">
+                    <div class="input-hint">This is where you'll receive your cashback</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mobile Number <span class="required">*</span></label>
+                    <input type="tel" id="mobile" class="form-input" placeholder="10-digit mobile number" required
+                        pattern="[6-9][0-9]{9}" maxlength="10">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Telegram Channel Link (Optional)</label>
+                    <input type="url" id="telegram" class="form-input"
+                        placeholder="https://t.me/yourchannel (optional)">
+                </div>
+
+                <input type="text" name="website" class="hp-field" tabindex="-1" autocomplete="off">
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    Generate My Referral Link
+                </button>
+            </form>
+
+            <!-- Terms Accordion -->
+            <div class="accordion">
+                <button class="accordion-header" onclick="toggleAccordion(this)">
+                    <h3>Terms and Conditions</h3>
+                    <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <ul>
+                            <li>Valid only once per user/UPI/IP/Device</li>
+                            <li>Duplicate accounts will not be rewarded</li>
+                            <li>Payout after referee completes all requirements</li>
+                            <li>Merchant verifies all transactions</li>
+                            <li>Fraudulent activity leads to rejection</li>
+                        </ul>
                     </div>
-                    
-                    <!-- Only Track Referrals Button -->
-                    <a href="#" id="trackerLink" class="nav-link">📊 Track Referrals</a>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Success Modal -->
     <div class="modal" id="linksModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -509,9 +549,6 @@
                     <input type="text" class="link-input" id="referralLink" readonly>
                     <button class="copy-btn" onclick="copyToClipboard('referralLink', this)">Copy</button>
                 </div>
-                <p class="tip-note">
-                    💡 <strong>Tip:</strong> Shorten this link using <a href="https://bitly.com" target="_blank">Bitly</a> or <a href="https://tinyurl.com" target="_blank">TinyURL</a> before sharing!
-                </p>
             </div>
 
             <button class="close-btn" onclick="closeModal()">Close</button>
@@ -523,38 +560,39 @@
 
     <script>
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        
+
         // Get campaign ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
-        
+
         let currentCampaign = null;
-        
+
         // Initialize
         function init() {
             currentCampaign = getCampaign(campaignId);
-            
+
             if (currentCampaign) {
-                document.getElementById('campaignLogo').src = currentCampaign.logo;
                 document.title = `Refer & Earn - ${currentCampaign.name}`;
-                
-                // Calculate total payout
+
+                // Set campaign name
+                document.getElementById('campaignName').textContent = currentCampaign.name;
+
+                // Display referrer payout
                 const referrerPayout = currentCampaign.referralPayout?.referrer || 200;
-                const refereePayout = currentCampaign.referralPayout?.referee || 200;
-                document.getElementById('totalPayout').textContent = referrerPayout + refereePayout;
+                document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
             }
-            
-            // ✅ UPDATED: Use clean URL for tracker
-            document.getElementById('trackerLink').href = `/refer-tracker?id=${campaignId}`;
+
+            // Set tracker link - use correct path
+            document.getElementById('trackEarningsLink').href = `../refer-tracker/index.html?id=${campaignId}`;
         }
-        
+
         function toggleAccordion(button) {
             const content = button.nextElementSibling;
             const icon = button.querySelector('.accordion-icon');
             content.classList.toggle('open');
             icon.classList.toggle('open');
         }
-        
+
         function generateReferrerId() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let result = '';
@@ -563,60 +601,63 @@
             }
             return result;
         }
-        
+
         function copyToClipboard(inputId, button) {
             const input = document.getElementById(inputId);
             input.select();
             document.execCommand('copy');
-            
+
             const originalText = button.textContent;
             button.textContent = '✓ Copied';
             button.classList.add('copied');
-            
+
             setTimeout(() => {
                 button.textContent = originalText;
                 button.classList.remove('copied');
             }, 2000);
         }
-        
+
         function closeModal() {
             document.getElementById('linksModal').classList.remove('active');
         }
-        
-        document.getElementById('referForm').addEventListener('submit', async function(e) {
+
+        document.getElementById('referForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const mobile = document.getElementById('mobile').value.trim();
             const upi = document.getElementById('upi').value.trim();
             const telegram = document.getElementById('telegram').value.trim();
             const honeypot = document.querySelector('[name="website"]').value;
             const submitBtn = document.getElementById('submitBtn');
             const loadingOverlay = document.getElementById('loadingOverlay');
-            
-            if (!/^[0-9]{10}$/.test(mobile)) {
+
+            if (!/^[6-9][0-9]{9}$/.test(mobile)) {
                 alert('Please enter a valid 10-digit mobile number');
                 return;
             }
-            
+
             if (!/^[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}$/.test(upi)) {
                 alert('Please enter a valid UPI ID');
                 return;
             }
-            
+
             submitBtn.disabled = true;
-            submitBtn.textContent = 'GENERATING...';
+            submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg> Generating...';
             loadingOverlay.classList.add('active');
-            
+
             try {
                 const referrerId = generateReferrerId();
-                
+
                 const referrerPayout = currentCampaign?.referralPayout?.referrer || 200;
                 const refereePayout = currentCampaign?.referralPayout?.referee || 200;
-                
+
+                // Use default Telegram link if not provided
+                const finalTelegram = telegram || 'https://t.me/camptechy';
+
                 const data = {
                     mobile: mobile,
                     upi: upi,
-                    telegram: telegram || null,
+                    telegram: finalTelegram,
                     referrerId: referrerId,
                     campaignSlug: currentCampaign?.slug || 'baja-broking',
                     type: 'referrer',
@@ -625,7 +666,7 @@
                     website: honeypot,
                     origin: window.location.origin
                 };
-                
+
                 const response = await fetch(WORKER_API + '/refer', {
                     method: 'POST',
                     headers: {
@@ -633,38 +674,39 @@
                     },
                     body: JSON.stringify(data)
                 });
-                
+
                 const result = await response.json();
-                
+
                 if (!result.success) {
                     throw new Error(result.error || 'Failed to generate links');
                 }
-                
+
                 loadingOverlay.classList.remove('active');
-                
+
                 const finalReferrerId = result.referrerId || referrerId;
-                
-                // ✅ UPDATED: Use clean URL format /c/?o=
+
+                // Generate referral URL
                 const referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${finalReferrerId}`;
-                
+
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
-                
+
                 if (result.isExisting) {
                     alert('✅ Welcome back! Here are your existing referral links.');
                 }
-                
+
             } catch (error) {
                 console.error('Error:', error);
                 alert(error.message || 'Failed to generate links. Please try again.');
                 loadingOverlay.classList.remove('active');
             } finally {
                 submitBtn.disabled = false;
-                submitBtn.textContent = 'GENERATE MY REFERRAL LINK';
+                submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg> Generate My Referral Link';
             }
         });
-        
+
         init();
     </script>
 </body>
+
 </html>
