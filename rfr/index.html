@@ -607,12 +607,13 @@
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
             }
 
-            // FIXED: Removed complex JS link handling - using simple HTML href above
-            /*
-            const trackerUrl = `refer-tracker-index.html?id=${campaignId}`;
+            // SERVER-READY FIX:
+            const trackerUrl = `/refer-tracker/?id=${campaignId}`;
             const trackLink = document.getElementById('trackEarningsLink');
-            if (trackLink) trackLink.href = trackerUrl;
-            */
+
+            if (trackLink) {
+                trackLink.href = trackerUrl;
+            }
         }
 
         function toggleAccordion(button) {
