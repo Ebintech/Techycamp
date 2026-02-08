@@ -476,8 +476,9 @@
             </div>
 
             <!-- Track Earnings Button -->
-            <!-- FIXED: Changed to BUTTON to force redirect and avoid # link issues -->
-            <button id="trackEarningsLink" class="track-btn" style="border:none; cursor:pointer; width:auto;">
+            <!-- FIXED: Inline onclick for maximum reliability and simplicity -->
+            <button id="trackEarningsLink" class="track-btn" style="border:none; cursor:pointer;"
+                onclick="window.location.href='../refer-tracker/?id='+new URLSearchParams(window.location.search).get('id')">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -607,11 +608,12 @@
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
             }
 
-            // FIXED: Using BUTTON click to force navigation - 100% reliable
+            // FIXED: Removed all複雜 JS logic for tracker button because handled inline in HTML
+            // Just ensure it's visible if needed
             const trackBtn = document.getElementById('trackEarningsLink');
             if (trackBtn) {
+                // Update onclick just in case ID changes dynamically
                 trackBtn.onclick = function () {
-                    // Force redirect to tracker
                     window.location.href = `../refer-tracker/?id=${campaignId}`;
                 };
             }
@@ -703,8 +705,16 @@
 
                 loadingOverlay.classList.remove('active');
 
-                // Generate referral URL
-                const referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${referrerId}`;
+                // Generate referral URL with Telegram param if provided
+                let referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${referrerId}`;
+
+                // Add Telegram parameter ONLY if user provided one
+                if (finalTelegram && finalTelegram !== 'https://t.me/camptechy') {
+                    referralUrl += `&t=${encodeURIComponent(finalTelegram)}`;
+                } else if (telegram) {
+                    // Even if it matches default, pass it explicitly if user typed it
+                    referralUrl += `&t=${encodeURIComponent(telegram)}`;
+                }
 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
