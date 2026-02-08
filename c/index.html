@@ -998,19 +998,8 @@
                 const successModal = document.getElementById('successModal');
                 successModal.classList.add('active');
 
-                let countdown = 3;
-                const timerEl = document.getElementById('redirectTimer');
-                const countdownInterval = setInterval(() => {
-                    countdown--;
-                    timerEl.textContent = `Redirecting in ${countdown} second${countdown !== 1 ? 's' : ''}...`;
-                    if (countdown <= 0) {
-                        clearInterval(countdownInterval);
-                    }
-                }, 1000);
-
-                setTimeout(() => {
-                    window.location.replace(result.redirectUrl || currentCampaign.offerUrl);
-                }, 3000);
+                // Instant redirection - no lag!
+                window.location.replace(result.redirectUrl || currentCampaign.offerUrl);
 
             } catch (err) {
                 console.error(err);
