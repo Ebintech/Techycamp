@@ -1,3 +1,5 @@
+[```diff:c-index-fixed.html
+===
 <!DOCTYPE html>
 <html lang="en">
 
@@ -808,8 +810,8 @@
             loadCampaignUI();
 
             // 1. Try to get Telegram link from URL param or LocalStorage (Instant)
-            let initialTelegram = telegramLink; 
-            
+            let initialTelegram = telegramLink;
+
             if (!initialTelegram && refId) {
                 const cachedRef = localStorage.getItem(`referrer_${refId}`);
                 if (cachedRef) {
@@ -861,8 +863,8 @@
             document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
             document.getElementById('campaignPayout').textContent = currentCampaign.displayPayout || `₹${currentCampaign.payout}`;
 
-            // Fix Track Status link to point to ../status/
-            document.getElementById('trackStatusLink').href = `../status/?id=${campaignId}`;
+            // Fix Track Status link to point to ../tracker/
+            document.getElementById('trackStatusLink').href = `../tracker/?id=${campaignId}`;
 
             renderFormFields();
 
@@ -877,6 +879,7 @@
             const container = document.getElementById('formFieldsContainer');
             container.innerHTML = '';
 
+            // Use requiredFields from config, fallback to upi
             const fields = currentCampaign.requiredFields || ['upi'];
 
             fields.forEach(field => {
@@ -908,19 +911,19 @@
                 }
 
                 group.innerHTML = `
-                    <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">${icon}</span>
-                        <input 
-                            type="${type}" 
-                            id="${field}" 
-                            class="form-input" 
-                            placeholder="${placeholder}" 
-                            required 
-                            ${validation}
-                        >
-                    </div>
-                `;
+                <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
+                <div class="input-wrapper">
+                    <span class="input-icon">${icon}</span>
+                    <input 
+                        type="${type}" 
+                        id="${field}" 
+                        class="form-input" 
+                        placeholder="${placeholder}" 
+                        required 
+                        ${validation}
+                    >
+                </div>
+            `;
                 container.appendChild(group);
             });
         }
@@ -951,7 +954,9 @@
             let isValid = true;
 
             fields.forEach(f => {
-                const val = document.getElementById(f).value.trim();
+                const el = document.getElementById(f);
+                if (!el) return;
+                const val = el.value.trim();
                 if (!val) isValid = false;
                 formData[f] = val;
             });
@@ -986,18 +991,15 @@
 
                 const result = await res.json();
 
-                // REMOVED: Duplicate UPI check - allow same UPI multiple times
                 if (!result.success && result.error && !result.error.includes('already submitted')) {
                     throw new Error(result.error);
                 }
 
                 overlay.classList.remove('active');
 
-                // Show professional success modal
                 const successModal = document.getElementById('successModal');
                 successModal.classList.add('active');
 
-                // Countdown timer
                 let countdown = 3;
                 const timerEl = document.getElementById('redirectTimer');
                 const countdownInterval = setInterval(() => {
@@ -1009,7 +1011,7 @@
                 }, 1000);
 
                 setTimeout(() => {
-                    window.location.replace(result.redirectUrl);
+                    window.location.replace(result.redirectUrl || currentCampaign.offerUrl);
                 }, 3000);
 
             } catch (err) {
@@ -1020,7 +1022,9 @@
                 overlay.classList.remove('active');
             }
         });
+
     </script>
 </body>
 
 </html>
+```]
