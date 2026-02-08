@@ -100,10 +100,16 @@ const CAMPAIGNS = {
     }
 };
 
-// Helper function to get campaign by ID
-function getCampaign(campaignId) {
-    return CAMPAIGNS[campaignId] || null;
-}
+/**
+ * Helper function to get campaign by ID
+ * Attached to window object for maximum compatibility
+ */
+window.getCampaign = function(campaignId) {
+    if (typeof CAMPAIGNS !== 'undefined' && CAMPAIGNS[campaignId]) {
+        return CAMPAIGNS[campaignId];
+    }
+    return null;
+};
 
 // Helper function to check if campaign is active
 function isCampaignActive(campaignId) {
@@ -118,5 +124,5 @@ function getActiveCampaigns() {
 
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { CAMPAIGNS, getCampaign, isCampaignActive, getActiveCampaigns };
+    module.exports = { CAMPAIGNS, getCampaign: window.getCampaign, isCampaignActive, getActiveCampaigns };
 }
