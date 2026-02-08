@@ -607,8 +607,8 @@
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
             }
 
-            // SERVER-READY FIX:
-            const trackerUrl = `/refer-tracker/?id=${campaignId}`;
+            // FIXED: Using relative path for GitHub Pages compatibility
+            const trackerUrl = `../refer-tracker/?id=${campaignId}`;
             const trackLink = document.getElementById('trackEarningsLink');
 
             if (trackLink) {
