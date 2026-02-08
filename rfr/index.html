@@ -606,10 +606,15 @@
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
             }
 
-            // FIXED: Using relative path for the link to work locally and on likely server structures
+            // FIXED: Force redirect on click to be 100% sure
             const trackerUrl = `../refer-tracker/index.html?id=${campaignId}`;
-            console.log("Setting tracker URL to:", trackerUrl);
-            document.getElementById('trackEarningsLink').href = trackerUrl;
+            const trackLink = document.getElementById('trackEarningsLink');
+
+            trackLink.href = trackerUrl;
+            trackLink.onclick = function (e) {
+                e.preventDefault();
+                window.location.href = trackerUrl;
+            };
         }
 
         function toggleAccordion(button) {
