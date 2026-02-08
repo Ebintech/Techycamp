@@ -1,3 +1,5 @@
+[```diff:rfr-index-fixed.html
+===
 <!DOCTYPE html>
 <html lang="en">
 
@@ -683,13 +685,16 @@
             submitBtn.disabled = true;
 
             try {
-                // Generate UNIQUE referrer ID (timestamp + random)
-                const referrerId = generateReferrerId();
+                // Check for existing ID locally first
+                const localKey = `ref_for_${upi}_${campaignId}`;
+                let referrerId = localStorage.getItem(localKey);
+                
+                if (!referrerId) {
+                    referrerId = generateReferrerId();
+                    localStorage.setItem(localKey, referrerId);
+                }
 
-                // Use provided Telegram or empty string (Backend will handle logic if needed, or frontend will ignore)
-                const finalTelegram = telegram || '';
-
-                // Store referrer data locally
+                // Store full referrer details locally
                 const referrerData = {
                     upi: upi,
                     mobile: mobile,
@@ -699,7 +704,7 @@
                     createdAt: new Date().toISOString()
                 };
 
-                localStorage.setItem(`referrer_${referrerId}`, JSON.stringify(referrerData));
+                localStorage.setItem(`referrer_data_${referrerId}`, JSON.stringify(referrerData));
 
 
                 // Backend API Integration
@@ -722,6 +727,15 @@
                     });
 
                     const registerResult = await registerResponse.json();
+                    
+                    // If backend has a different (existing) ID, sync it!
+                    if (registerResult.success && registerResult.referrerId && registerResult.referrerId !== referrerId) {
+                        referrerId = registerResult.referrerId;
+                        localStorage.setItem(localKey, referrerId);
+                        // Update the modal link live
+                        document.getElementById('referralLink').value = `${window.location.origin}/c/?o=${campaignId}&ref=${referrerId}`;
+                    }
+
                     if (!registerResult.success) {
                         console.warn('Backend registration warning:', registerResult.error);
                     }
@@ -760,3 +774,4 @@
 </body>
 
 </html>
+```]
