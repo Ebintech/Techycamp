@@ -476,14 +476,14 @@
             </div>
 
             <!-- Track Earnings Button -->
-            <!-- FIXED: Default href to avoid # issue -->
-            <a href="javascript:void(0)" id="trackEarningsLink" class="track-btn">
+            <!-- FIXED: Changed to BUTTON to force redirect and avoid # link issues -->
+            <button id="trackEarningsLink" class="track-btn" style="border:none; cursor:pointer; width:auto;">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                 </svg>
                 Track Your Earnings
-            </a>
+            </button>
         </div>
 
         <!-- Form Section -->
@@ -607,11 +607,13 @@
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
             }
 
-            // FIXED: Set tracker link on load, avoid #
-            const trackLink = document.getElementById('trackEarningsLink');
-            if (trackLink) {
-                // Ensure default href is not #
-                trackLink.href = `../refer-tracker/?id=${campaignId}`;
+            // FIXED: Using BUTTON click to force navigation - 100% reliable
+            const trackBtn = document.getElementById('trackEarningsLink');
+            if (trackBtn) {
+                trackBtn.onclick = function () {
+                    // Force redirect to tracker
+                    window.location.href = `../refer-tracker/?id=${campaignId}`;
+                };
             }
         }
 
