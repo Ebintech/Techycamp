@@ -685,8 +685,8 @@
                 // Generate UNIQUE referrer ID (timestamp + random)
                 const referrerId = generateReferrerId();
 
-                // Use default Telegram if not provided
-                const finalTelegram = telegram || 'https://t.me/camptechy';
+                // Use provided Telegram or empty string (Backend will handle logic if needed, or frontend will ignore)
+                const finalTelegram = telegram || '';
 
                 // Store referrer data locally
                 const referrerData = {
@@ -723,7 +723,7 @@
                             payoutReferee: refereePayout
                         })
                     });
-                    
+
                     const registerResult = await registerResponse.json();
                     if (!registerResult.success) {
                         console.warn('Backend registration warning:', registerResult.error);
