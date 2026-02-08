@@ -5,6 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn</title>
+    <!-- Added Outfit font for professional look -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -13,7 +17,7 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f5f7fa;
             min-height: 100vh;
         }
@@ -80,10 +84,13 @@
         }
 
         .payout-amount {
-            font-size: 36px;
+            font-family: 'Outfit', sans-serif;
+            /* Professional font */
+            font-size: 42px;
             font-weight: 800;
             margin-bottom: 6px;
             color: #fff;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .payout-label {
@@ -458,12 +465,12 @@
                 REFER & EARN
             </div>
 
-            <h1 class="campaign-name" id="campaignName"></h1>
+            <h1 class="campaign-name" id="campaignName">Refer & Earn</h1>
             <p class="campaign-subtitle">Share this offer and earn cashback!</p>
 
             <!-- Single Payout Card -->
             <div class="payout-card">
-                <div class="payout-amount" id="youEarn">₹0</div>
+                <div class="payout-amount" id="youEarn">₹200</div>
                 <div class="payout-label">You Earn Per Referral
                 </div>
             </div>
@@ -556,7 +563,8 @@
     </div>
 
     <!-- Load campaigns config -->
-    <script src="/campaigns-config.js"></script>
+    <!-- FIXED: Using relative path for local testing compatibility -->
+    <script src="../campaigns-config.js"></script>
 
     <script>
         // Get campaign ID from URL
@@ -570,6 +578,9 @@
             if (typeof window.getCampaign === 'function') {
                 return window.getCampaign(id);
             }
+            if (typeof CAMPAIGNS !== 'undefined') {
+                return CAMPAIGNS[id];
+            }
             return null;
         }
 
@@ -577,17 +588,28 @@
         function init() {
             currentCampaign = getCampaign(campaignId);
 
+            // Fallback object if config fails to load
+            if (!currentCampaign) {
+                currentCampaign = {
+                    name: 'Campaign Offer',
+                    referralPayout: { referrer: 200 }
+                };
+                console.log('Using fallback campaign data');
+            }
+
             if (currentCampaign) {
                 document.title = `Refer & Earn - ${currentCampaign.name}`;
                 document.getElementById('campaignName').textContent = currentCampaign.name;
 
+                // Handle payout display with fallback
                 const referrerPayout = currentCampaign.referralPayout?.referrer || 200;
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
-            } else {
-                document.getElementById('campaignName').textContent = 'Refer & Earn';
             }
 
-            document.getElementById('trackEarningsLink').href = `/refer-tracker/index.html?id=${campaignId}`;
+            // FIXED: Using relative path for the link to work locally and on likely server structures
+            const trackerUrl = `../refer-tracker/index.html?id=${campaignId}`;
+            console.log("Setting tracker URL to:", trackerUrl);
+            document.getElementById('trackEarningsLink').href = trackerUrl;
         }
 
         function toggleAccordion(button) {
@@ -692,7 +714,16 @@
             }
         });
 
-        init();
+        // Add small timeout to allow config to load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Try immediately
+            if (typeof CAMPAIGNS !== 'undefined') {
+                init();
+            } else {
+                // Wait a bit if config is slow
+                setTimeout(init, 500);
+            }
+        });
     </script>
 </body>
 
