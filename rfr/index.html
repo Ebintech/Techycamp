@@ -574,6 +574,8 @@
         const campaignId = urlParams.get('id') || 'bww4yubb';
 
         let currentCampaign = null;
+        let referrerPayout = 200;
+        let refereePayout = 100;
 
         // Fallback getCampaign function
         function getCampaign(id) {
@@ -604,7 +606,8 @@
                 document.getElementById('campaignName').textContent = currentCampaign.name;
 
                 // Handle payout display with fallback
-                const referrerPayout = currentCampaign.referralPayout?.referrer || 200;
+                referrerPayout = currentCampaign.referralPayout?.referrer || 200;
+                refereePayout = currentCampaign.referralPayout?.referee || 100;
                 document.getElementById('youEarn').textContent = `₹${referrerPayout}`;
             }
 
