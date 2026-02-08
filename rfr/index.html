@@ -686,11 +686,13 @@
                 // Check for existing ID locally first
                 const localKey = `ref_for_${upi}_${campaignId}`;
                 let referrerId = localStorage.getItem(localKey);
-                
+
                 if (!referrerId) {
                     referrerId = generateReferrerId();
                     localStorage.setItem(localKey, referrerId);
                 }
+
+                const finalTelegram = telegram || '';
 
                 // Store full referrer details locally
                 const referrerData = {
@@ -725,7 +727,7 @@
                     });
 
                     const registerResult = await registerResponse.json();
-                    
+
                     // If backend has a different (existing) ID, sync it!
                     if (registerResult.success && registerResult.referrerId && registerResult.referrerId !== referrerId) {
                         referrerId = registerResult.referrerId;
