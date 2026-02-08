@@ -577,12 +577,9 @@
         let referrerPayout = 200;
         let refereePayout = 100;
 
-        // Fallback getCampaign function
-        function getCampaign(id) {
-            if (typeof window.getCampaign === 'function') {
-                return window.getCampaign(id);
-            }
-            if (typeof CAMPAIGNS !== 'undefined') {
+        // Safe way to get campaign without infinite recursion
+        function getCampaignSafely(id) {
+            if (typeof CAMPAIGNS !== 'undefined' && CAMPAIGNS[id]) {
                 return CAMPAIGNS[id];
             }
             return null;
@@ -590,7 +587,7 @@
 
         // Initialize
         function init() {
-            currentCampaign = getCampaign(campaignId);
+            currentCampaign = getCampaignSafely(campaignId);
 
             // Fallback object if config fails to load
             if (!currentCampaign) {
