@@ -705,16 +705,36 @@
 
                 loadingOverlay.classList.remove('active');
 
-                // Generate referral URL with Telegram param if provided
-                let referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${referrerId}`;
-
-                // Add Telegram parameter ONLY if user provided one
-                if (finalTelegram && finalTelegram !== 'https://t.me/camptechy') {
-                    referralUrl += `&t=${encodeURIComponent(finalTelegram)}`;
-                } else if (telegram) {
-                    // Even if it matches default, pass it explicitly if user typed it
-                    referralUrl += `&t=${encodeURIComponent(telegram)}`;
+                // Backend API Integration
+                try {
+                    const registerResponse = await fetch('https://campaign-apii.businesstechy04.workers.dev/register-referrer', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            mobile: mobile,
+                            upi: upi,
+                            telegram: finalTelegram, // Save telegram to backend
+                            referrerId: referrerId,
+                            campaign: currentCampaign?.name || campaignId, // Send campaign name
+                            campaignSlug: campaignId,
+                            payoutReferrer: referrerPayout,
+                            payoutReferee: refereePayout
+                        })
+                    });
+                    
+                    const registerResult = await registerResponse.json();
+                    if (!registerResult.success) {
+                        console.warn('Backend registration warning:', registerResult.error);
+                    }
+                } catch (apiError) {
+                    console.error('API Registration Error:', apiError);
+                    // Continue even if API fails, as local storage fallback works
                 }
+
+                // Generate cleaner referral URL (No &t= parameter needed!)
+                let referralUrl = `${window.location.origin}/c/?o=${campaignId}&ref=${referrerId}`;
 
                 document.getElementById('referralLink').value = referralUrl;
                 document.getElementById('linksModal').classList.add('active');
