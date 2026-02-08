@@ -469,12 +469,13 @@
 
         let currentCampaign = null;
 
-        // Fallback getCampaign function if not loaded from config
-        function getCampaign(id) {
-            if (typeof window.getCampaign === 'function') {
-                return window.getCampaign(id);
+        // Safe way to get campaign without infinite recursion
+        function getCampaignSafely(id) {
+            // Check if global CAMPAIGNS object exists first
+            if (typeof CAMPAIGNS !== 'undefined' && CAMPAIGNS[id]) {
+                return CAMPAIGNS[id];
             }
-            // Fallback if campaigns-config.js not loaded
+            // Fallback if not in config
             return {
                 name: 'Campaign',
                 slug: id
@@ -483,7 +484,7 @@
 
         // Initialize
         function init() {
-            currentCampaign = getCampaign(campaignId);
+            currentCampaign = getCampaignSafely(campaignId);
 
             if (currentCampaign) {
                 document.getElementById('campaignName').textContent = currentCampaign.name || 'Referral Tracker';
