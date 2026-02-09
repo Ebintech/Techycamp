@@ -508,12 +508,12 @@
                         step1.querySelector('.step-indicator').textContent = '✓';
                         step1.querySelector('.step-subtitle').textContent = 'Completed on ' + new Date(data.submittedDate).toLocaleDateString();
 
-                        if (status === 'paid' || status === 'cashback_paid') {
-                            // Paid Status
+                        if (status === 'paid' || status === 'cashback_paid' || status === 'approved') {
+                            // Success Status
                             statusCard.className = 'status-card status-paid';
                             statusIcon.textContent = '🎉';
-                            statusTitle.textContent = 'Cashback Released!';
-                            statusDesc.textContent = `₹${data.payout || '0'} has been sent to your UPI.`;
+                            statusTitle.textContent = 'Verification Successful!';
+                            statusDesc.textContent = `₹${data.payout || '0'} cashback is being sent to your UPI.`;
 
                             step2.className = 'step-box completed';
                             step2.querySelector('.step-indicator').textContent = '✓';
@@ -521,24 +521,10 @@
 
                             step3.className = 'step-box completed';
                             step3.querySelector('.step-indicator').textContent = '✓';
-                            step3.querySelector('.step-subtitle').textContent = 'Paid Successful';
-
-                        } else if (status === 'approved') {
-                            // Approved Status
-                            statusCard.className = 'status-card status-approved';
-                            statusIcon.textContent = '✅';
-                            statusTitle.textContent = 'Tracked Successfully';
-                            statusDesc.textContent = 'Your task is verified. Cashback is processing.';
-
-                            step2.className = 'step-box completed';
-                            step2.querySelector('.step-indicator').textContent = '✓';
-                            step2.querySelector('.step-subtitle').textContent = 'Verified';
-
-                            step3.className = 'step-box active';
-                            step3.querySelector('.step-indicator').textContent = '3';
-                            step3.querySelector('.step-subtitle').textContent = 'Processing Payment...';
+                            step3.querySelector('.step-subtitle').textContent = 'Cashback Paid';
 
                         } else {
+                            // Pending Status (default for anything else like 'pending')
                             // Pending Status
                             statusCard.className = 'status-card status-pending';
                             statusIcon.textContent = '⏳';
