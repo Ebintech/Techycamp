@@ -69,33 +69,30 @@ const CAMPAIGNS = {
         }
     },
 
-    // Axis Mutual Fund Campaign
-    'axismf01': {
-        id: 'axismf01',
-        name: 'Axis Mutual Fund',
-        slug: 'axis-mf',
-        payout: 500,
+    // Kalyan
+    'kal': {
+        id: 'kal',
+        name: 'kalyan',
+        slug: 'kalyan',
+        payout: 55,
         type: 'offline',
         active: true,
-        logo: 'https://campguruji.in/img/app-logo.png',
-        description: 'Earn ₹500 Cashback',
+        description: 'Earn ₹55 Cashback',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
         steps: [
             'Submit your UPI ID above',
-            'Complete KYC verification',
-            'Invest minimum ₹5000 in any fund',
-            'Wait 48-72 hours for merchant verification',
-            'Get ₹500 cashback automatically!'
+            'Complete Registration',
+            'You will get a call from the company talk as you are interested',
+            'Done in 48-72 hours You will get ₹55 cashback!'
         ],
         terms: [
             'Valid once per user/UPI/IP/Device',
-            'Minimum investment ₹5000',
-            'KYC must be completed',
+            'Must Be interested in profile',
             'Verification takes 48-72 hours'
         ],
         referralPayout: {
-            referrer: 300,
-            referee: 200
+            referrer: 30,
+            referee: 55
         }
     }
 };
