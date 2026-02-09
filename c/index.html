@@ -1000,8 +1000,11 @@
 
                 // Appending ClickID to Offer URL
                 let finalUrl = currentCampaign.offerUrl;
-                if (finalUrl.includes('{click_id}')) {
-                    // Modern placeholder approach (Safest for custom parameters like 'source')
+                if (finalUrl.includes('{your-sub-aff-id}')) {
+                    // Support for panel-specific placeholder
+                    finalUrl = finalUrl.replace('{your-sub-aff-id}', uniqueClickId);
+                } else if (finalUrl.includes('{click_id}')) {
+                    // Support for standard placeholder
                     finalUrl = finalUrl.replace('{click_id}', uniqueClickId);
                 } else {
                     // Classic fallback approach (Appends &aff_sub= at the end)
