@@ -575,11 +575,18 @@
                         statusText = 'COMPLETED';
                         successCount++;
 
-                        // Calculate earnings based on campaign config
+                        // Calculate earnings: Try specific campaign lookup, fallback to current page campaign
+                        let payout = 0;
                         const camp = getCampaignSafely(referral.campaign);
+
                         if (camp && camp.referralPayout && camp.referralPayout.referrer) {
-                            totalEarnings += camp.referralPayout.referrer;
+                            payout = camp.referralPayout.referrer;
+                        } else if (currentCampaign && currentCampaign.referralPayout && currentCampaign.referralPayout.referrer) {
+                            // Fallback to current campaign if specific lookup fails
+                            payout = currentCampaign.referralPayout.referrer;
                         }
+
+                        totalEarnings += payout;
                     } else if (status === 'install_success' || status === 'installed') {
                         statusClass = 'status-pending';
                         statusText = 'INSTALLED';
