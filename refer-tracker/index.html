@@ -548,17 +548,17 @@
             const resultsSection = document.getElementById('resultsSection');
             const referralList = document.getElementById('referralList');
             const emptyState = document.getElementById('emptyState');
+            const totalReferralsEl = document.getElementById('totalReferrals');
+            const totalEarningsEl = document.getElementById('totalEarnings');
 
-            // Update stats
-            document.getElementById('totalReferrals').textContent = data.total || 0;
-            document.getElementById('totalEarnings').textContent = data.totalEarnings || 0;
-
-            // Show results
+            referralList.innerHTML = '';
             resultsSection.classList.add('active');
 
             if (data.referrals && data.referrals.length > 0) {
-                referralList.innerHTML = '';
                 emptyState.style.display = 'none';
+
+                let successCount = 0;
+                let totalEarnings = 0;
 
                 data.referrals.forEach(referral => {
                     const item = document.createElement('div');
@@ -567,11 +567,19 @@
                     let statusClass = 'status-pending';
                     let statusText = 'PENDING';
 
-                    const status = referral.status ? referral.status.toLowerCase() : 'pending';
+                    const status = (referral.status || 'pending').toLowerCase();
+                    const isSuccess = (status === 'approved' || status === 'cashback_paid' || status === 'paid');
 
-                    if (status === 'approved' || status === 'cashback_paid' || status === 'paid') {
+                    if (isSuccess) {
                         statusClass = 'status-completed';
                         statusText = 'COMPLETED';
+                        successCount++;
+
+                        // Calculate earnings based on campaign config
+                        const camp = getCampaignSafely(referral.campaign);
+                        if (camp && camp.referralPayout && camp.referralPayout.referrer) {
+                            totalEarnings += camp.referralPayout.referrer;
+                        }
                     } else if (status === 'install_success' || status === 'installed') {
                         statusClass = 'status-pending';
                         statusText = 'INSTALLED';
@@ -590,12 +598,16 @@
                             ${statusText}
                         </div>
                     `;
-
                     referralList.appendChild(item);
                 });
+
+                // Update Stats with calculated values
+                totalReferralsEl.textContent = successCount;
+                totalEarningsEl.textContent = totalEarnings;
             } else {
                 emptyState.style.display = 'block';
-                referralList.innerHTML = '';
+                totalReferralsEl.textContent = '0';
+                totalEarningsEl.textContent = '0';
             }
         }
 
