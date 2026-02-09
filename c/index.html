@@ -998,8 +998,18 @@
                 const successModal = document.getElementById('successModal');
                 successModal.classList.add('active');
 
-                // Instant redirection - no lag!
-                window.location.replace(result.redirectUrl || currentCampaign.offerUrl);
+                // Appending ClickID to Offer URL
+                let finalUrl = currentCampaign.offerUrl;
+                if (finalUrl.includes('{click_id}')) {
+                    // Modern placeholder approach (Safest for custom parameters like 'source')
+                    finalUrl = finalUrl.replace('{click_id}', uniqueClickId);
+                } else {
+                    // Classic fallback approach (Appends &aff_sub= at the end)
+                    const separator = finalUrl.includes('?') ? '&' : '?';
+                    finalUrl += separator + 'aff_sub=' + uniqueClickId;
+                }
+
+                window.location.replace(finalUrl);
 
             } catch (err) {
                 console.error(err);
