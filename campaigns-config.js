@@ -14,6 +14,7 @@ const CAMPAIGNS = {
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹301 Rewards',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
+        requiredFields: ['upi', 'mobile'], // Default fields
         steps: [
             'Submit your UPI ID above',
             'Download & Install the Baja Broking App',
@@ -48,6 +49,7 @@ const CAMPAIGNS = {
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹500 Rewards',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
+        requiredFields: ['upi', 'mobile', 'name'], // Example with Name
         steps: [
             'Submit your UPI ID above',
             'Download & Install Angel One App',
@@ -69,39 +71,69 @@ const CAMPAIGNS = {
         }
     },
 
+    // Axis Mutual Fund Campaign
+    'axismf01': {
+        id: 'axismf01',
+        name: 'Axis Mutual Fund',
+        slug: 'axis-mf',
+        payout: 500,
+        type: 'offline',
+        active: true,
+        logo: 'https://campguruji.in/img/app-logo.png',
+        description: 'Earn ₹500 Cashback',
+        offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
+        requiredFields: ['upi'], // Minimum fields
+        steps: [
+            'Submit your UPI ID above',
+            'Complete KYC verification',
+            'Invest minimum ₹5000 in any fund',
+            'Wait 48-72 hours for merchant verification',
+            'Get ₹500 cashback automatically!'
+        ],
+        terms: [
+            'Valid once per user/UPI/IP/Device',
+            'Minimum investment ₹5000',
+            'KYC must be completed',
+            'Verification takes 48-72 hours'
+        ],
+        referralPayout: {
+            referrer: 300,
+            referee: 200
+        }
+    },
+
     // Kalyan
     'kal': {
         id: 'kal',
-        name: 'kalyan',
+        name: 'Kalyan',
         slug: 'kalyan',
-        payout: 55,
+        payout: 50,
         type: 'offline',
         active: true,
-        description: 'Earn ₹55 Cashback',
-        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546',
+        description: 'Earn ₹50 Cashback',
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546&source={your-sub-aff-id}',
+        requiredFields: ['upi'],
         steps: [
             'Submit your UPI ID above',
             'Complete Registration',
             'You will get a call from the company talk as you are interested',
-            'Done in 48-72 hours You will get ₹55 cashback!'
+            'Done in 48-72 hours You will get ₹50 cashback!'
         ],
         terms: [
             'Valid once per user/UPI/IP/Device',
-            'Must Be interested in profile',
-            'Verification takes 48-72 hours'
+            'Complete registration with real details',
+            'Must answer the company call as interested',
+            'Cashback after verification (48-72 hours)'
         ],
         referralPayout: {
-            referrer: 30,
-            referee: 55
+            referrer: 35,
+            referee: 50
         }
     }
 };
 
-/**
- * Helper function to get campaign by ID
- * Attached to window object for maximum compatibility
- */
-window.getCampaign = function(campaignId) {
+// Helper function to get campaign by ID
+window.getCampaign = function (campaignId) {
     if (typeof CAMPAIGNS !== 'undefined' && CAMPAIGNS[campaignId]) {
         return CAMPAIGNS[campaignId];
     }
@@ -121,5 +153,5 @@ function getActiveCampaigns() {
 
 // Export for use in other files
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { CAMPAIGNS, getCampaign: window.getCampaign, isCampaignActive, getActiveCampaigns };
+    module.exports = { CAMPAIGNS, getCampaign, isCampaignActive, getActiveCampaigns };
 }
