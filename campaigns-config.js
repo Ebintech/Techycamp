@@ -78,7 +78,7 @@ const CAMPAIGNS = {
         type: 'offline',
         active: true,
         description: 'Earn ₹55 Cashback',
-        offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546',
         steps: [
             'Submit your UPI ID above',
             'Complete Registration',
