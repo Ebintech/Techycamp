@@ -240,7 +240,7 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 16px;
             margin-bottom: 24px;
         }
@@ -278,6 +278,12 @@
             padding: 8px;
             margin-bottom: 4px;
             border-radius: 4px;
+        }
+
+        .log div.warning {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            color: #92400e;
         }
 
         .log-success {
@@ -437,6 +443,10 @@ test3@googlepay"></textarea>
                         <div class="stat-card">
                             <div class="stat-number" id="successCount">0</div>
                             <div class="stat-label">Updated</div>
+                        </div>
+                        <div class="stat-card" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                            <div class="stat-number" id="dupCount">0</div>
+                            <div class="stat-label">Duplicated</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-number" id="errorCount">0</div>
@@ -681,7 +691,7 @@ test3@googlepay"></textarea>
                 }
 
                 // Parse UPIs
-                const upis = upiText.split('\\n')
+                const upis = upiText.split('\n')
                     .map(line => line.trim())
                     .filter(line => line && line.includes('@'));
 
@@ -698,6 +708,7 @@ test3@googlepay"></textarea>
                 document.getElementById('convLog').style.display = 'block';
                 document.getElementById('totalCount').textContent = upis.length;
                 document.getElementById('successCount').textContent = '0';
+                document.getElementById('dupCount').textContent = '0';
                 document.getElementById('errorCount').textContent = '0';
                 document.getElementById('convLog').innerHTML = '';
 
@@ -728,6 +739,13 @@ test3@googlepay"></textarea>
                             successCount++;
                             addLog('success', `✓ ${upi} - Updated successfully`);
                             document.getElementById('successCount').textContent = successCount;
+
+                            if (result.duplicateFound) {
+                                let currentDups = parseInt(document.getElementById('dupCount').textContent) || 0;
+                                let newDups = currentDups + (result.duplicateCount || 1);
+                                document.getElementById('dupCount').textContent = newDups;
+                                addLog('warning', `⚠️ ${upi} - ${result.duplicateCount} duplicate(s) found and ignored (Approved only once)`);
+                            }
                         } else {
                             errorCount++;
                             addLog('error', `✗ ${upi} - ${result.message || 'Not found'}`);
