@@ -347,17 +347,47 @@
         }
 
         .duplicate-list {
-            background: #f9fafb;
-            border: 2px solid #e5e7eb;
+            background: #fdf2f2;
+            border: 2px solid #fecaca;
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 24px;
             overflow-y: auto;
-            max-height: 300px;
+            max-height: 400px;
+            font-family: inherit;
+        }
+
+        .dup-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid #fee2e2;
+            transition: all 0.2s;
+        }
+
+        .dup-item:hover {
+            border-color: #f87171;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .dup-upi {
             font-family: monospace;
-            font-size: 14px;
-            line-height: 1.6;
-            color: #374151;
+            font-weight: 600;
+            color: #b91c1c;
+        }
+
+        .dup-badge {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .stat-card.clickable {
@@ -562,6 +592,7 @@ test3@googlepay"></textarea>
             const BASE_URL = 'https://www.camptechy.site'; // ✅ YOUR CUSTOM DOMAIN
 
             let campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
+            let duplicateCounts = {}; // ✅ Track duplicates globally for the modal
 
             // Initialize
             updateCampaignSelectors();
@@ -800,7 +831,7 @@ test3@googlepay"></textarea>
 
                 let successCount = 0;
                 let errorCount = 0;
-                let allDuplicates = []; // ✅ Track all duplicated UPIs
+                duplicateCounts = {}; // ✅ Reset on each process run
 
                 addLog('info', `Starting to process ${upis.length} UPIs...`);
 
@@ -832,11 +863,13 @@ test3@googlepay"></textarea>
                                 let newDups = currentDups + (result.duplicateCount || 0);
                                 document.getElementById('dupCount').textContent = newDups;
 
-                                // ✅ Add to our master list
+                                // ✅ Add to our tracking object
                                 if (result.duplicatedUpis && Array.isArray(result.duplicatedUpis)) {
-                                    allDuplicates.push(...result.duplicatedUpis);
+                                    result.duplicatedUpis.forEach(dupUpi => {
+                                        duplicateCounts[dupUpi] = (duplicateCounts[dupUpi] || 0) + 1;
+                                    });
                                 } else {
-                                    allDuplicates.push(upi); // Fallback
+                                    duplicateCounts[upi] = (duplicateCounts[upi] || 0) + (result.duplicateCount || 1);
                                 }
 
                                 addLog('warning', `⚠️ ${upi} - ${result.duplicateCount} duplicate(s) found and ignored (Approved only once)`);
@@ -873,12 +906,20 @@ test3@googlepay"></textarea>
                 const modal = document.getElementById('duplicateModal');
                 const list = document.getElementById('duplicateList');
 
-                if (allDuplicates.length === 0) {
-                    list.innerHTML = `<div style="text-align:center; color:#6b7280; padding:20px;">No duplicates found in the last batch.</div>`;
+                const upis = Object.keys(duplicateCounts);
+
+                if (upis.length === 0) {
+                    list.innerHTML = `<div style="text-align:center; color:#6b7280; padding:40px;">
+                        <div style="font-size:40px; margin-bottom:12px;">🔍</div>
+                        No duplicates found in this batch yet.
+                    </div>`;
                 } else {
-                    // Remove duplicates from the list itself for cleaner display
-                    const uniqueDups = [...new Set(allDuplicates)];
-                    list.innerHTML = uniqueDups.join('<br>');
+                    list.innerHTML = upis.map(upi => `
+                        <div class="dup-item">
+                            <span class="dup-upi">${upi}</span>
+                            <span class="dup-badge">${duplicateCounts[upi]} times</span>
+                        </div>
+                    `).join('');
                 }
 
                 modal.style.display = 'flex';
@@ -889,13 +930,14 @@ test3@googlepay"></textarea>
             }
 
             async function copyAllDuplicates() {
-                if (allDuplicates.length === 0) return;
-                const uniqueDups = [...new Set(allDuplicates)];
-                const text = uniqueDups.join('\n');
+                const upis = Object.keys(duplicateCounts);
+                if (upis.length === 0) return;
+
+                const text = upis.join('\n');
 
                 try {
                     await navigator.clipboard.writeText(text);
-                    alert('✅ All duplicated UPIs copied to clipboard!');
+                    alert('✅ All unique duplicated UPIs copied to clipboard!');
                 } catch (err) {
                     alert('❌ Failed to copy: ' + err);
                 }
@@ -918,7 +960,10 @@ test3@googlepay"></textarea>
                 <button class="close-modal" onclick="closeModal()">×</button>
             </div>
             <div id="duplicateList" class="duplicate-list">
-                No duplicates found in this batch.
+                <div style="text-align:center; color:#6b7280; padding:40px;">
+                    <div style="font-size:40px; margin-bottom:12px;">🔍</div>
+                    No duplicates processed yet.
+                </div>
             </div>
             <div style="display: flex; gap: 12px;">
                 <button class="btn btn-primary" style="flex: 1;" onclick="copyAllDuplicates()">
