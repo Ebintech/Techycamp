@@ -90,17 +90,17 @@
             font-weight: 400;
         }
 
-        /* CASHBACK CARD - Green Style on Blue Header */
+        /* CASHBACK CARD - Green        /* REWARD SECTION */
         .cashback-card {
             background: rgba(255, 255, 255, 0.1);
-            /* Glassy Effect */
+            backdrop-filter: blur(8px);
+            /* Kept original blur for consistency with other glassy elements */
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             padding: 16px;
-            /* Compact padding */
-            backdrop-filter: blur(8px);
+            /* Kept original padding */
             margin: 0 auto -40px;
-            /* Overlap */
+            /* Kept original margin for overlap */
             width: 90%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             display: flex;
@@ -109,6 +109,15 @@
             justify-content: center;
             position: relative;
             z-index: 10;
+            opacity: 0;
+            /* Silent loading */
+            transform: translateY(10px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .cashback-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .cashback-label {
@@ -648,16 +657,10 @@
 
             let customRewardValue = null;
 
-            // PRE-FETCH CUSTOM DATA TO PREVENT FLICKER
+            // SILENT PRE-FETCH (No dots, no flicker)
             if (refId) {
-                console.log('Pre-fetching sync data for Ref ID:', refId);
-
-                // Show a generic placeholder in the reward section immediately
-                const rewardAmountEl = document.getElementById('campaignPayout');
-                if (rewardAmountEl) rewardAmountEl.innerText = '...';
-
+                console.log('Syncing custom reward for Ref:', refId);
                 try {
-                    // Create a sync promise
                     const syncPromise = fetch(`${WORKER_API}/register-referrer`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -669,35 +672,33 @@
                         })
                     }).then(res => res.ok ? res.json() : null);
 
-                    // Timeout after 1.8 seconds to prevent hanging the page
-                    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 1800));
-
+                    // Wait up to 2.5 seconds for custom reward
+                    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 2500));
                     const data = await Promise.race([syncPromise, timeoutPromise]);
 
                     if (data && data.success) {
-                        console.log('Pre-fetch Success:', data);
-
+                        console.log('Sync Data Received:', data);
                         // Sync Telegram
                         if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
                             const telegramBtn = document.querySelector('.telegram-btn');
-                            if (telegramBtn) {
-                                telegramBtn.href = data.telegram;
-                                telegramBtn.style.display = 'flex';
-                            }
+                            if (telegramBtn) telegramBtn.href = data.telegram;
                         }
-
-                        // Set final reward
+                        // Set custom reward
                         if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
                             customRewardValue = data.payoutReferee;
                         }
                     }
                 } catch (e) {
-                    console.error('Pre-fetch sync error:', e);
+                    console.error('Silent sync failed:', e);
                 }
             }
 
-            // Final render (Only once!)
+            // FINAL RENDER (Direct)
             await loadCampaignUI(customRewardValue);
+
+            // Show the reward card once data is ready
+            const card = document.querySelector('.cashback-card');
+            if (card) card.classList.add('visible');
         }
 
         function toggleSection(viewId) {
