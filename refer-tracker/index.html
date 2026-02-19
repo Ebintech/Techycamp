@@ -4,20 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral Dashboard - Trace Your Earnings</title>
+    <title id="pageTitle">Referral Summary</title>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --primary: #6366f1;
-            --primary-dark: #4f46e5;
-            --success: #10b981;
-            --pending: #f59e0b;
-            --error: #ef4444;
-            --bg: #f8fafc;
-            --glass: rgba(255, 255, 255, 0.8);
-            --glass-border: rgba(255, 255, 255, 0.5);
+            --primary: #059669;
+            --primary-light: #10b981;
+            --primary-bg: #ecfdf5;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            --error-bg: #fef2f2;
+            --error-border: #fee2e2;
+            --error-text: #991b1b;
         }
 
         * {
@@ -27,251 +28,249 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
-            color: #1e293b;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-dark);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        /* PREMIUM HEADER */
-        .header {
-            text-align: center;
-            margin-bottom: 32px;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-            border-radius: 24px;
-            color: white;
-            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
-            position: relative;
+            width: 100%;
+            max-width: 480px;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
             overflow: hidden;
-        }
-
-        .header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotate(0deg);
-            }
-
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .header h1 {
-            font-family: 'Outfit', sans-serif;
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 8px;
             position: relative;
         }
 
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
+        /* CARD HEADER */
+        .summary-header {
+            background: var(--primary);
+            padding: 32px 24px;
+            color: white;
             position: relative;
         }
 
-        /* SEARCH SECTION */
-        .search-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        .header-top {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .header-icon {
+            width: 28px;
+            height: 28px;
+            opacity: 0.9;
+        }
+
+        .header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .header-desc {
+            font-size: 14px;
+            opacity: 0.85;
+            line-height: 1.5;
+        }
+
+        /* CONTENT AREA */
+        .content {
+            padding: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #374151;
         }
 
         .input-group {
-            flex-grow: 1;
             position: relative;
+            margin-bottom: 16px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 14px 20px;
-            border: 1.5px solid #e2e8f0;
+            padding: 14px 16px;
+            border: 1.5px solid #e5e7eb;
             border-radius: 12px;
             font-size: 15px;
             font-weight: 500;
             transition: all 0.2s;
-            background: white;
+            background: #f9fafb;
         }
 
         .input-group input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
         }
 
-        .search-btn {
+        .check-btn {
+            width: 100%;
             background: var(--primary);
             color: white;
             border: none;
-            padding: 14px 28px;
+            padding: 16px;
             border-radius: 12px;
+            font-size: 16px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
             align-items: center;
-            gap: 8px;
-            white-space: nowrap;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
         }
 
-        .search-btn:hover {
-            background: var(--primary-dark);
+        .check-btn:hover {
+            background: var(--primary-light);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
         }
 
-        /* INFO BOX (From Previous Version) */
-        .info-box {
+        .check-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        /* ALERT BOXES */
+        .alert {
             display: flex;
             gap: 12px;
-            background: #f0f9ff;
-            border-left: 4px solid #3b82f6;
             padding: 16px;
             border-radius: 12px;
             margin-bottom: 24px;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+            font-size: 13.5px;
+            line-height: 1.5;
+            display: none;
         }
 
-        .info-icon {
-            color: #3b82f6;
-            font-size: 20px;
+        .alert-info {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #dcfce7;
+            display: flex;
+            /* Initial state */
+        }
+
+        .alert-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid var(--error-border);
+            border-left: 4px solid #ef4444;
+        }
+
+        .alert-icon {
             flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
         }
 
-        .info-text {
-            font-size: 13px;
-            color: #1e40af;
-            line-height: 1.6;
-            font-weight: 500;
+        /* RESULTS SECTION */
+        .results-section {
+            display: none;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 24px;
         }
 
-        /* DASHBOARD GRID */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
             margin-bottom: 24px;
         }
 
         .stat-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
         }
 
         .stat-val {
             font-family: 'Outfit', sans-serif;
             font-size: 28px;
             font-weight: 800;
-            margin-bottom: 4px;
-            color: #1e293b;
+            color: var(--text-dark);
+            margin-bottom: 2px;
         }
 
         .stat-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* REFERRALS LIST */
-        .list-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 8px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-
-        .list-header {
-            padding: 20px 24px;
-            font-weight: 700;
-            font-size: 18px;
-            color: #1e293b;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .table-container {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th {
-            text-align: left;
-            padding: 16px 24px;
             font-size: 11px;
             font-weight: 700;
-            color: #64748b;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            background: rgba(248, 250, 252, 0.5);
         }
 
-        td {
-            padding: 16px 24px;
+        /* REFERRAL LIST */
+        .list-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #374151;
+        }
+
+        .referral-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .referral-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #f9fafb;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+        }
+
+        .ref-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .ref-upi {
             font-size: 14px;
-            color: #334155;
-            border-bottom: 1px solid #f1f5f9;
+            font-weight: 600;
+            color: var(--text-dark);
         }
 
-        tr:last-child td {
-            border-bottom: none;
+        .ref-date {
+            font-size: 12px;
+            color: var(--text-muted);
         }
 
         .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 10px;
-            border-radius: 9999px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: capitalize;
-        }
-
-        .status-paid {
-            background: #d1fae5;
-            color: #065f46;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .status-approved {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .status-pending {
@@ -279,45 +278,40 @@
             color: #92400e;
         }
 
-        .upi-text {
-            font-family: monospace;
-            font-weight: 600;
-            color: #475569;
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
-        /* STATES */
-        .loading-overlay {
+        .footer a {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* LOADER */
+        .loader {
             display: none;
             text-align: center;
-            padding: 40px;
+            padding: 24px;
         }
 
-        .empty-state {
-            text-align: center;
-            padding: 60px 40px;
-            color: #64748b;
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e2e8f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
         }
 
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        /* MOBILE OPTIMIZATION */
-        @media (max-width: 640px) {
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .search-card {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            td,
-            th {
-                padding: 12px 16px;
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
             }
         }
     </style>
@@ -326,106 +320,94 @@
 <body>
     <div class="container">
         <!-- HEADER -->
-        <header class="header">
-            <h1 id="campaignName">Referral Tracking</h1>
-            <p>Track your referrals, status, and earnings in real-time.</p>
+        <header class="summary-header">
+            <div class="header-top">
+                <svg class="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                <h1 class="header-title">Referral Summary</h1>
+            </div>
+            <p class="header-desc">Check your referral earnings and track who you've referred</p>
         </header>
 
-        <!-- INFO BOX -->
-        <div class="info-box">
-            <div class="info-icon">ℹ️</div>
-            <div class="info-text">Enter your registered UPI ID below to see all users who joined through your link and
-                check your current payout status.</div>
-        </div>
-
-        <!-- SEARCH -->
-        <div class="search-card">
+        <div class="content">
+            <label class="form-label">Your UPI Address</label>
             <div class="input-group">
-                <input type="text" id="upiInput" placeholder="Enter your registered UPI ID" value="">
+                <input type="text" id="upiInput" placeholder="yourname@upi" value="">
             </div>
-            <button class="search-btn" id="searchBtn" onclick="trackEarnings()">
-                <span>📊 Trace My Referrals</span>
+
+            <button class="check-btn" id="checkBtn" onclick="trackEarnings()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span>Check</span>
             </button>
-        </div>
 
-        <!-- DASHBOARD (Hidden initially) -->
-        <div id="dashboard" style="display: none;">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-val" id="totalRefs">0</div>
-                    <div class="stat-label">Total Referrals</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val" id="paidRefs">0</div>
-                    <div class="stat-label">Paid Referrals</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-val" id="totalEarnings">₹0</div>
-                    <div class="stat-label">Total Earned</div>
+            <!-- ERROR ALERT -->
+            <div id="errorAlert" class="alert alert-error">
+                <div class="alert-icon">⚠️</div>
+                <div>No referral data found for this UPI. You may not have generated a referral link yet.</div>
+            </div>
+
+            <!-- INFO ALERT -->
+            <div id="infoAlert" class="alert alert-info" style="display: flex;">
+                <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>Enter your UPI/mobile to see all users who signed up using your referral link and your earnings.
                 </div>
             </div>
 
-            <div class="list-card">
-                <div class="list-header">Referral Details</div>
-                <div class="table-container">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Referee UPI</th>
-                                <th>Campaign</th>
-                                <th>Status</th>
-                                <th>Reward</th>
-                            </tr>
-                        </thead>
-                        <tbody id="referralsBody">
-                            <!-- Rows will be injected here -->
-                        </tbody>
-                    </table>
+            <!-- LOADER -->
+            <div id="loader" class="loader">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- RESULTS -->
+            <div id="results" class="results-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-val" id="totalRefs">0</div>
+                        <div class="stat-label">Total Referrals</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="totalEarnings">₹0</div>
+                        <div class="stat-label">Total Earnings</div>
+                    </div>
+                </div>
+
+                <h3 class="list-title">Your Referrals</h3>
+                <div id="referralList" class="referral-list">
+                    <!-- Items go here -->
                 </div>
             </div>
         </div>
 
-        <!-- LOADING -->
-        <div id="loading" class="loading-overlay">
-            <div class="stat-label">⚡ Loading your data...</div>
-        </div>
-
-        <!-- EMPTY/INITIAL STATE -->
-        <div id="emptyState" class="empty-state">
-            <div class="empty-icon">📂</div>
-            <p id="emptyMsg">Enter your UPI ID above to see your referral performance.</p>
-        </div>
+        <footer class="footer">
+            Having issues? <a href="mailto:camptechybusiness@gmail.com">Contact our support team for assistance</a>
+        </footer>
     </div>
 
-    <!-- Load campaigns config -->
     <script src="../campaigns-config.js"></script>
-
     <script>
         const CLOUDFLARE_WORKER = 'https://campaign-apii.businesstechy04.workers.dev';
-
-        // Get campaign ID from URL (From Previous Version)
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
 
-        // Auto-load if upi is in URL
         document.addEventListener('DOMContentLoaded', () => {
-            // Updated Header with Campaign Name
+            // Update Branding
             if (typeof CAMPAIGNS !== 'undefined' && CAMPAIGNS[campaignId]) {
-                document.getElementById('campaignName').textContent = CAMPAIGNS[campaignId].name;
-                document.title = `Referrals - ${CAMPAIGNS[campaignId].name}`;
+                const name = CAMPAIGNS[campaignId].name;
+                document.getElementById('pageTitle').textContent = `${name} - Referral Summary`;
             }
 
-            const upi = urlParams.get('upi') || urlParams.get('ref');
-            if (upi && upi.includes('@')) {
-                document.getElementById('upiInput').value = upi;
-                trackEarnings();
-            }
-        });
-
-        // Allow Enter key to submit
-        document.getElementById('upiInput').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
+            // Auto-load if in URL
+            const urlUpi = urlParams.get('upi') || urlParams.get('ref');
+            if (urlUpi && urlUpi.includes('@')) {
+                document.getElementById('upiInput').value = urlUpi;
                 trackEarnings();
             }
         });
@@ -433,113 +415,109 @@
         async function trackEarnings() {
             const upi = document.getElementById('upiInput').value.trim();
             if (!upi || !upi.includes('@')) {
-                alert('Please enter a valid UPI ID (e.g. name@paytm)');
+                alert('Please enter a valid UPI ID');
                 return;
             }
 
-            // UI Feedback
-            const btn = document.getElementById('searchBtn');
-            const dashboard = document.getElementById('dashboard');
-            const loading = document.getElementById('loading');
-            const emptyState = document.getElementById('emptyState');
+            // UI Reset
+            const btn = document.getElementById('checkBtn');
+            const results = document.getElementById('results');
+            const loader = document.getElementById('loader');
+            const errorAlert = document.getElementById('errorAlert');
+            const infoAlert = document.getElementById('infoAlert');
 
             btn.disabled = true;
-            btn.innerHTML = '⚡ Syncing...';
-            loading.style.display = 'block';
-            dashboard.style.display = 'none';
-            emptyState.style.display = 'none';
+            loader.style.display = 'block';
+            results.style.display = 'none';
+            errorAlert.style.display = 'none';
+            infoAlert.style.display = 'none';
 
             try {
                 const response = await fetch(`${CLOUDFLARE_WORKER}/track-referrals?upi=${encodeURIComponent(upi)}`);
                 const data = await response.json();
 
                 if (data.success && data.referrals && data.referrals.length > 0) {
-                    renderDashboard(data.referrals);
-                    dashboard.style.display = 'block';
-                    loading.style.display = 'none';
+                    renderResults(data.referrals);
+                    results.style.display = 'block';
                 } else {
-                    showEmpty("No referrals found for this referral. Start sharing your link to earn!");
-                    loading.style.display = 'none';
+                    errorAlert.style.display = 'flex';
                 }
             } catch (err) {
                 console.error(err);
-                showEmpty("Error connecting to server. Please try again later.");
-                loading.style.display = 'none';
+                alert("Server error. Please try again later.");
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = '<span>📊 Trace My Referrals</span>';
+                loader.style.display = 'none';
             }
         }
 
-        function renderDashboard(referrals) {
-            const body = document.getElementById('referralsBody');
+        function renderResults(referrals) {
+            const body = document.getElementById('referralList');
             body.innerHTML = '';
 
-            let total = referrals.length;
-            let paidCount = 0;
-            let totalEarned = 0;
+            // 1. Sort: Approved/Paid first, then others (Pending)
+            const sorted = [...referrals].sort((a, b) => {
+                const statusA = (a.status || 'pending').toLowerCase();
+                const statusB = (b.status || 'pending').toLowerCase();
+                const isWinnerA = ['paid', 'approved', 'cashback_paid'].includes(statusA);
+                const isWinnerB = ['paid', 'approved', 'cashback_paid'].includes(statusB);
 
-            referrals.forEach(ref => {
-                const row = document.createElement('tr');
-
-                // Date formatting
-                const date = ref.date ? new Date(ref.date).toLocaleDateString('en-IN', {
-                    day: '2-digit',
-                    month: 'short',
-                    year: 'numeric'
-                }) : 'N/A';
-
-                // Status rendering (From Previous Version logic)
-                let statusClass = 'status-pending';
-                let statusLabel = ref.status || 'pending';
-
-                const status = String(ref.status || 'pending').toLowerCase();
-                const isSuccess = ['paid', 'approved', 'cashback_paid'].includes(status);
-                const isInstalled = ['installed', 'install_success'].includes(status);
-
-                if (isSuccess) {
-                    statusClass = 'status-paid';
-                    statusLabel = 'COMPLETED';
-                    paidCount++;
-                    totalEarned += (parseFloat(ref.payoutReferrer) || 0);
-                } else if (isInstalled) {
-                    statusClass = 'status-approved';
-                    statusLabel = 'INSTALLED';
-                } else {
-                    statusClass = 'status-pending';
-                    statusLabel = 'PENDING';
-                }
-
-                row.innerHTML = `
-                    <td>${date}</td>
-                    <td class="upi-text">${maskUPI(ref.refereeUpi)}</td>
-                    <td style="font-weight: 600;">${ref.campaign || 'Default'}</td>
-                    <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
-                    <td style="font-weight: 700; color: #10b981;">₹${ref.payoutReferrer || 0}</td>
-                `;
-                body.appendChild(row);
+                if (isWinnerA && !isWinnerB) return -1;
+                if (!isWinnerA && isWinnerB) return 1;
+                return 0;
             });
 
-            document.getElementById('totalRefs').textContent = total;
-            document.getElementById('paidRefs').textContent = paidCount;
+            let approvedCount = 0;
+            let totalEarned = 0;
+
+            sorted.forEach(ref => {
+                const status = (ref.status || 'pending').toLowerCase();
+                const isApproved = ['paid', 'approved', 'cashback_paid'].includes(status);
+
+                if (isApproved) {
+                    approvedCount++;
+                    totalEarned += (parseFloat(ref.payoutReferrer) || 0);
+                }
+
+                // Render Item
+                const item = document.createElement('div');
+                item.className = 'referral-item';
+
+                let statusLabel = 'PENDING';
+                let statusClass = 'status-pending';
+
+                if (isApproved) {
+                    statusLabel = 'APPROVED';
+                    statusClass = 'status-approved';
+                } else if (status === 'installed' || status === 'install_success') {
+                    statusLabel = 'INSTALLED';
+                }
+
+                const date = ref.date ? new Date(ref.date).toLocaleDateString('en-IN', {
+                    day: '2-digit', month: 'short'
+                }) : 'N/A';
+
+                item.innerHTML = `
+                    <div class="ref-info">
+                        <div class="ref-upi">${maskUPI(ref.refereeUpi)}</div>
+                        <div class="ref-date">${date} • ${ref.campaign || 'N/A'}</div>
+                    </div>
+                    <div class="status-badge ${statusClass}">${statusLabel}</div>
+                `;
+                body.appendChild(item);
+            });
+
+            // Update Stats (Only counting approved)
+            document.getElementById('totalRefs').textContent = approvedCount;
             document.getElementById('totalEarnings').textContent = `₹${totalEarned}`;
         }
 
-        function showEmpty(msg) {
-            const emptyState = document.getElementById('emptyState');
-            const emptyMsg = document.getElementById('emptyMsg');
-            emptyState.style.display = 'block';
-            emptyMsg.textContent = msg;
-        }
-
         function maskUPI(upi) {
-            if (!upi) return 'N/A';
+            if (!upi || !upi.includes('@')) return upi || 'N/A';
             const parts = upi.split('@');
-            if (parts.length !== 2) return upi;
             const name = parts[0];
-            const handle = parts[1];
-            if (name.length <= 4) return `***@${handle}`;
-            return `${name.substring(0, 3)}***${name.substring(name.length - 1)}@${handle}`;
+            if (name.length <= 4) return `***@${parts[1]}`;
+            return `${name.substring(0, 3)}***${name.substring(name.length - 1)}@${parts[1]}`;
         }
     </script>
 </body>
