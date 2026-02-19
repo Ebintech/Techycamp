@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loading Campaign...</title>
+    <title>Claim Reward</title>
     <style>
         * {
             margin: 0;
@@ -26,9 +26,10 @@
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.95);
-            z-index: 50;
+            z-index: 100;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
 
         .loading-overlay.active {
@@ -47,9 +48,7 @@
         /* HEADER SECTION - Blue Gradient */
         .header {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
-            /* Deep Navy/Blue */
             padding: 24px 20px 50px;
-            /* Reduced vertical padding */
             color: white;
             border-bottom-left-radius: 24px;
             border-bottom-right-radius: 24px;
@@ -57,7 +56,6 @@
             position: relative;
         }
 
-        /* Header Elements */
         .badge {
             background: rgba(255, 255, 255, 0.15);
             padding: 6px 12px;
@@ -70,14 +68,12 @@
             align-items: center;
             gap: 6px;
             margin-bottom: 8px;
-            /* Tighter spacing */
             backdrop-filter: blur(4px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header h1 {
             font-size: 24px;
-            /* Slightly smaller for compact look */
             font-weight: 700;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
@@ -113,7 +109,6 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #ecfccb;
-            /* Slight Lime Tint for readability */
             font-weight: 700;
             margin-bottom: 4px;
         }
@@ -131,12 +126,10 @@
             line-height: 1;
         }
 
-        /* Specific Green Icon Container */
         .wallet-icon-container {
             width: 36px;
             height: 36px;
             background: rgba(16, 185, 129, 0.2);
-            /* Green tint bg */
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -148,15 +141,11 @@
             width: 20px;
             height: 20px;
             color: #34d399;
-            /* Bright Green Icon */
         }
-
-        /* Track Status Button INSIDE Card? User image has it inside. Let's try inside as per image? No, user said "Track Status should be as it is on our last code no change on it" - which was below submit button. But the image shows it inside. The user specifically said "track lead status should be as it is on our last code no change on it" -> assuming BELOW submit button. */
 
         /* FORM SECTION */
         .content-area {
             padding: 50px 20px 40px;
-            /* Top padding for overlap */
             background: #fff;
         }
 
@@ -191,7 +180,6 @@
         .form-input {
             width: 100%;
             padding: 14px 14px 14px 44px;
-            /* Compact padding */
             border: 1px solid #e2e8f0;
             background: #f8fafc;
             border-radius: 12px;
@@ -212,8 +200,6 @@
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(90deg, #10b981, #059669);
-            /* Green CTA per Image 1? Or keep Purple? User asked for Blue Header but Image 1 has Green Button. Let's match Header Theme -> Purple/Blue for consistency unless specified. User said "the colour theme we need is like this" referring to Blue. I will stick to Purple Button. */
             background: linear-gradient(90deg, #6366f1, #4f46e5);
             color: white;
             border: none;
@@ -229,7 +215,7 @@
             margin-top: 8px;
         }
 
-        /* TRACK STATUS LINK (Below Submit) */
+        /* TRACK STATUS LINK */
         .track-status-container {
             text-align: center;
             margin-top: 20px;
@@ -252,7 +238,7 @@
             transition: background 0.2s;
         }
 
-        /* ACCORDIONS - Clean White Style */
+        /* ACCORDIONS */
         .accordion-section {
             border: 1px solid #f1f5f9;
             border-radius: 12px;
@@ -263,7 +249,6 @@
         .accordion-header {
             width: 100%;
             padding: 14px 16px;
-            /* Compact padding */
             background: #fff;
             border: none;
             display: flex;
@@ -343,7 +328,6 @@
             top: 3px;
         }
 
-        /* Icons inside Accordion Titles */
         .acc-icon-bg {
             display: flex;
             align-items: center;
@@ -354,9 +338,10 @@
             margin-right: 4px;
         }
 
-        /* TELEGRAM BUTTON (Footer) */
+        /* TELEGRAM BUTTON */
         .telegram-btn {
-            display: flex;
+            display: none;
+            /* Hidden by default */
             align-items: center;
             justify-content: center;
             gap: 8px;
@@ -381,6 +366,86 @@
             text-align: center;
         }
 
+        /* OVER STATE STYLES */
+        .over-card {
+            background: #fff;
+            border-radius: 28px;
+            padding: 40px 16px;
+            width: 100%;
+            max-width: 320px;
+            margin: 60px auto;
+            text-align: center;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.06);
+            border: 1px solid #f1f5f9;
+        }
+
+        .over-icon-circle {
+            width: 72px;
+            height: 72px;
+            background: #fef2f2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            color: #ef4444;
+        }
+
+        .over-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: #7f1d1d;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .over-desc {
+            font-size: 16px;
+            color: #94a3b8;
+            font-weight: 500;
+            margin-bottom: 40px;
+        }
+
+        .over-footer {
+            border-top: 1px solid #f8fafc;
+            padding-top: 32px;
+            background: #fff;
+        }
+
+        .over-footer-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .support-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            background: #fff;
+            border: 1.5px solid #f1f5f9;
+            color: #475569;
+            padding: 12px 24px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        .support-btn:hover {
+            border-color: #e2e8f0;
+            background: #f8fafc;
+            transform: translateY(-1px);
+        }
+
         .state-icon {
             font-size: 64px;
             margin-bottom: 16px;
@@ -400,7 +465,73 @@
             margin-bottom: 24px;
         }
 
-        /* Loading Dots */
+        /* SUCCESS MODAL BOX */
+        .success-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 320px;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 200;
+        }
+
+        .success-box.active {
+            display: block;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -45%) scale(0.95);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Improved Backdrop for Success/Loading */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 150;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        /* Loading Dots - HORIZONTAL FIX */
+        .loading-dots {
+            display: flex;
+            flex-direction: row;
+            /* Ensure horizontal */
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .loading-text {
+            color: #6366f1;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         @keyframes pulse {
             0% {
                 transform: scale(0.95);
@@ -438,60 +569,75 @@
 </head>
 
 <body>
+    <!-- Backdrop for Blur -->
+    <div class="modal-overlay" id="modalOverlay"></div>
 
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-overlay" id="loadingOverlay"
+        style="background: rgba(255,255,255,0.7); backdrop-filter: blur(4px);">
         <div class="loading-dots">
             <div></div>
             <div></div>
             <div></div>
         </div>
+        <div class="loading-text">Processing...</div>
     </div>
 
-    <!-- Main Application Container -->
-    <div class="app-container">
+    <!-- Success Box (Modal Style) -->
+    <div class="success-box" id="successBox">
+        <div class="state-icon" style="font-size:48px; margin-bottom:12px">✅</div>
+        <h2 class="state-title" style="font-size:18px">Submission Successful!</h2>
+        <p class="state-desc" style="font-size:12px; margin-bottom:0">Redirecting to offer page...</p>
+    </div>
 
-        <!-- 1. ERROR STATE -->
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- ERROR STATE -->
         <div id="errorView" class="state-container section-hidden">
             <span class="state-icon">❌</span>
             <h2 class="state-title">Campaign Not Found</h2>
             <p class="state-desc">This offer is unavailable or the link is incorrect.</p>
         </div>
 
-        <!-- 2. ENDED STATE -->
-        <div id="campaignEnded" class="state-container section-hidden">
-            <span class="state-icon">⏰</span>
-            <h2 class="state-title">Offer Expired</h2>
-            <p class="state-desc">This campaign has ended. Stay tuned for new offers!</p>
-        </div>
-
-        <!-- 3. SUCCESS STATE -->
-        <div id="successView" class="state-container section-hidden">
-            <span class="state-icon">✅</span>
-            <h2 class="state-title">Submission Successful!</h2>
-            <p class="state-desc">Redirecting you to the offer page...<br>Please complete the steps to earn cashback.
-            </p>
-        </div>
-
-        <!-- 4. ACTIVE FORM VIEW -->
-        <div id="formView">
-            <!-- Header -->
-            <div class="header">
-                <div class="badge">
-                    <span>🎁</span> COMPLETE & EARN
+        <!-- ENDED STATE -->
+        <div id="campaignEnded" class="section-hidden">
+            <div class="over-card">
+                <div class="over-icon-circle">
+                    <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                        </path>
+                    </svg>
                 </div>
+                <h2 class="over-title">OVER !!</h2>
+                <p class="over-desc">Sorry, You Are Late</p>
+
+                <div class="over-footer">
+                    <span class="over-footer-label">NEED HELP?</span>
+                    <a href="mailto:camptechybusiness@gmail.com" class="support-btn">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
+                            </path>
+                        </svg>
+                        Email Support
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORM VIEW -->
+        <div id="formView">
+            <div class="header">
+                <div class="badge"><span>🎁</span> COMPLETE & EARN</div>
                 <h1 id="campaignName">Campaign</h1>
                 <p id="campaignDescription">Complete the offer to get instant cashback!</p>
 
-                <!-- Compact Cashback Card -->
                 <div class="cashback-card">
                     <div class="cashback-label">YOUR CASHBACK REWARD</div>
                     <div class="cashback-amount-row">
                         <span class="cashback-amount" id="campaignPayout">₹0</span>
-
-                        <!-- Green Wallet Icon Container -->
                         <div class="wallet-icon-container">
-                            <!-- SVG Wallet Icon -->
                             <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
@@ -502,17 +648,11 @@
                 </div>
             </div>
 
-            <!-- Content Area -->
             <div class="content-area">
                 <form id="campaignForm">
-                    <div id="formFieldsContainer">
-                        <!-- Dynamic Fields will be injected here -->
-                    </div>
-
-                    <!-- Honeypot -->
+                    <div id="formFieldsContainer"></div>
                     <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
 
-                    <!-- Submit Button -->
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -522,14 +662,11 @@
                     </button>
                 </form>
 
-                <!-- Track Status Link (Original Request: Below Submit) -->
                 <div class="track-status-container">
-                    <a href="#" id="trackStatusLink" class="track-link">
-                        Track Your Leads Status →
-                    </a>
+                    <a href="#" id="trackStatusLink" class="track-link">Track Your Leads Status →</a>
                 </div>
 
-                <!-- How to Avail (Open by Default) -->
+                <!-- Accordions -->
                 <div class="accordion-section">
                     <button class="accordion-header active" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
@@ -548,13 +685,10 @@
                         </svg>
                     </button>
                     <div class="accordion-body open" style="max-height: 1000px;">
-                        <ul class="step-list" id="stepsContainer">
-                            <!-- Steps Injected Here -->
-                        </ul>
+                        <ul class="step-list" id="stepsContainer"></ul>
                     </div>
                 </div>
 
-                <!-- Terms (Collapsed) -->
                 <div class="accordion-section">
                     <button class="accordion-header" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
@@ -574,330 +708,226 @@
                         </svg>
                     </button>
                     <div class="accordion-body">
-                        <ul class="step-list" id="termsContainer">
-                            <!-- Terms Injected Here -->
-                        </ul>
+                        <ul class="step-list" id="termsContainer"></ul>
                     </div>
                 </div>
 
                 <!-- Telegram Button -->
-                <a href="https://t.me/yourchannel" target="_blank" class="telegram-btn">
+                <a href="#" target="_blank" class="telegram-btn" id="telegramBtn">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
                     </svg>
                     Join Our Telegram Channel
                 </a>
-
             </div>
         </div>
-
     </div>
 
     <!-- Scripts -->
     <script src="../campaigns-config.js"></script>
     <script>
-        // ================================
-        // CONFIG & STATE
-        // ================================
-        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        const urlParams = new URLSearchParams(window.location.search);
-        const campaignId = urlParams.get('o') || urlParams.get('v') || urlParams.get('id') || 'bww4yubb';
-        const clickId = urlParams.get('click_id') || urlParams.get('source');
-        const refId = urlParams.get('ref');
-        const tgLink = urlParams.get('tg'); // Get Telegram Link from URL
+        const WORK_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        const params = new URLSearchParams(window.location.search);
+        const campaignId = params.get('o') || params.get('v') || params.get('id') || 'bww4yubb';
+        const refId = params.get('ref');
+        const clickIdFromUrl = params.get('click_id') || params.get('source');
 
         let currentCampaign = null;
+        let customData = null;
 
-        // ================================
-        // INITIALIZATION
-        // ================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Handle Telegram Button Logic immediately
-            const tgBtn = document.querySelector('.telegram-btn');
-            if (tgBtn) {
-                if (tgLink) {
-                    tgBtn.href = tgLink;
-                } else {
-                    tgBtn.href = 'https://t.me/camptechy';
-                }
-            }
-
-            if (typeof CAMPAIGNS !== 'undefined') {
-                init();
-            } else {
-                setTimeout(init, 500);
-            }
-        });
-
-        // ================================
-        // 🚀 SMART ID DECODER (Instant 0ms Sync)
-        // ================================
+        // 🚀 SMART ID DECODER (0ms Sync)
         let smartReward = null;
         if (refId && refId.startsWith('ML')) {
-            const match = refId.match(/ML(\d+)Z/); // Searching for reward followed by 'Z'
-            if (match && match[1]) {
-                smartReward = parseInt(match[1]);
-                console.log('Smart ID Detected! Instant Reward:', smartReward);
+            const match = refId.match(/ML(\d+)Z/);
+            if (match && match[1]) smartReward = parseInt(match[1]);
+        }
+
+        // 🚀 PRE-LOAD TELEGRAM IF POSSIBLE
+        function checkTelegram(data) {
+            const btn = document.getElementById('telegramBtn');
+            const link = (data && data.telegram) ? data.telegram : null;
+            if (link && link !== 'https://t.me/camptechy' && link.trim() !== '') {
+                btn.href = link;
+                btn.style.display = 'flex';
+            } else {
+                btn.style.display = 'none';
             }
         }
 
-        // ================================
-        // 🚀 BACKGROUND SYNC (Silent)
-        // ================================
-        let customData = null;
+        // 🚀 SILENT SYNC BACKGROUND
         if (refId) {
-            fetch(`${WORKER_API}/register-referrer`, {
+            fetch(`${WORK_API}/register-referrer`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    type: 'getReferrerInfo',
-                    ref: refId,
-                    secretKey: 'Techybaanupxty892546',
-                    cacheBust: Date.now()
-                })
-            })
-                .then(res => res.ok ? res.json() : null)
-                .then(data => {
-                    if (data && data.success) {
-                        customData = data;
-
-                        const tgBtn = document.querySelector('.telegram-btn');
-                        if (tgBtn) {
-                            // Only show if it's a real custom link (not empty and not default)
-                            if (data.telegram && data.telegram !== 'https://t.me/camptechy' && data.telegram.trim() !== '') {
-                                tgBtn.href = data.telegram;
-                                tgBtn.style.display = 'inline-flex';
-                            } else {
-                                tgBtn.style.display = 'none'; // Hide if no custom link
-                            }
-                        }
-
-                        // Sync Reward (Backup for old non-Smart IDs)
-                        if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
-                            applyCustomization(data.payoutReferee);
-                        }
-                    }
-                })
-                .catch(e => console.error('Silent sync error:', e));
+                body: JSON.stringify({ type: 'getReferrerInfo', ref: refId, secretKey: 'Techybaanupxty892546' })
+            }).then(r => r.json()).then(data => {
+                if (data.success) {
+                    customData = data;
+                    checkTelegram(data);
+                    // Update Payout (If not locked by Smart ID AND customization allowed)
+                    const isAllowed = currentCampaign ? currentCampaign.allowCustomPayout !== false : true;
+                    if (isAllowed && smartReward === null && data.payoutReferee) applyCustomization(data.payoutReferee);
+                }
+            });
         }
 
         async function init() {
-            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : CAMPAIGNS[campaignId];
+            currentCampaign = getCampaign(campaignId) || CAMPAIGNS[campaignId];
+            if (!currentCampaign) { toggleSection('errorView'); return; }
 
-            if (!currentCampaign) {
-                toggleSection('errorView');
-                return;
+            // Check if Customization is disabled in config
+            if (currentCampaign.allowCustomPayout === false) {
+                smartReward = null; // Kill the URL-based reward if not allowed
             }
 
-            if (currentCampaign.active === false) {
+            // Check if Campaign is over
+            if (currentCampaign.active === false || currentCampaign.active === 'false') {
                 toggleSection('campaignEnded');
                 return;
             }
 
-            // Telegram Button: Hide initially until customData arrives
-            const tgBtn = document.querySelector('.telegram-btn');
-            if (tgBtn) tgBtn.style.display = 'none';
-
-            // INSTANT RENDER: Use Smart ID for the very first draw (0ms delay)
-            await loadCampaignUI(smartReward);
-
-            // Backup Sync: If backend data already arrived, update now (Handles old IDs)
-            if (customData && customData.payoutReferee !== undefined && customData.payoutReferee !== null) {
-                applyCustomization(customData.payoutReferee);
-            }
+            loadCampaignUI(smartReward);
         }
 
         function applyCustomization(amt) {
-            // CRITICAL: If a Smart ID reward was extracted from the URL, NEVER overwrite it.
-            if (smartReward !== null) return;
-
-            console.log('Sync complete. Rendering custom reward:', amt);
-            const payoutEl = document.getElementById('campaignPayout');
-            if (payoutEl) {
-                payoutEl.textContent = `₹${amt}`;
-                // Re-render only the steps to show new amount
-                const steps = [...(currentCampaign.steps || [])];
-                if (steps.length > 0) {
-                    const i = steps.length - 1;
-                    steps[i] = steps[i].replace(/₹[0-9]+/g, `₹${amt}`);
-                    const stepsContainer = document.getElementById('stepsContainer');
-                    if (stepsContainer) {
-                        stepsContainer.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
-                    }
-                }
-            }
-        }
-
-        function toggleSection(viewId) {
-            ['formView', 'errorView', 'campaignEnded', 'successView'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.classList.add('section-hidden');
-            });
-            const targetEl = document.getElementById(viewId);
-            if (targetEl) targetEl.classList.remove('section-hidden');
-        }
-
-        async function loadCampaignUI(customAmt = null) {
-            document.title = currentCampaign.name;
-            document.getElementById('campaignName').textContent = currentCampaign.name;
-            document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
-
-            // Priority: customAmt (Smart ID) > config.payout
-            const finalAmt = customAmt !== null ? customAmt : currentCampaign.payout;
-            document.getElementById('campaignPayout').textContent = `₹${finalAmt}`;
-
-            // Track Status Links
-            const trackerUrl = `../tracker/index.html?id=${campaignId}`;
-            const trackLink = document.getElementById('trackStatusLink');
-            if (trackLink) trackLink.href = trackerUrl;
-
-            renderFormFields();
-
-            // Steps
+            if (smartReward !== null) return; // Locked
+            document.getElementById('campaignPayout').textContent = `₹${amt}`;
             const steps = [...(currentCampaign.steps || [])];
             if (steps.length > 0) {
-                const i = steps.length - 1;
-                steps[i] = steps[i].replace(/₹[0-9]+/g, `₹${finalAmt}`);
+                steps[steps.length - 1] = steps[steps.length - 1].replace(/₹[0-9]+/g, `₹${amt}`);
+                document.getElementById('stepsContainer').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
             }
-
-            const stepsContainer = document.getElementById('stepsContainer');
-            stepsContainer.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
-
-            const termsContainer = document.getElementById('termsContainer');
-            termsContainer.innerHTML = (currentCampaign.terms || []).map(term => `<li>${term}</li>`).join('');
         }
 
-        function renderFormFields() {
+        function loadCampaignUI(customAmt) {
+            const finalAmt = customAmt !== null ? customAmt : currentCampaign.payout;
+            document.title = currentCampaign.name;
+            document.getElementById('campaignName').textContent = currentCampaign.name;
+            document.getElementById('campaignPayout').textContent = `₹${finalAmt}`;
+            document.getElementById('trackStatusLink').href = `../tracker/index.html?id=${campaignId}`;
+
+            renderFields();
+
+            const steps = [...(currentCampaign.steps || [])];
+            if (steps.length > 0) steps[steps.length - 1] = steps[steps.length - 1].replace(/₹[0-9]+/g, `₹${finalAmt}`);
+            document.getElementById('stepsContainer').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
+            document.getElementById('termsContainer').innerHTML = (currentCampaign.terms || []).map(t => `<li>${t}</li>`).join('');
+        }
+
+        function renderFields() {
             const container = document.getElementById('formFieldsContainer');
-            container.innerHTML = '';
-
             const fields = currentCampaign.requiredFields || ['upi'];
-
-            fields.forEach(field => {
-                const group = document.createElement('div');
-                group.className = 'form-group';
-
-                let label = '';
-                let placeholder = '';
-                let type = 'text';
-                let icon = '';
-                let validation = '';
-
+            container.innerHTML = fields.map(field => {
+                let label = '', placeholder = '', type = 'text', icon = '', validation = '';
                 if (field === 'name') {
-                    label = 'Enter Your Name';
-                    placeholder = 'e.g. John Doe';
-                    icon = '👤';
+                    label = 'Enter Your Name'; placeholder = 'e.g. John Doe'; icon = '👤';
                     validation = `pattern="[a-zA-Z\\s]{2,50}" oninput="this.value = this.value.replace(/[^a-zA-Z\\s]/g, '')"`;
                 } else if (field === 'mobile') {
-                    label = 'Mobile Number';
-                    placeholder = '10-digit number';
-                    type = 'tel';
-                    icon = '📱';
+                    label = 'Mobile Number'; placeholder = '10-digit number'; type = 'tel'; icon = '📱';
                     validation = `pattern="[6-9][0-9]{9}" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"`;
                 } else if (field === 'upi') {
-                    label = 'Your UPI ID';
-                    placeholder = 'e.g. name@upi';
-                    icon = '@';
+                    label = 'Your UPI ID'; placeholder = 'e.g. name@upi'; icon = '@';
                     validation = `pattern="[a-zA-Z0-9.\\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()"`;
                 }
-
-                group.innerHTML = `
-                    <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">${icon}</span>
-                        <input 
-                            type="${type}" 
-                            id="${field}" 
-                            class="form-input" 
-                            placeholder="${placeholder}" 
-                            required 
-                            ${validation}
-                        >
+                return `
+                    <div class="form-group">
+                        <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
+                        <div class="input-wrapper">
+                            <span class="input-icon">${icon}</span>
+                            <input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}>
+                        </div>
                     </div>
                 `;
-                container.appendChild(group);
+            }).join('');
+        }
+
+        function toggleSection(id) {
+            const container = document.querySelector('.app-container');
+            ['formView', 'errorView', 'campaignEnded'].forEach(v => {
+                const el = document.getElementById(v);
+                if (el) el.classList.add('section-hidden');
             });
+            const target = document.getElementById(id);
+            if (target) target.classList.remove('section-hidden');
+
+            // Style for OVER or ERROR states to match screenshot
+            if (id === 'campaignEnded' || id === 'errorView') {
+                if (container) {
+                    container.style.background = 'transparent';
+                    container.style.boxShadow = 'none';
+                }
+                document.body.style.background = 'linear-gradient(135deg, #fff5f5 0%, #eef2ff 100%)';
+            } else {
+                if (container) {
+                    container.style.background = '#fff';
+                    container.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.05)';
+                }
+                document.body.style.background = '#eef2ff';
+            }
         }
 
         window.toggleAccordion = function (btn) {
-            const content = btn.nextElementSibling;
-            const isOpen = content.classList.contains('open');
-
-            if (isOpen) {
-                content.style.maxHeight = null;
-                content.classList.remove('open');
-                btn.classList.remove('active');
-            } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-                content.classList.add('open');
-                btn.classList.add('active');
-            }
+            const body = btn.nextElementSibling;
+            const isOpen = body.classList.contains('open');
+            body.style.maxHeight = isOpen ? null : body.scrollHeight + "px";
+            body.classList.toggle('open');
+            btn.classList.toggle('active');
         };
 
         document.getElementById('campaignForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-
             const submitBtn = document.getElementById('submitBtn');
             const overlay = document.getElementById('loadingOverlay');
+            const sBox = document.getElementById('successBox');
 
-            const formData = {};
             const fields = currentCampaign.requiredFields || ['upi'];
-            let isValid = true;
-
-            fields.forEach(f => {
-                const val = document.getElementById(f).value.trim();
-                if (!val) isValid = false;
-                formData[f] = val;
-            });
-
-            if (!isValid) {
-                alert("Please fill all fields correctly.");
-                return;
-            }
+            const data = {};
+            fields.forEach(f => data[f] = document.getElementById(f).value.trim());
 
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Processing...';
             overlay.classList.add('active');
 
             try {
-                const uniqueClickId = clickId || ('C' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase());
-
-                const payload = {
-                    ...formData,
-                    clickId: uniqueClickId,
-                    campaignId: campaignId,
-                    campaignSlug: currentCampaign.slug,
-                    referrerId: refId || null,
-                    website: document.querySelector('[name="website"]').value,
-                    origin: window.location.origin
-                };
-
-                const res = await fetch(WORKER_API, {
+                const clickId = clickIdFromUrl || ('C' + Date.now().toString(36).toUpperCase());
+                const res = await fetch(WORK_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
+                    body: JSON.stringify({
+                        ...data,
+                        clickId,
+                        campaignId,
+                        campaignSlug: currentCampaign.slug,
+                        referrerId: refId || null,
+                        origin: window.location.origin,
+                        secretKey: 'Techybaanupxty892546' // Ensure secret is passed if needed
+                    })
                 });
-
                 const result = await res.json();
 
-                if (!result.success) throw new Error(result.error || 'Failed');
+                // Robust Redirect URL Handling
+                let finalRedirect = result.redirectUrl || currentCampaign.offerUrl || currentCampaign.redirectUrl;
+                if (!finalRedirect || finalRedirect === 'undefined') {
+                    // One last fallback: try to re-fetch from local config
+                    finalRedirect = currentCampaign.offerUrl || 'https://google.com';
+                }
 
                 overlay.classList.remove('active');
-                toggleSection('successView');
+                document.getElementById('modalOverlay').classList.add('active'); // Blur background
+                sBox.classList.add('active'); // Show horizontal/box success
 
-                setTimeout(() => {
-                    window.location.replace(result.redirectUrl);
-                }, 2000);
-
+                // FAST REDIRECT: 0.8 second for snappiness
+                setTimeout(() => window.location.replace(finalRedirect), 800);
             } catch (err) {
-                console.error(err);
-                alert("Submission failed. Please try again.");
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Claim Reward';
+                console.error("Submission error:", err);
+                alert("Submission failed. Redirecting to offer anyway...");
                 overlay.classList.remove('active');
+                window.location.replace(currentCampaign.offerUrl || 'https://google.com');
             }
         });
+
+        init();
     </script>
 </body>
 
