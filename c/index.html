@@ -733,8 +733,9 @@
                 if (data.success) {
                     customData = data;
                     checkTelegram(data);
-                    // Update Payout (If not locked by Smart ID)
-                    if (smartReward === null && data.payoutReferee) applyCustomization(data.payoutReferee);
+                    // Update Payout (If not locked by Smart ID AND customization allowed)
+                    const isAllowed = currentCampaign ? currentCampaign.allowCustomPayout !== false : true;
+                    if (isAllowed && smartReward === null && data.payoutReferee) applyCustomization(data.payoutReferee);
                 }
             });
         }
@@ -742,6 +743,11 @@
         async function init() {
             currentCampaign = getCampaign(campaignId) || CAMPAIGNS[campaignId];
             if (!currentCampaign) { toggleSection('errorView'); return; }
+
+            // Check if Customization is disabled in config
+            if (currentCampaign.allowCustomPayout === false) {
+                smartReward = null; // Kill the URL-based reward if not allowed
+            }
 
             // Check if Campaign is over
             if (currentCampaign.active === false || currentCampaign.active === 'false') {
