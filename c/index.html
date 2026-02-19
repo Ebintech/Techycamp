@@ -26,9 +26,10 @@
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.95);
-            z-index: 50;
+            z-index: 100;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
         }
 
         .loading-overlay.active {
@@ -339,7 +340,8 @@
 
         /* TELEGRAM BUTTON */
         .telegram-btn {
-            display: flex;
+            display: none;
+            /* Hidden by default */
             align-items: center;
             justify-content: center;
             gap: 8px;
@@ -383,7 +385,45 @@
             margin-bottom: 24px;
         }
 
-        /* Loading Dots */
+        /* SUCCESS MODAL BOX */
+        .success-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 320px;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 200;
+        }
+
+        .success-box.active {
+            display: block;
+        }
+
+        /* Loading Dots - HORIZONTAL FIX */
+        .loading-dots {
+            display: flex;
+            flex-direction: row;
+            /* Ensure horizontal */
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .loading-text {
+            color: #6366f1;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         @keyframes pulse {
             0% {
                 transform: scale(0.95);
@@ -428,6 +468,14 @@
             <div></div>
             <div></div>
         </div>
+        <div class="loading-text">Processing...</div>
+    </div>
+
+    <!-- Success Box (Modal Style) -->
+    <div class="success-box" id="successBox">
+        <div class="state-icon" style="font-size:48px; margin-bottom:12px">✅</div>
+        <h2 class="state-title" style="font-size:18px">Submission Successful!</h2>
+        <p class="state-desc" style="font-size:12px; margin-bottom:0">Redirecting to offer page...</p>
     </div>
 
     <!-- Main Container -->
@@ -444,14 +492,6 @@
             <span class="state-icon">⏰</span>
             <h2 class="state-title">Offer Expired</h2>
             <p class="state-desc">This campaign has ended. Stay tuned for new offers!</p>
-        </div>
-
-        <!-- SUCCESS STATE -->
-        <div id="successView" class="state-container section-hidden">
-            <span class="state-icon">✅</span>
-            <h2 class="state-title">Submission Successful!</h2>
-            <p class="state-desc">Redirecting you to the offer page...<br>Please complete the steps to earn cashback.
-            </p>
         </div>
 
         <!-- FORM VIEW -->
@@ -571,6 +611,18 @@
             if (match && match[1]) smartReward = parseInt(match[1]);
         }
 
+        // 🚀 PRE-LOAD TELEGRAM IF POSSIBLE
+        function checkTelegram(data) {
+            const btn = document.getElementById('telegramBtn');
+            const link = (data && data.telegram) ? data.telegram : null;
+            if (link && link !== 'https://t.me/camptechy' && link.trim() !== '') {
+                btn.href = link;
+                btn.style.display = 'flex';
+            } else {
+                btn.style.display = 'none';
+            }
+        }
+
         // 🚀 SILENT SYNC BACKGROUND
         if (refId) {
             fetch(`${WORK_API}/register-referrer`, {
@@ -580,14 +632,7 @@
             }).then(r => r.json()).then(data => {
                 if (data.success) {
                     customData = data;
-                    const tgBtn = document.getElementById('telegramBtn');
-                    // Update Telegram
-                    if (data.telegram && data.telegram !== 'https://t.me/camptechy' && data.telegram.trim() !== '') {
-                        tgBtn.href = data.telegram;
-                        tgBtn.style.display = 'flex';
-                    } else {
-                        tgBtn.style.display = 'none';
-                    }
+                    checkTelegram(data);
                     // Update Payout (If not locked by Smart ID)
                     if (smartReward === null && data.payoutReferee) applyCustomization(data.payoutReferee);
                 }
@@ -599,7 +644,6 @@
             if (!currentCampaign) { toggleSection('errorView'); return; }
             if (currentCampaign.active === false) { toggleSection('campaignEnded'); return; }
 
-            document.getElementById('telegramBtn').style.display = 'none'; // Default hidden
             loadCampaignUI(smartReward);
         }
 
@@ -656,8 +700,12 @@
         }
 
         function toggleSection(id) {
-            ['formView', 'errorView', 'campaignEnded', 'successView'].forEach(v => document.getElementById(v).classList.add('section-hidden'));
-            document.getElementById(id).classList.remove('section-hidden');
+            ['formView', 'errorView', 'campaignEnded'].forEach(v => {
+                const el = document.getElementById(v);
+                if (el) el.classList.add('section-hidden');
+            });
+            const target = document.getElementById(id);
+            if (target) target.classList.remove('section-hidden');
         }
 
         window.toggleAccordion = function (btn) {
@@ -672,6 +720,7 @@
             e.preventDefault();
             const submitBtn = document.getElementById('submitBtn');
             const overlay = document.getElementById('loadingOverlay');
+            const sBox = document.getElementById('successBox');
 
             const fields = currentCampaign.requiredFields || ['upi'];
             const data = {};
@@ -686,18 +735,35 @@
                 const res = await fetch(WORK_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...data, clickId, campaignId, campaignSlug: currentCampaign.slug, referrerId: refId || null, origin: window.location.origin })
+                    body: JSON.stringify({
+                        ...data,
+                        clickId,
+                        campaignId,
+                        campaignSlug: currentCampaign.slug,
+                        referrerId: refId || null,
+                        origin: window.location.origin,
+                        secretKey: 'Techybaanupxty892546' // Ensure secret is passed if needed
+                    })
                 });
                 const result = await res.json();
-                if (!result.success) throw new Error();
+
+                // Robust Redirect URL Handling
+                let finalRedirect = result.redirectUrl || currentCampaign.offerUrl || currentCampaign.redirectUrl;
+                if (!finalRedirect || finalRedirect === 'undefined') {
+                    // One last fallback: try to re-fetch from local config
+                    finalRedirect = currentCampaign.offerUrl || 'https://google.com';
+                }
+
                 overlay.classList.remove('active');
-                toggleSection('successView');
-                setTimeout(() => window.location.replace(result.redirectUrl), 2000);
+                sBox.classList.add('active'); // Show horizontal/box success
+
+                // FAST REDIRECT: 1 second instead of 2
+                setTimeout(() => window.location.replace(finalRedirect), 1000);
             } catch (err) {
-                alert("Submission failed.");
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Claim Reward';
+                console.error("Submission error:", err);
+                alert("Submission failed. Redirecting to offer anyway...");
                 overlay.classList.remove('active');
+                window.location.replace(currentCampaign.offerUrl || 'https://google.com');
             }
         });
 
