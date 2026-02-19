@@ -631,7 +631,19 @@
         });
 
         // ================================
-        // 🚀 HIGH-PRIORITY BACKGROUND SYNC (Starts NOW)
+        // 🚀 SMART ID DECODER (Instant 0ms Sync)
+        // ================================
+        let smartReward = null;
+        if (refId && refId.startsWith('ML')) {
+            const match = refId.match(/ML(\d+)/);
+            if (match && match[1]) {
+                smartReward = parseInt(match[1]);
+                console.log('Smart ID Detected! Instant Reward:', smartReward);
+            }
+        }
+
+        // ================================
+        // 🚀 BACKGROUND SYNC (Silent)
         // ================================
         let customData = null;
         if (refId) {
@@ -649,11 +661,12 @@
                 .then(data => {
                     if (data && data.success) {
                         customData = data;
-                        // Apply improvements as soon as they arrive
+                        // Apply Telegram immediately
                         if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
                             const tgBtn = document.querySelector('.telegram-btn');
                             if (tgBtn) tgBtn.href = data.telegram;
                         }
+                        // Sync Reward (Backup for old IDs)
                         if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
                             applyCustomization(data.payoutReferee);
                         }
@@ -675,10 +688,10 @@
                 return;
             }
 
-            // Render UI with defaults immediately
-            await loadCampaignUI();
+            // INSTANT RENDER: Use Smart ID for the very first draw (0ms delay)
+            await loadCampaignUI(smartReward);
 
-            // Check if backend data already arrived before init finished
+            // Backup Sync: If backend data already arrived, update now (Handles old IDs)
             if (customData && customData.payoutReferee !== undefined && customData.payoutReferee !== null) {
                 applyCustomization(customData.payoutReferee);
             }
@@ -711,13 +724,14 @@
             if (targetEl) targetEl.classList.remove('section-hidden');
         }
 
-        async function loadCampaignUI() {
+        async function loadCampaignUI(customAmt = null) {
             document.title = currentCampaign.name;
             document.getElementById('campaignName').textContent = currentCampaign.name;
             document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
 
-            // Default payout from config
-            document.getElementById('campaignPayout').textContent = `₹${currentCampaign.payout}`;
+            // Priority: customAmt (Smart ID) > config.payout
+            const finalAmt = customAmt !== null ? customAmt : currentCampaign.payout;
+            document.getElementById('campaignPayout').textContent = `₹${finalAmt}`;
 
             // Track Status Links
             const trackerUrl = `../tracker/index.html?id=${campaignId}`;
@@ -730,7 +744,7 @@
             const steps = [...(currentCampaign.steps || [])];
             if (steps.length > 0) {
                 const i = steps.length - 1;
-                steps[i] = steps[i].replace(/₹[0-9]+/g, `₹${currentCampaign.payout}`);
+                steps[i] = steps[i].replace(/₹[0-9]+/g, `₹${finalAmt}`);
             }
 
             const stepsContainer = document.getElementById('stepsContainer');
