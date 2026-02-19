@@ -316,6 +316,106 @@
             width: 100%;
             margin-top: 16px;
         }
+
+        /* Duplicate Panel Styles */
+        .dup-panel {
+            display: none;
+            background: #fffbeb;
+            border: 2px solid #fde68a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 16px;
+        }
+
+        .dup-panel.active {
+            display: block;
+        }
+
+        .dup-panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #92400e;
+            margin-bottom: 12px;
+        }
+
+        .dup-item {
+            background: white;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .dup-item-info {
+            flex: 1;
+        }
+
+        .dup-item-upi {
+            font-family: monospace;
+            font-weight: 600;
+            color: #1f2937;
+            font-size: 14px;
+        }
+
+        .dup-item-count {
+            font-size: 12px;
+            color: #92400e;
+            margin-top: 2px;
+        }
+
+        .dup-item-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dup-item-actions input {
+            width: 50px;
+            padding: 6px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .btn-approve-dup {
+            background: linear-gradient(90deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-approve-dup:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-approve-dup:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .stat-card-clickable {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card-clickable:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+        }
     </style>
 </head>
 
@@ -461,9 +561,11 @@ test3@googlepay"></textarea>
                             <div class="stat-number" id="successCount">0</div>
                             <div class="stat-label">Updated</div>
                         </div>
-                        <div class="stat-card" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
+                        <div class="stat-card stat-card-clickable" id="dupCard"
+                            style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);"
+                            onclick="toggleDupPanel()" title="Click to view duplicate details">
                             <div class="stat-number" id="dupCount">0</div>
-                            <div class="stat-label">Duplicated</div>
+                            <div class="stat-label">Duplicated ▼</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-number" id="errorCount">0</div>
@@ -471,7 +573,36 @@ test3@googlepay"></textarea>
                         </div>
                     </div>
 
+                    <!-- Duplicate Details Panel -->
+                    <div class="dup-panel" id="dupPanel">
+                        <div class="dup-panel-title">⚠️ Duplicate UPIs Found in Your List</div>
+                        <p style="font-size: 13px; color: #78350f; margin-bottom: 12px;">These UPIs appeared more than
+                            once in your pasted list. Verify manually and approve if valid.</p>
+                        <div id="dupList"></div>
+                    </div>
+
                     <div class="log" id="convLog" style="display:none; margin-top:24px;"></div>
+
+                    <!-- 🧹 Cleanup Duplicate Referrals -->
+                    <div
+                        style="margin-top: 24px; padding: 20px; background: #fef2f2; border: 2px solid #fca5a5; border-radius: 12px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <div style="font-weight: 700; color: #991b1b; font-size: 15px;">🧹 Cleanup Duplicate
+                                    Referrals</div>
+                                <div style="font-size: 13px; color: #b91c1c; margin-top: 4px;">Removes duplicate rows
+                                    from Referrals sheet (keeps first occurrence per UPI+Campaign)</div>
+                            </div>
+                            <button class="btn" id="cleanupBtn" onclick="runCleanup()"
+                                style="background: linear-gradient(90deg, #ef4444, #dc2626); color: white; padding: 10px 20px;">
+                                🧹 Run Cleanup Now
+                            </button>
+                        </div>
+                        <div id="cleanupResult"
+                            style="display: none; margin-top: 12px; padding: 12px; background: white; border-radius: 8px; font-family: monospace; font-size: 13px;">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -693,6 +824,10 @@ test3@googlepay"></textarea>
                 }
             }
 
+            // Store duplicates globally so the panel can use them
+            let currentDuplicates = {};
+            let currentApiKey = '';
+
             async function processConversions() {
                 // 🔒 STEP 1: ASK FOR API KEY
                 const apiKey = prompt('🔐 Enter Admin API Key to update conversions:');
@@ -701,6 +836,7 @@ test3@googlepay"></textarea>
                     alert('❌ API key required to update conversions');
                     return;
                 }
+                currentApiKey = apiKey;
 
                 const campaignId = document.getElementById('convCampaign').value;
                 const payout = document.getElementById('convPayout').value;
@@ -734,8 +870,24 @@ test3@googlepay"></textarea>
                     if (!confirmMulti) return;
                 }
 
-                const uniqueUpis = [...new Set(rawUpis)];
-                const dupCount = rawUpis.length - uniqueUpis.length;
+                // Count duplicates per UPI
+                const upiCountMap = {};
+                rawUpis.forEach(upi => {
+                    const key = upi.toLowerCase();
+                    upiCountMap[key] = (upiCountMap[key] || 0) + 1;
+                });
+
+                // Build duplicate details (only UPIs appearing 2+ times)
+                currentDuplicates = {};
+                for (const [upi, count] of Object.entries(upiCountMap)) {
+                    if (count > 1) {
+                        currentDuplicates[upi] = count;
+                    }
+                }
+
+                const uniqueUpis = [...new Set(rawUpis.map(u => u.toLowerCase()))];
+                const dupCount = Object.keys(currentDuplicates).length;
+                const totalDupEntries = rawUpis.length - uniqueUpis.length;
 
                 // Show stats
                 document.getElementById('convStats').style.display = 'grid';
@@ -746,11 +898,14 @@ test3@googlepay"></textarea>
                 document.getElementById('errorCount').textContent = '0';
                 document.getElementById('convLog').innerHTML = '';
 
+                // Build Duplicate Panel
+                buildDupPanel(currentDuplicates, campaignId, payout);
+
                 if (dupCount > 0) {
-                    addLog('warning', `⚠️ Found ${dupCount} duplicate UPIs in your input list. These will be handled based on Multi-Approval settings.`);
+                    addLog('warning', `⚠️ Found ${dupCount} UPIs with duplicates (${totalDupEntries} extra entries). Click "Duplicated" to view details.`);
                 }
 
-                addLog('info', `🚀 Sending batch request to approve up to ${maxPerUpi} per UPI...`);
+                addLog('info', `🚀 Sending batch request for ${uniqueUpis.length} unique UPIs (max ${maxPerUpi} per UPI)...`);
 
                 try {
                     // ⚡ BATCH REQUEST (Instant)
@@ -758,12 +913,12 @@ test3@googlepay"></textarea>
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-API-Key': apiKey // Still send header for Worker
+                            'X-API-Key': apiKey
                         },
                         body: JSON.stringify({
-                            secretKey: apiKey, // Also send in body for GAS
-                            type: 'batchUpdateConversions', // Required for GAS routing
-                            upis: uniqueUpis, // Send unique list for processing
+                            secretKey: apiKey,
+                            type: 'batchUpdateConversions',
+                            upis: uniqueUpis,
                             campaign: campaignId,
                             status: 'approved',
                             payout: payout,
@@ -783,14 +938,122 @@ test3@googlepay"></textarea>
                         if (result.notFoundCount > 0) {
                             addLog('warning', `⚠️ ${result.notFoundCount} UPIs were not found (or had no more pending records to approve).`);
                         }
+                        if (dupCount > 0) {
+                            addLog('info', `📋 ${dupCount} UPIs had duplicates. Click the "Duplicated" card above to review and approve them.`);
+                        }
                     } else {
-                        // Better Error Reporting
                         const errMsg = result.message || result.error || JSON.stringify(result);
                         addLog('error', `❌ Batch update failed: ${errMsg}`);
                     }
 
                 } catch (error) {
                     addLog('error', `❌ Network Error: ${error.message}`);
+                }
+            }
+
+            function buildDupPanel(duplicates, campaignId, payout) {
+                const panel = document.getElementById('dupPanel');
+                const list = document.getElementById('dupList');
+                list.innerHTML = '';
+
+                const keys = Object.keys(duplicates);
+                if (keys.length === 0) {
+                    panel.classList.remove('active');
+                    return;
+                }
+
+                keys.forEach((upi, idx) => {
+                    const count = duplicates[upi];
+                    const extraCount = count - 1; // Already approved 1, this many are extra
+
+                    list.innerHTML += `
+                        <div class="dup-item" id="dupItem${idx}">
+                            <div class="dup-item-info">
+                                <div class="dup-item-upi">${upi}</div>
+                                <div class="dup-item-count">Appeared ${count}x in your list (${extraCount} extra)</div>
+                            </div>
+                            <div class="dup-item-actions">
+                                <label style="font-size:12px; color:#4b5563; white-space:nowrap;">Approve:</label>
+                                <input type="number" id="dupApproveCount${idx}" value="${extraCount}" min="1" max="${extraCount}" title="How many extra to approve">
+                                <button class="btn-approve-dup" id="dupApproveBtn${idx}" onclick="approveDuplicate('${upi}', ${idx}, '${campaignId}', '${payout}')">
+                                    ✅ Approve
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            function toggleDupPanel() {
+                const panel = document.getElementById('dupPanel');
+                const keys = Object.keys(currentDuplicates);
+                if (keys.length === 0) {
+                    alert('No duplicates found in the current batch.');
+                    return;
+                }
+                panel.classList.toggle('active');
+            }
+
+            async function approveDuplicate(upi, idx, campaignId, payout) {
+                const countInput = document.getElementById('dupApproveCount' + idx);
+                const btn = document.getElementById('dupApproveBtn' + idx);
+                const approveCount = parseInt(countInput.value) || 1;
+
+                if (!currentApiKey) {
+                    alert('Please process conversions first to set your API key.');
+                    return;
+                }
+
+                const confirm1 = confirm(`Approve ${approveCount} extra entries for:\n${upi}\n\nCampaign: ${campaignId}\nAre you sure?`);
+                if (!confirm1) return;
+
+                btn.disabled = true;
+                btn.textContent = '⏳...';
+
+                try {
+                    // Send with maxPerUpi = approveCount + 1 (1 already approved + extras)
+                    const response = await fetch(`${WORKER_API}/admin/update-conversion-batch`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-API-Key': currentApiKey
+                        },
+                        body: JSON.stringify({
+                            secretKey: currentApiKey,
+                            type: 'batchUpdateConversions',
+                            upis: [upi],
+                            campaign: campaignId,
+                            status: 'approved',
+                            payout: payout,
+                            maxPerUpi: approveCount + 1
+                        })
+                    });
+
+                    const result = await response.json();
+                    console.log('Dup Approve Response:', result);
+
+                    if (result.success && result.matchedCount > 0) {
+                        btn.textContent = `✅ Done (${result.matchedCount})`;
+                        btn.style.background = '#d1fae5';
+                        btn.style.color = '#065f46';
+                        addLog('success', `✅ Approved ${result.matchedCount} extra entries for ${upi}`);
+                        // Update success count
+                        const cur = parseInt(document.getElementById('successCount').textContent) || 0;
+                        document.getElementById('successCount').textContent = cur + result.matchedCount;
+                    } else if (result.success && result.matchedCount === 0) {
+                        btn.textContent = '⚠️ None Left';
+                        btn.style.background = '#fef3c7';
+                        btn.style.color = '#92400e';
+                        addLog('warning', `⚠️ No more pending entries found for ${upi}`);
+                    } else {
+                        btn.textContent = '❌ Failed';
+                        btn.style.background = '#fee2e2';
+                        btn.style.color = '#991b1b';
+                        addLog('error', `❌ Failed to approve duplicates for ${upi}: ${result.message || result.error}`);
+                    }
+                } catch (error) {
+                    btn.textContent = '❌ Error';
+                    addLog('error', `❌ Network error approving ${upi}: ${error.message}`);
                 }
             }
 
@@ -801,6 +1064,53 @@ test3@googlepay"></textarea>
                 item.textContent = message;
                 log.appendChild(item);
                 log.scrollTop = log.scrollHeight;
+            }
+
+            async function runCleanup() {
+                const apiKey = prompt('🔐 Enter Admin API Key to run cleanup:');
+                if (!apiKey || apiKey.trim() === '') return;
+
+                const confirmClean = confirm('⚠️ This will DELETE duplicate rows from your Referrals sheet.\n\nIt keeps the FIRST occurrence of each referee UPI + Campaign and removes extras.\n\nAre you sure?');
+                if (!confirmClean) return;
+
+                const btn = document.getElementById('cleanupBtn');
+                const resultDiv = document.getElementById('cleanupResult');
+                btn.disabled = true;
+                btn.textContent = '⏳ Running cleanup...';
+                resultDiv.style.display = 'none';
+
+                try {
+                    const response = await fetch(`${WORKER_API}/admin/cleanup-referrals`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-API-Key': apiKey
+                        }
+                    });
+
+                    const result = await response.json();
+                    resultDiv.style.display = 'block';
+
+                    if (result.success) {
+                        resultDiv.style.borderLeft = '4px solid #10b981';
+                        resultDiv.innerHTML = `✅ <strong>Cleanup complete!</strong><br>🗑️ Removed: <strong>${result.removed}</strong> duplicate rows<br>📊 Remaining: <strong>${result.remaining}</strong> unique referrals`;
+                        btn.textContent = '✅ Cleanup Done';
+                        btn.style.background = 'linear-gradient(90deg, #10b981, #059669)';
+                    } else {
+                        resultDiv.style.borderLeft = '4px solid #ef4444';
+                        resultDiv.textContent = '❌ ' + (result.message || result.error || 'Unknown error');
+                        btn.textContent = '🧹 Run Cleanup Now';
+                        btn.disabled = false;
+                        btn.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                    }
+                } catch (error) {
+                    resultDiv.style.display = 'block';
+                    resultDiv.style.borderLeft = '4px solid #ef4444';
+                    resultDiv.textContent = '❌ Network error: ' + error.message;
+                    btn.textContent = '🧹 Run Cleanup Now';
+                    btn.disabled = false;
+                    btn.style.background = 'linear-gradient(90deg, #ef4444, #dc2626)';
+                }
             }
         </script>
     </div>
