@@ -13,7 +13,7 @@ const CAMPAIGNS = {
         payout: 301,
         type: 'online',
         active: false,
-        allowCustomPayout: true, // Set to false to lock rewards
+        allowCustomPayout: false, // Set to false to lock rewards
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹301 Rewards',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
