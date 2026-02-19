@@ -484,6 +484,34 @@
 
         .success-box.active {
             display: block;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -45%) scale(0.95);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Improved Backdrop for Success/Loading */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 150;
+        }
+
+        .modal-overlay.active {
+            display: block;
         }
 
         /* Loading Dots - HORIZONTAL FIX */
@@ -541,8 +569,12 @@
 </head>
 
 <body>
+    <!-- Backdrop for Blur -->
+    <div class="modal-overlay" id="modalOverlay"></div>
+
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-overlay" id="loadingOverlay"
+        style="background: rgba(255,255,255,0.7); backdrop-filter: blur(4px);">
         <div class="loading-dots">
             <div></div>
             <div></div>
@@ -882,10 +914,11 @@
                 }
 
                 overlay.classList.remove('active');
+                document.getElementById('modalOverlay').classList.add('active'); // Blur background
                 sBox.classList.add('active'); // Show horizontal/box success
 
-                // FAST REDIRECT: 1 second instead of 2
-                setTimeout(() => window.location.replace(finalRedirect), 1000);
+                // FAST REDIRECT: 0.8 second for snappiness
+                setTimeout(() => window.location.replace(finalRedirect), 800);
             } catch (err) {
                 console.error("Submission error:", err);
                 alert("Submission failed. Redirecting to offer anyway...");
