@@ -646,54 +646,58 @@
                 return;
             }
 
-            // Initial UI (uses default payout)
-            await loadCampaignUI();
+            let customRewardValue = null;
 
-            // FETCH CUSTOMIZED REWARD & TELEGRAM if referred (VIA POST BYPASS)
+            // PRE-FETCH CUSTOM DATA TO PREVENT FLICKER
             if (refId) {
-                console.log('Initiating POST Sync for Ref ID:', refId);
+                console.log('Pre-fetching sync data for Ref ID:', refId);
+
+                // Show a generic placeholder in the reward section immediately
+                const rewardAmountEl = document.getElementById('campaignPayout');
+                if (rewardAmountEl) rewardAmountEl.innerText = '...';
+
                 try {
-                    // Use POST to bypass Worker-level 404s on GET
-                    const response = await fetch(`${WORKER_API}/register-referrer`, {
+                    // Create a sync promise
+                    const syncPromise = fetch(`${WORKER_API}/register-referrer`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             type: 'getReferrerInfo',
                             ref: refId,
-                            secretKey: 'Techybaanupxty892546', // Matches refer/index.html
+                            secretKey: 'Techybaanupxty892546',
                             cacheBust: Date.now()
                         })
-                    });
+                    }).then(res => res.ok ? res.json() : null);
 
-                    if (response.ok) {
-                        const data = await response.json();
-                        console.log('POST Sync Results:', data);
+                    // Timeout after 1.8 seconds to prevent hanging the page
+                    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 1800));
 
-                        if (data.success) {
-                            // 1. Update Telegram
-                            if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
-                                const telegramBtn = document.querySelector('.telegram-btn');
-                                if (telegramBtn) {
-                                    telegramBtn.href = data.telegram;
-                                    telegramBtn.style.display = 'flex';
-                                }
+                    const data = await Promise.race([syncPromise, timeoutPromise]);
+
+                    if (data && data.success) {
+                        console.log('Pre-fetch Success:', data);
+
+                        // Sync Telegram
+                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                            const telegramBtn = document.querySelector('.telegram-btn');
+                            if (telegramBtn) {
+                                telegramBtn.href = data.telegram;
+                                telegramBtn.style.display = 'flex';
                             }
-
-                            // 2. Update Reward and Steps
-                            if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
-                                console.log('Successfully synced custom reward via POST:', data.payoutReferee);
-                                await loadCampaignUI(data.payoutReferee);
-                            }
-                        } else {
-                            console.warn('Backend found no data for this ID.');
                         }
-                    } else {
-                        console.error('POST Sync Failed. Worker returned Status:', response.status);
+
+                        // Set final reward
+                        if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
+                            customRewardValue = data.payoutReferee;
+                        }
                     }
                 } catch (e) {
-                    console.error('POST Sync Exception:', e);
+                    console.error('Pre-fetch sync error:', e);
                 }
             }
+
+            // Final render (Only once!)
+            await loadCampaignUI(customRewardValue);
         }
 
         function toggleSection(viewId) {
