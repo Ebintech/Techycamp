@@ -635,7 +635,7 @@
         // ================================
         let smartReward = null;
         if (refId && refId.startsWith('ML')) {
-            const match = refId.match(/ML(\d+)/);
+            const match = refId.match(/ML(\d+)Z/); // Searching for reward followed by 'Z'
             if (match && match[1]) {
                 smartReward = parseInt(match[1]);
                 console.log('Smart ID Detected! Instant Reward:', smartReward);
