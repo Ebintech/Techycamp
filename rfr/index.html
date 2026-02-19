@@ -408,7 +408,7 @@
                 <div class="form-group">
                     <label class="form-label">Your UPI ID <span class="required">*</span></label>
                     <input type="text" id="upi" class="form-input" placeholder="yourname@paytm" required
-                        pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}">
+                        pattern="[a-zA-Z0-9.\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()">
                     <div class="input-hint">For receiving your rewards</div>
                 </div>
 
