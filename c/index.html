@@ -90,17 +90,14 @@
             font-weight: 400;
         }
 
-        /* CASHBACK CARD - Green        /* REWARD SECTION */
+        /* REWARD SECTION */
         .cashback-card {
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(8px);
-            /* Kept original blur for consistency with other glassy elements */
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             padding: 16px;
-            /* Kept original padding */
             margin: 0 auto -40px;
-            /* Kept original margin for overlap */
             width: 90%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             display: flex;
@@ -109,15 +106,6 @@
             justify-content: center;
             position: relative;
             z-index: 10;
-            opacity: 0;
-            /* Silent loading */
-            transform: translateY(10px);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-
-        .cashback-card.visible {
-            opacity: 1;
-            transform: translateY(0);
         }
 
         .cashback-label {
@@ -492,7 +480,7 @@
                 <div class="badge">
                     <span>🎁</span> COMPLETE & EARN
                 </div>
-                <h1 id="campaignName">Loading...</h1>
+                <h1 id="campaignName">Campaign</h1>
                 <p id="campaignDescription">Complete the offer to get instant cashback!</p>
 
                 <!-- Compact Cashback Card -->
@@ -642,6 +630,38 @@
             }
         });
 
+        // ================================
+        // 🚀 HIGH-PRIORITY BACKGROUND SYNC (Starts NOW)
+        // ================================
+        let customData = null;
+        if (refId) {
+            fetch(`${WORKER_API}/register-referrer`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type: 'getReferrerInfo',
+                    ref: refId,
+                    secretKey: 'Techybaanupxty892546',
+                    cacheBust: Date.now()
+                })
+            })
+                .then(res => res.ok ? res.json() : null)
+                .then(data => {
+                    if (data && data.success) {
+                        customData = data;
+                        // Apply improvements as soon as they arrive
+                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                            const tgBtn = document.querySelector('.telegram-btn');
+                            if (tgBtn) tgBtn.href = data.telegram;
+                        }
+                        if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
+                            applyCustomization(data.payoutReferee);
+                        }
+                    }
+                })
+                .catch(e => console.error('Silent sync error:', e));
+        }
+
         async function init() {
             currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : CAMPAIGNS[campaignId];
 
@@ -655,80 +675,62 @@
                 return;
             }
 
-            let customRewardValue = null;
+            // Render UI with defaults immediately
+            await loadCampaignUI();
 
-            // SILENT PRE-FETCH (No dots, no flicker)
-            if (refId) {
-                console.log('Syncing custom reward for Ref:', refId);
-                try {
-                    const syncPromise = fetch(`${WORKER_API}/register-referrer`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            type: 'getReferrerInfo',
-                            ref: refId,
-                            secretKey: 'Techybaanupxty892546',
-                            cacheBust: Date.now()
-                        })
-                    }).then(res => res.ok ? res.json() : null);
+            // Check if backend data already arrived before init finished
+            if (customData && customData.payoutReferee !== undefined && customData.payoutReferee !== null) {
+                applyCustomization(customData.payoutReferee);
+            }
+        }
 
-                    // Wait up to 2.5 seconds for custom reward
-                    const timeoutPromise = new Promise(resolve => setTimeout(() => resolve(null), 2500));
-                    const data = await Promise.race([syncPromise, timeoutPromise]);
-
-                    if (data && data.success) {
-                        console.log('Sync Data Received:', data);
-                        // Sync Telegram
-                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
-                            const telegramBtn = document.querySelector('.telegram-btn');
-                            if (telegramBtn) telegramBtn.href = data.telegram;
-                        }
-                        // Set custom reward
-                        if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
-                            customRewardValue = data.payoutReferee;
-                        }
+        function applyCustomization(amt) {
+            console.log('Sync complete. Rendering custom reward:', amt);
+            const payoutEl = document.getElementById('campaignPayout');
+            if (payoutEl) {
+                payoutEl.textContent = `₹${amt}`;
+                // Re-render only the steps to show new amount
+                const steps = [...(currentCampaign.steps || [])];
+                if (steps.length > 0) {
+                    const i = steps.length - 1;
+                    steps[i] = steps[i].replace(/₹[0-9]+/g, `₹${amt}`);
+                    const stepsContainer = document.getElementById('stepsContainer');
+                    if (stepsContainer) {
+                        stepsContainer.innerHTML = steps.map(step => `<li>${step}</li>`).join('');
                     }
-                } catch (e) {
-                    console.error('Silent sync failed:', e);
                 }
             }
-
-            // FINAL RENDER (Direct)
-            await loadCampaignUI(customRewardValue);
-
-            // Show the reward card once data is ready
-            const card = document.querySelector('.cashback-card');
-            if (card) card.classList.add('visible');
         }
 
         function toggleSection(viewId) {
             ['formView', 'errorView', 'campaignEnded', 'successView'].forEach(id => {
-                document.getElementById(id).classList.add('section-hidden');
+                const el = document.getElementById(id);
+                if (el) el.classList.add('section-hidden');
             });
-            document.getElementById(viewId).classList.remove('section-hidden');
+            const targetEl = document.getElementById(viewId);
+            if (targetEl) targetEl.classList.remove('section-hidden');
         }
 
-        async function loadCampaignUI(customAmt = null) {
+        async function loadCampaignUI() {
             document.title = currentCampaign.name;
             document.getElementById('campaignName').textContent = currentCampaign.name;
             document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
 
-            // Priority: customAmt > config.payout
-            const finalAmt = customAmt !== null ? customAmt : currentCampaign.payout;
-            document.getElementById('campaignPayout').textContent = `₹${finalAmt}`;
+            // Default payout from config
+            document.getElementById('campaignPayout').textContent = `₹${currentCampaign.payout}`;
 
             // Track Status Links
             const trackerUrl = `../tracker/index.html?id=${campaignId}`;
-            document.getElementById('trackStatusLink').href = trackerUrl;
+            const trackLink = document.getElementById('trackStatusLink');
+            if (trackLink) trackLink.href = trackerUrl;
 
             renderFormFields();
 
-            // DYNAMIC STEPS: Replace reward amount in the last step
+            // Steps
             const steps = [...(currentCampaign.steps || [])];
             if (steps.length > 0) {
                 const i = steps.length - 1;
-                // Regex replaces any price mention like ₹50 or ₹500
-                steps[i] = steps[i].replace(/₹[0-9]+/g, `₹${finalAmt}`);
+                steps[i] = steps[i].replace(/₹[0-9]+/g, `₹${currentCampaign.payout}`);
             }
 
             const stepsContainer = document.getElementById('stepsContainer');
