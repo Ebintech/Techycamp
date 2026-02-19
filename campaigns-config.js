@@ -12,7 +12,7 @@ const CAMPAIGNS = {
         slug: 'baja-broking',
         payout: 301,
         type: 'online',
-        active: true,
+        active: false,
         allowCustomPayout: true, // Set to false to lock rewards
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹301 Rewards',
