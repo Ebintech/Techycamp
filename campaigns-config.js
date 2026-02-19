@@ -2,6 +2,8 @@
 // ========================================
 // CAMPAIGNS CONFIGURATION DATABASE
 // ========================================
+// Note: Add 'allowCustomPayout: false' inside any campaign 
+// to disable reward customization for that specific offer.
 const CAMPAIGNS = {
     // Baja Broking Campaign
     'bww4yubb': {
@@ -11,6 +13,7 @@ const CAMPAIGNS = {
         payout: 301,
         type: 'online',
         active: true,
+        allowCustomPayout: true, // Set to false to lock rewards
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹301 Rewards',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
@@ -46,6 +49,7 @@ const CAMPAIGNS = {
         payout: 500,
         type: 'online',
         active: true,
+        allowCustomPayout: true, // Set to false to lock rewards
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹500 Rewards',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
@@ -79,6 +83,7 @@ const CAMPAIGNS = {
         payout: 500,
         type: 'offline',
         active: true,
+        allowCustomPayout: true, // Set to false to lock rewards
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹500 Cashback',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
@@ -110,6 +115,7 @@ const CAMPAIGNS = {
         payout: 50,
         type: 'offline',
         active: true,
+        allowCustomPayout: true, // Set to false to lock rewards
         description: 'Earn ₹50 Cashback',
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546&source={your-sub-aff-id}',
         requiredFields: ['upi'],
