@@ -114,8 +114,8 @@ const CAMPAIGNS = {
         slug: 'kalyan',
         payout: 50,
         type: 'offline',
-        active: false,
-        allowCustomPayout: false, // Set to false to lock rewards
+        active: true,
+        allowCustomPayout: true, // Set to false to lock rewards
         description: 'Earn ₹50 Cashback',
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546&source={your-sub-aff-id}',
         requiredFields: ['upi'],
