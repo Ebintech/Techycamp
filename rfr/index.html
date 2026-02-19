@@ -502,6 +502,12 @@
             document.title = `Refer & Earn - ${currentCampaign.name}`;
             document.getElementById('totalDisplay').textContent = `₹${currentCampaign.referralPayout?.referrer || totalPayout}`;
 
+            // 🚀 DISABLE CUSTOMIZATION IF CONFIG SAYS SO
+            if (currentCampaign.allowCustomPayout === false) {
+                const panel = document.querySelector('.customize-panel');
+                if (panel) panel.style.display = 'none';
+            }
+
             // Sync Slider + Inputs
             const initialReferrer = currentCampaign.referralPayout?.referrer || totalPayout;
             syncAll('slider', (initialReferrer / totalPayout) * 100);
