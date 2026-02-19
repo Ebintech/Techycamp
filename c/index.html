@@ -651,28 +651,44 @@
 
             // FETCH CUSTOMIZED REWARD & TELEGRAM if referred
             if (refId) {
+                console.log('Fetching custom data for Ref ID:', refId);
                 try {
-                    const res = await fetch(`${WORKER_API}/register-referrer?action=getReferrerTelegram&ref=${refId}&_=${Date.now()}`);
-                    const data = await res.json();
+                    // Start with the path known to work (from refer/index.html)
+                    let response = await fetch(`${WORKER_API}/register-referrer?action=getReferrerTelegram&ref=${refId}&_=${Date.now()}`);
 
-                    if (data.success) {
-                        // 1. Update Telegram if custom one exists
-                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
-                            const telegramBtn = document.getElementById('telegramBtn');
-                            if (telegramBtn) {
-                                telegramBtn.href = data.telegram;
-                                telegramBtn.style.display = 'flex';
+                    // Fallback to root if specific path 404s
+                    if (!response.ok) {
+                        console.log('Specific path failed, trying root fallback...');
+                        response = await fetch(`${WORKER_API}/?action=getReferrerTelegram&ref=${refId}&_=${Date.now()}`);
+                    }
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        console.log('Sync Response:', data);
+
+                        if (data.success) {
+                            // 1. Update Telegram
+                            if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                                const telegramBtn = document.querySelector('.telegram-btn'); // Changed to querySelector to match HTML
+                                if (telegramBtn) {
+                                    telegramBtn.href = data.telegram;
+                                    telegramBtn.style.display = 'flex';
+                                }
                             }
-                        }
 
-                        // 2. Update Reward and Steps if custom reward found
-                        if (data.payoutReferee !== undefined) {
-                            console.log('Customized reward found:', data.payoutReferee);
-                            await loadCampaignUI(data.payoutReferee);
+                            // 2. Update Reward and Steps
+                            if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
+                                console.log('Successfully synced custom reward:', data.payoutReferee);
+                                await loadCampaignUI(data.payoutReferee);
+                            }
+                        } else {
+                            console.warn('Backend returned success: false for referrer sync.');
                         }
+                    } else {
+                        console.error('Worker Sync Failed (HTTP Status:', response.status, response.statusText, ').');
                     }
                 } catch (e) {
-                    console.warn('BG Fetch failed, using defaults.');
+                    console.error('Sync Error Details:', e);
                 }
             }
         }
