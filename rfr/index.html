@@ -551,7 +551,7 @@
         // PRESERVED REGISTRATION LOGIC from OLD CODE
         function generateReferrerId(amt) {
             const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-            return `ML${amt}${random}`; // Encoding amount directly for 0ms sync
+            return `ML${amt}Z${random}`; // Using 'Z' as a separator to prevent digit collision
         }
 
         document.getElementById('referForm').addEventListener('submit', async function (e) {
