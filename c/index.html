@@ -649,27 +649,30 @@
             // Initial UI (uses default payout)
             await loadCampaignUI();
 
-            // FETCH CUSTOMIZED REWARD & TELEGRAM if referred
+            // FETCH CUSTOMIZED REWARD & TELEGRAM if referred (VIA POST BYPASS)
             if (refId) {
-                console.log('Fetching custom data for Ref ID:', refId);
+                console.log('Initiating POST Sync for Ref ID:', refId);
                 try {
-                    // Start with the path known to work (from refer/index.html)
-                    let response = await fetch(`${WORKER_API}/register-referrer?action=getReferrerTelegram&ref=${refId}&_=${Date.now()}`);
-
-                    // Fallback to root if specific path 404s
-                    if (!response.ok) {
-                        console.log('Specific path failed, trying root fallback...');
-                        response = await fetch(`${WORKER_API}/?action=getReferrerTelegram&ref=${refId}&_=${Date.now()}`);
-                    }
+                    // Use POST to bypass Worker-level 404s on GET
+                    const response = await fetch(`${WORKER_API}/register-referrer`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'getReferrerInfo',
+                            ref: refId,
+                            secretKey: 'Techybaanupxty892546', // Matches refer/index.html
+                            cacheBust: Date.now()
+                        })
+                    });
 
                     if (response.ok) {
                         const data = await response.json();
-                        console.log('Sync Response:', data);
+                        console.log('POST Sync Results:', data);
 
                         if (data.success) {
                             // 1. Update Telegram
                             if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
-                                const telegramBtn = document.querySelector('.telegram-btn'); // Changed to querySelector to match HTML
+                                const telegramBtn = document.querySelector('.telegram-btn');
                                 if (telegramBtn) {
                                     telegramBtn.href = data.telegram;
                                     telegramBtn.style.display = 'flex';
@@ -678,17 +681,17 @@
 
                             // 2. Update Reward and Steps
                             if (data.payoutReferee !== undefined && data.payoutReferee !== null) {
-                                console.log('Successfully synced custom reward:', data.payoutReferee);
+                                console.log('Successfully synced custom reward via POST:', data.payoutReferee);
                                 await loadCampaignUI(data.payoutReferee);
                             }
                         } else {
-                            console.warn('Backend returned success: false for referrer sync.');
+                            console.warn('Backend found no data for this ID.');
                         }
                     } else {
-                        console.error('Worker Sync Failed (HTTP Status:', response.status, response.statusText, ').');
+                        console.error('POST Sync Failed. Worker returned Status:', response.status);
                     }
                 } catch (e) {
-                    console.error('Sync Error Details:', e);
+                    console.error('POST Sync Exception:', e);
                 }
             }
         }
