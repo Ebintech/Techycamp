@@ -576,7 +576,7 @@
                 let referrerId = localStorage.getItem(localKey) || generateReferrerId();
                 localStorage.setItem(localKey, referrerId);
 
-                // Register API from Old Code
+                // Register API with Type & Secret
                 const response = await fetch('https://campaign-apii.businesstechy04.workers.dev/register-referrer', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -585,7 +585,9 @@
                         campaign: currentCampaign.name,
                         campaignSlug: campaignId,
                         payoutReferrer: finalYou,
-                        payoutReferee: finalFriend
+                        payoutReferee: finalFriend,
+                        type: 'referrer',
+                        secretKey: 'Techybaanupxty892546'
                     })
                 });
 
