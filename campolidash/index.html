@@ -275,7 +275,6 @@
         }
 
         .log-item {
-            padding: 8px;
             margin-bottom: 4px;
             border-radius: 4px;
         }
@@ -287,122 +286,6 @@
         }
 
         .log div.success {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        /* MODAL STYLES */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            border-radius: 20px;
-            width: 90%;
-            max-width: 500px;
-            padding: 32px;
-            position: relative;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-title {
-            font-size: 22px;
-            font-weight: 700;
-            color: #1f2937;
-        }
-
-        .close-modal {
-            background: #f3f4f6;
-            border: none;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            color: #6b7280;
-            font-size: 20px;
-        }
-
-        .duplicate-list {
-            background: #fdf2f2;
-            border: 2px solid #fecaca;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-            overflow-y: auto;
-            max-height: 400px;
-            font-family: inherit;
-        }
-
-        .dup-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 8px;
-            border: 1px solid #fee2e2;
-            transition: all 0.2s;
-        }
-
-        .dup-item:hover {
-            border-color: #f87171;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-
-        .dup-upi {
-            font-family: monospace;
-            font-weight: 600;
-            color: #b91c1c;
-        }
-
-        .dup-badge {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .stat-card.clickable {
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-
-        .stat-card.clickable:hover {
-            transform: translateY(-5px);
-            border-color: #f59e0b;
-            box-shadow: 0 10px 20px rgba(245, 158, 11, 0.2);
-        }
-
-        .log-success {
             background: #d1fae5;
             color: #065f46;
         }
@@ -540,6 +423,24 @@
                         </div>
                     </div>
 
+                    <!-- 🛡️ Multi-Approval Toggle -->
+                    <div class="multi-approval-card"
+                        style="margin-top: 20px; padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px;">
+                        <label
+                            style="display: flex; align-items: center; gap: 12px; font-weight: 600; color: #374151; cursor: pointer;">
+                            <input type="checkbox" id="multiApproveToggle" onchange="toggleMultiApprove()"
+                                style="width: 20px; height: 20px; accent-color: #059669;">
+                            Enable Multi-Approval Mode (Advanced)
+                        </label>
+                        <div id="multiApproveControls"
+                            style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #d1d5db; align-items: center; gap: 15px;">
+                            <span style="font-size: 0.9rem; color: #4b5563;">Max approvals allowed per
+                                UPI/Campaign:</span>
+                            <input type="number" id="maxPerUpi" value="1" min="1"
+                                style="width: 70px; padding: 6px; border: 1px solid #d1d5db; border-radius: 6px; text-align: center; font-weight: bold;">
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label>Paste UPI IDs (one per line)</label>
                         <textarea id="upiTextarea" placeholder="test1@paytm
@@ -560,9 +461,9 @@ test3@googlepay"></textarea>
                             <div class="stat-number" id="successCount">0</div>
                             <div class="stat-label">Updated</div>
                         </div>
-                        <div class="stat-card clickable" onclick="showDuplicateDetails()">
+                        <div class="stat-card" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);">
                             <div class="stat-number" id="dupCount">0</div>
-                            <div class="stat-label">Duplicated (Click to View)</div>
+                            <div class="stat-label">Duplicated</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-number" id="errorCount">0</div>
@@ -592,7 +493,6 @@ test3@googlepay"></textarea>
             const BASE_URL = 'https://www.camptechy.site'; // ✅ YOUR CUSTOM DOMAIN
 
             let campaigns = JSON.parse(localStorage.getItem('campaigns') || '[]');
-            let duplicateCounts = {}; // ✅ Track duplicates globally for the modal
 
             // Initialize
             updateCampaignSelectors();
@@ -644,10 +544,10 @@ test3@googlepay"></textarea>
 
             function generateLinks(campaign) {
                 const links = {
-                    'Landing Page': `${BASE_URL}/index.html?id=${campaign.id}`,
-                    'Referral Generator': `${BASE_URL}/refer.html?id=${campaign.id}`,
-                    'Status Checker': `${BASE_URL}/status.html?id=${campaign.id}`,
-                    'Referral Tracker': `${BASE_URL}/refer-tracker.html?id=${campaign.id}`
+                    'Landing Page': `${BASE_URL}/c/?o=${campaign.id}`,
+                    'Referral Generator': `${BASE_URL}/refer?id=${campaign.id}`,
+                    'Status Checker': `${BASE_URL}/tracker`,
+                    'Referral Tracker': `${BASE_URL}/refer-tracker?id=${campaign.id}`
                 };
 
                 let html = '';
@@ -711,10 +611,10 @@ test3@googlepay"></textarea>
                 let html = '';
                 campaigns.forEach((c, index) => {
                     const links = {
-                        'Landing Page': `${BASE_URL}/index.html?id=${c.id}`,
-                        'Referral Generator': `${BASE_URL}/refer.html?id=${c.id}`,
-                        'Status Checker': `${BASE_URL}/status.html?id=${c.id}`,
-                        'Referral Tracker': `${BASE_URL}/refer-tracker.html?id=${c.id}`
+                        'Landing Page': `${BASE_URL}/c/?o=${c.id}`,
+                        'Referral Generator': `${BASE_URL}/refer?id=${c.id}`,
+                        'Status Checker': `${BASE_URL}/tracker`,
+                        'Referral Tracker': `${BASE_URL}/refer-tracker?id=${c.id}`
                     };
 
                     html += `
@@ -761,10 +661,10 @@ test3@googlepay"></textarea>
             function copyAllCampaignLinks(index) {
                 const campaign = campaigns[index];
                 const links = {
-                    'Landing Page': `${BASE_URL}/index.html?id=${campaign.id}`,
-                    'Referral Generator': `${BASE_URL}/refer.html?id=${campaign.id}`,
-                    'Status Checker': `${BASE_URL}/status.html?id=${campaign.id}`,
-                    'Referral Tracker': `${BASE_URL}/refer-tracker.html?id=${campaign.id}`
+                    'Landing Page': `${BASE_URL}/c/?o=${campaign.id}`,
+                    'Referral Generator': `${BASE_URL}/refer?id=${campaign.id}`,
+                    'Status Checker': `${BASE_URL}/tracker`,
+                    'Referral Tracker': `${BASE_URL}/refer-tracker?id=${campaign.id}`
                 };
 
                 const text = Object.entries(links)
@@ -784,6 +684,15 @@ test3@googlepay"></textarea>
                 }
             }
 
+            function toggleMultiApprove() {
+                const multiApproveControls = document.getElementById('multiApproveControls');
+                if (document.getElementById('multiApproveToggle').checked) {
+                    multiApproveControls.style.display = 'flex';
+                } else {
+                    multiApproveControls.style.display = 'none';
+                }
+            }
+
             async function processConversions() {
                 // 🔒 STEP 1: ASK FOR API KEY
                 const apiKey = prompt('🔐 Enter Admin API Key to update conversions:');
@@ -796,6 +705,8 @@ test3@googlepay"></textarea>
                 const campaignId = document.getElementById('convCampaign').value;
                 const payout = document.getElementById('convPayout').value;
                 const upiText = document.getElementById('upiTextarea').value.trim();
+                const isMultiEnabled = document.getElementById('multiApproveToggle').checked;
+                const maxPerUpi = isMultiEnabled ? parseInt(document.getElementById('maxPerUpi').value) : 1;
 
                 if (!campaignId) {
                     alert('Please enter a campaign slug (e.g., baja-broking)');
@@ -807,89 +718,76 @@ test3@googlepay"></textarea>
                     return;
                 }
 
-                // Parse UPIs
-                const upis = upiText.split('\n')
+                // 🔍 Parse and Detect Duplicates in the input list
+                const rawUpis = upiText.split('\n')
                     .map(line => line.trim())
                     .filter(line => line && line.includes('@'));
 
-                if (upis.length === 0) {
+                if (rawUpis.length === 0) {
                     alert('No valid UPI IDs found');
                     return;
                 }
 
-                // ✅ REMOVED: No need to validate campaign exists locally
-                // Just send it to the server - server will validate
+                // Security Confirmation for Multi-Approval
+                if (isMultiEnabled && maxPerUpi > 1) {
+                    const confirmMulti = confirm(`🚨 ALERT: Multi-Approval Mode is ACTIVE.\n\nThis will approve up to ${maxPerUpi} entries for EVERY UPI in your list.\nAre you absolutely sure you want to proceed?`);
+                    if (!confirmMulti) return;
+                }
+
+                const uniqueUpis = [...new Set(rawUpis)];
+                const dupCount = rawUpis.length - uniqueUpis.length;
 
                 // Show stats
                 document.getElementById('convStats').style.display = 'grid';
                 document.getElementById('convLog').style.display = 'block';
-                document.getElementById('totalCount').textContent = upis.length;
+                document.getElementById('totalCount').textContent = rawUpis.length;
                 document.getElementById('successCount').textContent = '0';
-                document.getElementById('dupCount').textContent = '0';
+                document.getElementById('dupCount').textContent = dupCount;
                 document.getElementById('errorCount').textContent = '0';
                 document.getElementById('convLog').innerHTML = '';
 
-                let successCount = 0;
-                let errorCount = 0;
-                duplicateCounts = {}; // ✅ Reset on each process run
-
-                addLog('info', `Starting to process ${upis.length} UPIs...`);
-
-                for (const upi of upis) {
-                    try {
-                        const response = await fetch(`${WORKER_API}/admin/update-conversion`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-API-Key': apiKey  // ← SEND API KEY
-                            },
-                            body: JSON.stringify({
-                                upi: upi,
-                                campaign: campaignId,  // ✅ FIXED: Use campaignId directly
-                                status: 'approved',
-                                payout: payout
-                            })
-                        });
-
-                        const result = await response.json();
-
-                        if (result.success) {
-                            successCount++;
-                            addLog('success', `✓ ${upi} - Updated successfully`);
-                            document.getElementById('successCount').textContent = successCount;
-
-                            if (result.duplicateFound) {
-                                let currentDups = parseInt(document.getElementById('dupCount').textContent) || 0;
-                                let newDups = currentDups + (result.duplicateCount || 0);
-                                document.getElementById('dupCount').textContent = newDups;
-
-                                // ✅ Add to our tracking object
-                                if (result.duplicatedUpis && Array.isArray(result.duplicatedUpis)) {
-                                    result.duplicatedUpis.forEach(dupUpi => {
-                                        duplicateCounts[dupUpi] = (duplicateCounts[dupUpi] || 0) + 1;
-                                    });
-                                } else {
-                                    duplicateCounts[upi] = (duplicateCounts[upi] || 0) + (result.duplicateCount || 1);
-                                }
-
-                                addLog('warning', `⚠️ ${upi} - ${result.duplicateCount} duplicate(s) found and ignored (Approved only once)`);
-                            }
-                        } else {
-                            errorCount++;
-                            addLog('error', `✗ ${upi} - ${result.message || 'Not found'}`);
-                            document.getElementById('errorCount').textContent = errorCount;
-                        }
-
-                        await new Promise(resolve => setTimeout(resolve, 100));
-
-                    } catch (error) {
-                        errorCount++;
-                        addLog('error', `✗ ${upi} - Error: ${error.message}`);
-                        document.getElementById('errorCount').textContent = errorCount;
-                    }
+                if (dupCount > 0) {
+                    addLog('warning', `⚠️ Found ${dupCount} duplicate UPIs in your input list. These will be handled based on Multi-Approval settings.`);
                 }
 
-                addLog('info', `✅ Processing complete! ${successCount} updated, ${errorCount} not found.`);
+                addLog('info', `🚀 Sending batch request to approve up to ${maxPerUpi} per UPI...`);
+
+                try {
+                    // ⚡ BATCH REQUEST (Instant)
+                    const response = await fetch(`${WORKER_API}/admin/update-conversion-batch`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-API-Key': apiKey
+                        },
+                        body: JSON.stringify({
+                            type: 'batchUpdateConversions', // Required for GAS routing
+                            upis: uniqueUpis, // Send unique list for processing
+                            campaign: campaignId,
+                            status: 'approved',
+                            payout: payout,
+                            maxPerUpi: maxPerUpi
+                        })
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        document.getElementById('successCount').textContent = result.matchedCount || 0;
+                        document.getElementById('errorCount').textContent = result.notFoundCount || 0;
+
+                        addLog('success', `✅ Batch processing complete!`);
+                        addLog('success', `✓ ${result.matchedCount} records approved successfully.`);
+                        if (result.notFoundCount > 0) {
+                            addLog('warning', `⚠️ ${result.notFoundCount} UPIs were not found (or had no more pending records to approve).`);
+                        }
+                    } else {
+                        addLog('error', `❌ Batch update failed: ${result.message}`);
+                    }
+
+                } catch (error) {
+                    addLog('error', `❌ Network Error: ${error.message}`);
+                }
             }
 
             function addLog(type, message) {
@@ -900,80 +798,7 @@ test3@googlepay"></textarea>
                 log.appendChild(item);
                 log.scrollTop = log.scrollHeight;
             }
-
-            // --- MODAL FUNCTIONS ---
-            function showDuplicateDetails() {
-                const modal = document.getElementById('duplicateModal');
-                const list = document.getElementById('duplicateList');
-
-                const upis = Object.keys(duplicateCounts);
-
-                if (upis.length === 0) {
-                    list.innerHTML = `<div style="text-align:center; color:#6b7280; padding:40px;">
-                        <div style="font-size:40px; margin-bottom:12px;">🔍</div>
-                        No duplicates found in this batch yet.
-                    </div>`;
-                } else {
-                    list.innerHTML = upis.map(upi => `
-                        <div class="dup-item">
-                            <span class="dup-upi">${upi}</span>
-                            <span class="dup-badge">${duplicateCounts[upi]} times</span>
-                        </div>
-                    `).join('');
-                }
-
-                modal.style.display = 'flex';
-            }
-
-            function closeModal() {
-                document.getElementById('duplicateModal').style.display = 'none';
-            }
-
-            async function copyAllDuplicates() {
-                const upis = Object.keys(duplicateCounts);
-                if (upis.length === 0) return;
-
-                const text = upis.join('\n');
-
-                try {
-                    await navigator.clipboard.writeText(text);
-                    alert('✅ All unique duplicated UPIs copied to clipboard!');
-                } catch (err) {
-                    alert('❌ Failed to copy: ' + err);
-                }
-            }
-
-            // Close modal on click outside
-            window.onclick = function (event) {
-                const modal = document.getElementById('duplicateModal');
-                if (event.target == modal) {
-                    closeModal();
-                }
-            }
         </script>
-    </div>
-    <!-- DUPLICATE DETAILS MODAL -->
-    <div id="duplicateModal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <span class="modal-title">📦 Duplicated UPIs</span>
-                <button class="close-modal" onclick="closeModal()">×</button>
-            </div>
-            <div id="duplicateList" class="duplicate-list">
-                <div style="text-align:center; color:#6b7280; padding:40px;">
-                    <div style="font-size:40px; margin-bottom:12px;">🔍</div>
-                    No duplicates processed yet.
-                </div>
-            </div>
-            <div style="display: flex; gap: 12px;">
-                <button class="btn btn-primary" style="flex: 1;" onclick="copyAllDuplicates()">
-                    📋 Copy All UPIs
-                </button>
-                <button class="btn" style="background: #f3f4f6; color: #4b5563;" onclick="closeModal()">
-                    Close
-                </button>
-            </div>
-        </div>
     </div>
     <!-- END MAIN DASHBOARD -->
 
