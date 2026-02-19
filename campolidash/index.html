@@ -758,9 +758,10 @@ test3@googlepay"></textarea>
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
-                            'X-API-Key': apiKey
+                            'X-API-Key': apiKey // Still send header for Worker
                         },
                         body: JSON.stringify({
+                            secretKey: apiKey, // Also send in body for GAS
                             type: 'batchUpdateConversions', // Required for GAS routing
                             upis: uniqueUpis, // Send unique list for processing
                             campaign: campaignId,
@@ -771,6 +772,7 @@ test3@googlepay"></textarea>
                     });
 
                     const result = await response.json();
+                    console.log('Batch Response:', result);
 
                     if (result.success) {
                         document.getElementById('successCount').textContent = result.matchedCount || 0;
@@ -782,7 +784,9 @@ test3@googlepay"></textarea>
                             addLog('warning', `⚠️ ${result.notFoundCount} UPIs were not found (or had no more pending records to approve).`);
                         }
                     } else {
-                        addLog('error', `❌ Batch update failed: ${result.message}`);
+                        // Better Error Reporting
+                        const errMsg = result.message || result.error || JSON.stringify(result);
+                        addLog('error', `❌ Batch update failed: ${errMsg}`);
                     }
 
                 } catch (error) {
