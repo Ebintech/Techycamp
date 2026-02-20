@@ -901,7 +901,8 @@
                         campaignSlug: currentCampaign.slug,
                         referrerId: refId || null,
                         origin: window.location.origin,
-                        secretKey: 'Techybaanupxty892546' // Ensure secret is passed if needed
+                        secretKey: 'Techybaanupxty892546', // Ensure secret is passed if needed
+                        offerUrl: currentCampaign.offerUrl // ✅ ADDED: Required for ClickID replacement
                     })
                 });
                 const result = await res.json();
