@@ -120,12 +120,14 @@ const CAMPAIGNS = {
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546&source={your-sub-aff-id}',
         requiredFields: ['upi'],
         steps: [
+            'ONLY Female Registrations Will be paid',
             'Submit your UPI ID above',
             'Complete Registration',
             'You will get a call from the company talk as you are interested',
             'Done in 48-72 hours You will get ₹50 cashback!'
         ],
         terms: [
+            'ONLY Female Registration Will be paid',
             'Valid once per user/UPI/IP/Device',
             'Complete registration with real details',
             'Must answer the company call as interested',
