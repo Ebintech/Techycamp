@@ -90,7 +90,7 @@ const CAMPAIGNS = {
         steps: [
             'Enter your UPI ID & Mobile And Submit.',
             'Basic Details Email  Mobile, Pan Number Complete Basic Process.',
-            'Then Choose Min Amount of ₹1000+or Above ( 1000, 1020, 1050, 1100) of Any SIP or Lumpsum & Don't Withdrawal At least 30 Days. { Amount 1000+ amount randomly choose 👍 }',
+            'Then Choose Min Amount of ₹1000+or Above ( 1000, 1020, 1050, 1100) of Any SIP or Lumpsum & Don\'t Withdrawal At least 30 Days. { Amount 1000+ amount randomly choose 👍 }',
             'Complete The Payment With Turn On Autopay.',
             'Complete Payment and Fill The Form',
             'Done ✅ You will Get Cashback within 3/4 Working Days.',
