@@ -78,8 +78,8 @@ const CAMPAIGNS = {
     // Axis Mutual Fund Campaign
     'axismf01': {
         id: 'axismf01',
-        name: 'Axis',
-        slug: 'Axis',
+        name: 'axis',
+        slug: 'axis',
         payout: 700,
         type: 'offline',
         active: true,
@@ -94,9 +94,7 @@ const CAMPAIGNS = {
             'Complete The Payment With Turn On Autopay.',
             'Complete Payment and Fill The Form',
             'Done ✅ You will Get Cashback within 3/4 Working Days.',
-            'Important Note ⛔️:- 
-
-    Only For New User, If you have done Axis SIP from somewhere else before then dont try & process has to be completed in one touch go only, you have to pay along with the 1st installment of SIP only (If you have done Axis SIP before on Funds India, Edufund, Small Case Camp then dont try)'
+            'Important Note ⛔️:- Only For New User, If you have done Axis SIP from somewhere else before then dont try & process has to be completed in one touch go only, you have to pay along with the 1st installment of SIP only (If you have done Axis SIP before on Funds India, Edufund, Small Case Camp then dont try)'
         ],
         terms: [
             'Valid once per user/UPI/IP/Device',
