@@ -85,7 +85,7 @@ const CAMPAIGNS = {
         active: true,
         allowCustomPayout: true, // Set to false to lock rewards
         description: 'Earn ₹700 Cashback',
-        offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2792&pub_id=3546&source={your-sub-aff-id}',
         requiredFields: ['upi','mobile'], // Minimum fields
         steps: [
             'Enter your UPI ID & Mobile And Submit.',
@@ -98,9 +98,11 @@ const CAMPAIGNS = {
         ],
         terms: [
             'Valid once per user/UPI/IP/Device',
-            'Minimum investment ₹5000',
-            'KYC must be completed',
-            'Verification takes 48-72 hours'
+            'Multiple registrations from same user/UID/IP address, similar looking usernames and e mail ID & Device will not be paid.',
+            'Use only Real Indian Mobile Numbers and genuine mail ID to register in the app.',
+            'Merchant verifies your account, if they find any Duplicate or Suspicious transaction, then your Reward may get rejected.',
+            'CampTechy reserves the right to disapprove the rewards anytime if any Fraudulent activity found from your end.',
+            'Any query related to Reward will be entertained by the CampTechy Team. Email to camptechybusiness@gmail.com or Contact us via Telegram'
         ],
         referralPayout: {
             referrer: 700,
