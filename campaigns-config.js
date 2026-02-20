@@ -48,7 +48,7 @@ const CAMPAIGNS = {
         slug: 'angel-one',
         payout: 500,
         type: 'online',
-        active: true,
+        active: false,
         allowCustomPayout: true, // Set to false to lock rewards
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹500 Rewards',
@@ -78,22 +78,25 @@ const CAMPAIGNS = {
     // Axis Mutual Fund Campaign
     'axismf01': {
         id: 'axismf01',
-        name: 'Axis Mutual Fund',
-        slug: 'axis-mf',
-        payout: 500,
+        name: 'Axis',
+        slug: 'Axis',
+        payout: 700,
         type: 'offline',
         active: true,
         allowCustomPayout: true, // Set to false to lock rewards
-        logo: 'https://campguruji.in/img/app-logo.png',
-        description: 'Earn ₹500 Cashback',
+        description: 'Earn ₹700 Cashback',
         offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
-        requiredFields: ['upi'], // Minimum fields
+        requiredFields: ['upi','mobile'], // Minimum fields
         steps: [
-            'Submit your UPI ID above',
-            'Complete KYC verification',
-            'Invest minimum ₹5000 in any fund',
-            'Wait 48-72 hours for merchant verification',
-            'Get ₹500 cashback automatically!'
+            'Enter your UPI ID & Mobile And Submit.',
+            'Basic Details Email  Mobile, Pan Number Complete Basic Process.',
+            'Then Choose Min Amount of ₹1000+or Above ( 1000, 1020, 1050, 1100) of Any SIP or Lumpsum & Don't Withdrawal At least 30 Days. { Amount 1000+ amount randomly choose 👍 }',
+            'Complete The Payment With Turn On Autopay.',
+            'Complete Payment and Fill The Form',
+            'Done ✅ You will Get Cashback within 3/4 Working Days.',
+            'Important Note ⛔️:- 
+
+    Only For New User, If you have done Axis SIP from somewhere else before then dont try & process has to be completed in one touch go only, you have to pay along with the 1st installment of SIP only (If you have done Axis SIP before on Funds India, Edufund, Small Case Camp then dont try)'
         ],
         terms: [
             'Valid once per user/UPI/IP/Device',
@@ -102,7 +105,7 @@ const CAMPAIGNS = {
             'Verification takes 48-72 hours'
         ],
         referralPayout: {
-            referrer: 300,
+            referrer: 700,
             referee: 200
         }
     },
