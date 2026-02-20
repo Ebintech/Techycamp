@@ -105,8 +105,8 @@ const CAMPAIGNS = {
             'Any query related to Reward will be entertained by the CampTechy Team. Email to camptechybusiness@gmail.com or Contact us via Telegram'
         ],
         referralPayout: {
-            referrer: 700,
-            referee: 200
+            referrer: 200,
+            referee: 700
         }
     },
 
