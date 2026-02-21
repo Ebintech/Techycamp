@@ -1004,21 +1004,21 @@
                 let replaced = false;
 
                 placeholders.forEach(p => {
-                    if (finalUrl.toLowerCase().includes(p.toLowerCase())) {
+                    if (finalRedirect.toLowerCase().includes(p.toLowerCase())) {
                         // Case-insensitive regex replacement
                         const regex = new RegExp(p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
-                        finalUrl = finalUrl.replace(regex, uniqueClickId);
+                        finalRedirect = finalRedirect.replace(regex, uniqueClickId);
                         replaced = true;
                     }
                 });
 
                 // Fail-safe: If no placeholder was found, append as standard aff_sub
                 if (!replaced) {
-                    const separator = finalUrl.includes('?') ? '&' : '?';
-                    finalUrl += separator + 'aff_sub=' + uniqueClickId;
+                    const separator = finalRedirect.includes('?') ? '&' : '?';
+                    finalRedirect += separator + 'aff_sub=' + uniqueClickId;
                 }
 
-                window.location.replace(finalUrl);
+                window.location.replace(finalRedirect);
 
             } catch (err) {
                 console.error(err);
