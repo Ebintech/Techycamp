@@ -143,12 +143,12 @@ const CAMPAIGNS = {
         id: 'abcd_gold',
         name: 'ABCD Gold',
         slug: 'abcd-gold',
-        payout: 500,
+        payout: 25,
         type: 'online',
         active: true,
         allowCustomPayout: true,
         description: 'Earn ₹500 Cashback on Gold Purchase',
-        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&aff_sub={clickid}',
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&p1={clickid}',
         statusFlow: {
             'dg_gold_buy_proceed_click': 'Install Tracked',
             'dg_purchase_success_screen_load': 'Gold Purchased'
@@ -167,8 +167,8 @@ const CAMPAIGNS = {
             'Reward will be credited within 24 hours of successful purchase'
         ],
         referralPayout: {
-            referrer: 300,
-            referee: 100
+            referrer: 15,
+            referee: 25
         }
     }
 };
