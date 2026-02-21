@@ -26,7 +26,6 @@
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
             width: 100%;
             padding: 40px 20px 80px;
-            /* Extra bottom padding for overlap */
             color: white;
             text-align: center;
             border-bottom-left-radius: 30px;
@@ -72,7 +71,6 @@
             border-radius: 24px;
             padding: 30px;
             margin-top: -60px;
-            /* Overlap effect */
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
             position: relative;
             z-index: 10;
@@ -97,7 +95,6 @@
         .input-group input {
             width: 100%;
             padding: 16px 16px 16px 50px;
-            /* Space for icon */
             font-size: 16px;
             border: 2px solid #e2e8f0;
             border-radius: 16px;
@@ -167,17 +164,8 @@
             align-items: flex-start;
         }
 
-        .security-icon {
-            color: #3b82f6;
-            font-size: 20px;
-            margin-top: 2px;
-        }
-
-        .security-text {
-            font-size: 13px;
-            color: #475569;
-            line-height: 1.5;
-        }
+        .security-icon { color: #3b82f6; font-size: 20px; margin-top: 2px; }
+        .security-text { font-size: 13px; color: #475569; line-height: 1.5; }
 
         /* Result Section */
         .result-section {
@@ -186,9 +174,7 @@
             animation: fadeIn 0.4s ease;
         }
 
-        .result-section.active {
-            display: block;
-        }
+        .result-section.active { display: block; }
 
         .status-card {
             padding: 24px;
@@ -198,160 +184,45 @@
         }
 
         /* Status Variants */
-        .status-pending {
-            background: #fffbeb;
-            color: #b45309;
-        }
+        .status-pending { background: #fffbeb; color: #b45309; }
+        .status-approved { background: #dcfce7; color: #15803d; }
+        .status-paid { background: #eff6ff; color: #1d4ed8; }
+        .status-error { background: #fef2f2; color: #b91c1c; }
 
-        .status-approved {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        .status-paid {
-            background: #eff6ff;
-            color: #1d4ed8;
-        }
-
-        .status-error {
-            background: #fef2f2;
-            color: #b91c1c;
-        }
-
-        .status-icon-large {
-            font-size: 48px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .status-heading {
-            font-weight: 700;
-            font-size: 18px;
-            margin-bottom: 6px;
-        }
-
-        .status-desc {
-            font-size: 14px;
-            opacity: 0.9;
-        }
+        .status-icon-large { font-size: 48px; margin-bottom: 12px; display: block; }
+        .status-heading { font-weight: 700; font-size: 18px; margin-bottom: 6px; }
+        .status-desc { font-size: 14px; opacity: 0.9; }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Steps */
-        .steps-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-        }
+        .steps-container { display: flex; flex-direction: column; gap: 12px; margin-top: 20px; }
+        .step-box { background: #fff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 16px; display: flex; align-items: center; gap: 16px; transition: all 0.3s; }
+        .step-box.completed { background: #f0fdf4; border-color: #bbf7d0; }
+        .step-box.active { background: #eff6ff; border-color: #bfdbfe; }
+        .step-box.pending { background: #f8fafc; border-color: #e2e8f0; opacity: 0.7; }
+        .step-indicator { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+        .step-box.completed .step-indicator { background: #16a34a; color: white; }
+        .step-box.active .step-indicator { background: #2563eb; color: white; }
+        .step-box.pending .step-indicator { background: #cbd5e1; color: #64748b; }
+        .step-content { flex: 1; }
+        .step-title { font-weight: 600; font-size: 15px; color: #1e293b; margin-bottom: 2px; }
+        .step-subtitle { font-size: 12px; color: #64748b; }
 
-        .step-box {
-            background: #fff;
-            border: 1px solid #e2e8f0;
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            transition: all 0.3s;
-        }
-
-        .step-box.completed {
-            background: #f0fdf4;
-            border-color: #bbf7d0;
-        }
-
-        .step-box.active {
-            background: #eff6ff;
-            border-color: #bfdbfe;
-        }
-
-        .step-box.pending {
-            background: #f8fafc;
-            /* Inactive/Gray */
-            border-color: #e2e8f0;
-            opacity: 0.7;
-        }
-
-        .step-indicator {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .step-box.completed .step-indicator {
-            background: #16a34a;
-            color: white;
-        }
-
-        .step-box.active .step-indicator {
-            background: #2563eb;
-            color: white;
-        }
-
-        .step-box.pending .step-indicator {
-            background: #cbd5e1;
-            color: #64748b;
-        }
-
-        .step-content {
-            flex: 1;
-        }
-
-        .step-title {
-            font-weight: 600;
-            font-size: 15px;
-            color: #1e293b;
-            margin-bottom: 2px;
-        }
-
-        .step-subtitle {
-            font-size: 12px;
-            color: #64748b;
-        }
-
-        .step-box.completed .step-title {
-            color: #15803d;
-        }
-
-        .step-box.completed .step-subtitle {
-            color: #166534;
-        }
-
-        .step-box.active .step-title {
-            color: #1e40af;
-        }
-
-        .step-box.active .step-subtitle {
-            color: #1e3a8a;
-        }
+        .step-box.completed .step-title { color: #15803d; }
+        .step-box.active .step-title { color: #1e40af; }
     </style>
 </head>
 
 <body>
-
     <!-- Header Section -->
     <div class="header-bg">
         <div class="header-badge">
             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             Track Status
         </div>
@@ -369,13 +240,12 @@
 
         <button class="btn-track" id="trackBtn">
             <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             Track My Status
         </button>
 
-        <!-- Hidden Result Section -->
+        <!-- Result Section -->
         <div id="resultArea" class="result-section">
             <div id="statusCard" class="status-card status-pending">
                 <span id="statusIcon" class="status-icon-large">⏳</span>
@@ -384,7 +254,6 @@
             </div>
 
             <div class="steps-container">
-                <!-- Step 1: Submitted (Default: Pending) -->
                 <div class="step-box pending" id="step1">
                     <div class="step-indicator">1</div>
                     <div class="step-content">
@@ -393,16 +262,14 @@
                     </div>
                 </div>
 
-                <!-- Step 2: Verification -->
                 <div class="step-box pending" id="step2">
                     <div class="step-indicator">2</div>
                     <div class="step-content">
-                        <div class="step-title">Verification</div>
-                        <div class="step-subtitle">Pending</div>
+                        <div class="step-title" id="step2Title">Verification</div>
+                        <div class="step-subtitle" id="step2Sub">Pending</div>
                     </div>
                 </div>
 
-                <!-- Step 3: Cashback Paid -->
                 <div class="step-box pending" id="step3">
                     <div class="step-indicator">3</div>
                     <div class="step-content">
@@ -416,9 +283,7 @@
         <div class="security-box">
             <div class="security-icon">
                 <svg width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z">
-                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
                 </svg>
             </div>
             <div class="security-text">
@@ -427,36 +292,20 @@
         </div>
     </div>
 
-    <!-- Script to load campaign name dynamically -->
+    <!-- Scripts -->
     <script src="../campaigns-config.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // 1. Get URL parameters
             const urlParams = new URLSearchParams(window.location.search);
-            // Support ?id=, ?o=, ?v= for campaign identification
             const campaignId = urlParams.get('id') || urlParams.get('o') || urlParams.get('v');
-
-            // 2. Default Title
             const titleElement = document.getElementById('campaignNameTitle');
 
-            // 3. Logic to fetch campaign name from config
             if (campaignId && typeof CAMPAIGNS !== 'undefined' && CAMPAIGNS[campaignId]) {
                 const campaign = CAMPAIGNS[campaignId];
-                // Update the Header Name
                 titleElement.textContent = campaign.name;
                 document.title = `Track Status - ${campaign.name}`;
-            } else if (campaignId) {
-                // Fallback if ID exists but not in config (e.g. new campaign)
-                // Try to make it readable: 'angel-one' -> 'Angel One'
-                const readableName = campaignId.split('-')
-                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                    .join(' ');
-                titleElement.textContent = readableName;
-            } else {
-                titleElement.textContent = "Campaign Tracker";
             }
 
-            // 4. Handle Tracking Logic
             const trackBtn = document.getElementById('trackBtn');
             const upiInput = document.getElementById('upiInput');
             const resultArea = document.getElementById('resultArea');
@@ -464,36 +313,18 @@
             const statusTitle = document.getElementById('statusTitle');
             const statusDesc = document.getElementById('statusDesc');
             const statusIcon = document.getElementById('statusIcon');
-            // Steps
             const step1 = document.getElementById('step1');
             const step2 = document.getElementById('step2');
             const step3 = document.getElementById('step3');
 
             trackBtn.addEventListener('click', async () => {
                 const upi = upiInput.value.trim();
-                if (!upi) {
-                    alert('Please enter a valid UPI address');
-                    return;
-                }
+                if (!upi) { alert('Please enter a valid UPI address'); return; }
 
-                // UI Loading State
                 trackBtn.disabled = true;
                 trackBtn.innerHTML = 'Searching...';
 
-                // Reset steps to Pending
-                [step1, step2, step3].forEach(step => {
-                    step.className = 'step-box pending';
-                    if (step.id === 'step1') {
-                        step.querySelector('.step-subtitle').textContent = 'Waiting for search...';
-                    } else {
-                        step.querySelector('.step-subtitle').textContent = 'Pending';
-                    }
-                    // Reset indicator text to number
-                    step.querySelector('.step-indicator').textContent = step.id.replace('step', '');
-                });
-
                 try {
-                    // Replace with your actual Worker API
                     const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
                     const response = await fetch(`${WORKER_API}/status?upi=${encodeURIComponent(upi)}&campaign=${campaignId || ''}`);
                     const data = await response.json();
@@ -501,15 +332,25 @@
                     resultArea.classList.add('active');
 
                     if (data.found) {
-                        const status = data.status; // pending, approved, paid
+                        const status = data.status;
+                        const campaign = (typeof getCampaign !== 'undefined') ? getCampaign(campaignId) : null;
+                        const statusFlow = campaign?.statusFlow || {};
+
+                        // Update Step 2 Label dynamically
+                        const step2TitleEl = document.getElementById('step2Title');
+                        if (campaign?.steps && campaign.steps.length >= 3) {
+                            step2TitleEl.textContent = campaign.steps[2].replace('Complete ', '').replace('Register and complete ', '');
+                        }
 
                         // Step 1: Always Completed if found
                         step1.className = 'step-box completed';
                         step1.querySelector('.step-indicator').textContent = '✓';
                         step1.querySelector('.step-subtitle').textContent = 'Completed on ' + new Date(data.submittedDate).toLocaleDateString();
 
-                        if (status === 'paid' || status === 'cashback_paid' || status === 'approved') {
-                            // Success Status
+                        const isFinal = (status === 'paid' || status === 'cashback_paid' || status === 'approved');
+                        const isIntermediate = Object.values(statusFlow).includes(status) || status === 'installed' || status === 'kyc_done';
+
+                        if (isFinal) {
                             statusCard.className = 'status-card status-paid';
                             statusIcon.textContent = '🎉';
                             statusTitle.textContent = 'Verification Successful!';
@@ -517,15 +358,25 @@
 
                             step2.className = 'step-box completed';
                             step2.querySelector('.step-indicator').textContent = '✓';
-                            step2.querySelector('.step-subtitle').textContent = 'Verified';
+                            document.getElementById('step2Sub').textContent = 'Verified';
 
                             step3.className = 'step-box completed';
                             step3.querySelector('.step-indicator').textContent = '✓';
                             step3.querySelector('.step-subtitle').textContent = 'Cashback Paid';
 
+                        } else if (isIntermediate) {
+                            statusCard.className = 'status-card status-approved';
+                            statusIcon.textContent = '⚡';
+                            statusTitle.textContent = status;
+                            statusDesc.textContent = 'Almost there! Next step: Cashback';
+
+                            step2.className = 'step-box completed';
+                            step2.querySelector('.step-indicator').textContent = '✓';
+                            document.getElementById('step2Sub').textContent = status;
+
+                            step3.className = 'step-box active';
+                            step3.querySelector('.step-subtitle').textContent = 'Pending Final Step';
                         } else {
-                            // Pending Status (default for anything else like 'pending')
-                            // Pending Status
                             statusCard.className = 'status-card status-pending';
                             statusIcon.textContent = '⏳';
                             statusTitle.textContent = 'Submission Received';
@@ -533,35 +384,25 @@
 
                             step2.className = 'step-box active';
                             step2.querySelector('.step-indicator').textContent = '2';
-                            step2.querySelector('.step-subtitle').textContent = 'Verification In Progress';
+                            document.getElementById('step2Sub').textContent = 'Verifying...';
 
                             step3.className = 'step-box pending';
                             step3.querySelector('.step-subtitle').textContent = 'Pending';
                         }
                     } else {
-                        // Not Found
                         statusCard.className = 'status-card status-error';
                         statusIcon.textContent = '❌';
                         statusTitle.textContent = 'No Record Found';
                         statusDesc.textContent = 'We could not find a submission with this UPI ID.';
-
-                        // Keep steps pending or maybe hide result area? 
-                        // For now, let's keep result area active but steps pending.
                     }
-
                 } catch (e) {
-                    console.error(e);
                     alert('Error checking status. Please try again.');
                 } finally {
                     trackBtn.disabled = false;
-                    trackBtn.innerHTML = `
-                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                        Track My Status
-                    `;
+                    trackBtn.innerHTML = `<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg> Track My Status`;
                 }
             });
         });
     </script>
 </body>
-
 </html>
