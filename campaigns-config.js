@@ -148,7 +148,7 @@ const CAMPAIGNS = {
         active: true,
         allowCustomPayout: true,
         description: 'Earn ₹500 Cashback on Gold Purchase',
-        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&p1={clickid}',
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&source={clickid}&p1={clickid}',
         statusFlow: {
             'dg_gold_buy_proceed_click': 'Install Tracked',
             'dg_purchase_success_screen_load': 'Gold Purchased'
