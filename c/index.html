@@ -239,7 +239,6 @@
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
         }
 
-        /* SUBMIT BUTTON */
         .submit-btn {
             width: 100%;
             padding: 16px;
@@ -289,6 +288,146 @@
             border-radius: 8px;
             background: #fff1f2;
             transition: background 0.2s;
+        }
+
+        /* FLOATING TELEGRAM ICON */
+        .floating-telegram {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            animation: pulse-float 2s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+
+        .floating-telegram.show {
+            display: flex;
+        }
+
+        .floating-telegram:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-telegram svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        @keyframes pulse-float {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6);
+                transform: translateY(-4px);
+            }
+        }
+
+        /* SUCCESS MODAL */
+        .success-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .success-modal.active {
+            display: flex;
+        }
+
+        .success-modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 32px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.4s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 24px;
+            animation: checkmark-pop 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes checkmark-pop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-icon svg {
+            width: 48px;
+            height: 48px;
+            color: white;
+        }
+
+        .success-modal h2 {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+
+        .success-modal p {
+            font-size: 15px;
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .redirect-timer {
+            font-size: 13px;
+            color: #9ca3af;
+            font-weight: 600;
         }
 
         /* ACCORDIONS */
@@ -392,7 +531,7 @@
         }
 
         .telegram-btn {
-            display: none; /* Hidden by default */
+            display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
@@ -407,7 +546,6 @@
             font-size: 14px;
         }
 
-        /* STATES */
         .section-hidden {
             display: none !important;
         }
@@ -415,85 +553,6 @@
         .state-container {
             padding: 60px 20px;
             text-align: center;
-        }
-
-        .over-card {
-            background: #fff;
-            border-radius: 28px;
-            padding: 40px 16px;
-            width: 100%;
-            max-width: 320px;
-            margin: 60px auto;
-            text-align: center;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.06);
-            border: 1px solid #f1f5f9;
-        }
-
-        .over-icon-circle {
-            width: 72px;
-            height: 72px;
-            background: #fef2f2;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            color: #ef4444;
-        }
-
-        .over-title {
-            font-size: 26px;
-            font-weight: 800;
-            color: #7f1d1d;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .over-desc {
-            font-size: 16px;
-            color: #94a3b8;
-            font-weight: 500;
-            margin-bottom: 40px;
-        }
-
-        .over-footer {
-            border-top: 1px solid #f8fafc;
-            padding-top: 32px;
-            background: #fff;
-        }
-
-        .over-footer-label {
-            font-size: 10px;
-            font-weight: 700;
-            color: #cbd5e1;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 16px;
-            display: block;
-        }
-
-        .support-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: #fff;
-            border: 1.5px solid #f1f5f9;
-            color: #475569;
-            padding: 12px 24px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 14px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-        }
-
-        .support-btn:hover {
-            border-color: #e2e8f0;
-            background: #f8fafc;
-            transform: translateY(-1px);
         }
 
         .state-icon {
@@ -514,148 +573,71 @@
             color: #64748b;
             margin-bottom: 24px;
         }
-
-        /* SUCCESS MODAL */
-        .success-box {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 320px;
-            background: white;
-            padding: 30px 20px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            z-index: 200;
-        }
-
-        .success-box.active {
-            display: block;
-            animation: popIn 0.3s ease-out;
-        }
-
-        @keyframes popIn {
-            0% { transform: translate(-50%, -45%) scale(0.95); opacity: 0; }
-            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-        }
-
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(15, 23, 42, 0.4);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            z-index: 150;
-        }
-
-        .modal-overlay.active {
-            display: block;
-        }
-
-        .loading-dots {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .loading-text {
-            color: #6366f1;
-            font-weight: 700;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(0.95); opacity: 0.5; }
-            50% { transform: scale(1.05); opacity: 1; }
-        }
-
-        .loading-dots div {
-            width: 10px; height: 10px;
-            background: #6366f1;
-            border-radius: 50%; margin: 0 4px;
-            animation: pulse 1s infinite;
-        }
-
-        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
     </style>
 </head>
 
 <body>
-    <!-- Backdrop for Blur -->
-    <div class="modal-overlay" id="modalOverlay"></div>
 
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay"
-        style="background: rgba(255,255,255,0.7); backdrop-filter: blur(4px);">
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-dots">
-            <div></div><div></div><div></div>
+            <div></div>
+            <div></div>
+            <div></div>
         </div>
-        <div class="loading-text">Processing...</div>
     </div>
 
-    <!-- Success Box (Modal Style) -->
-    <div class="success-box" id="successBox">
-        <div class="state-icon" style="font-size:48px; margin-bottom:12px">✅</div>
-        <h2 class="state-title" style="font-size:18px">Submission Successful!</h2>
-        <p class="state-desc" style="font-size:12px; margin-bottom:0">Redirecting to offer page...</p>
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <div class="success-modal-content">
+            <div class="success-icon">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </div>
+            <h2>Submission Successful!</h2>
+            <p>Redirecting you to the offer page...</p>
+            <p style="margin-top: 8px;">Please complete the steps to earn cashback.</p>
+            <p class="redirect-timer" id="redirectTimer">Redirecting in 3 seconds...</p>
+        </div>
     </div>
 
-    <!-- Main Container -->
+    <!-- Floating Telegram Removed based on user request -->
+
+    <!-- Main Application Container -->
     <div class="app-container">
-        <!-- ERROR STATE -->
+
+        <!-- 1. ERROR STATE -->
         <div id="errorView" class="state-container section-hidden">
             <span class="state-icon">❌</span>
             <h2 class="state-title">Campaign Not Found</h2>
             <p class="state-desc">This offer is unavailable or the link is incorrect.</p>
         </div>
 
-        <!-- ENDED STATE -->
-        <div id="campaignEnded" class="section-hidden">
-            <div class="over-card">
-                <div class="over-icon-circle">
-                    <svg width="32" height="32" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
-                        </path>
-                    </svg>
-                </div>
-                <h2 class="over-title">OVER !!</h2>
-                <p class="over-desc">Sorry, You Are Late</p>
-
-                <div class="over-footer">
-                    <span class="over-footer-label">NEED HELP?</span>
-                    <a href="mailto:camptechybusiness@gmail.com" class="support-btn">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                            </path>
-                        </svg>
-                        Email Support
-                    </a>
-                </div>
-            </div>
+        <!-- 2. ENDED STATE -->
+        <div id="campaignEnded" class="state-container section-hidden">
+            <span class="state-icon">⏰</span>
+            <h2 class="state-title">Offer Expired</h2>
+            <p class="state-desc">This campaign has ended. Stay tuned for new offers!</p>
         </div>
 
-        <!-- FORM VIEW -->
+        <!-- 3. ACTIVE FORM VIEW -->
         <div id="formView">
+            <!-- Header -->
             <div class="header">
-                <div class="badge"><span>🎁</span> COMPLETE & EARN</div>
-                <h1 id="campaignName">Campaign</h1>
+                <div class="badge">
+                    <span>🎁</span> COMPLETE & EARN
+                </div>
+                <h1 id="campaignName">&nbsp;</h1>
                 <p id="campaignDescription">Complete the offer to get instant cashback!</p>
 
+                <!-- Compact Cashback Card -->
                 <div class="cashback-card">
                     <div class="cashback-label">YOUR CASHBACK REWARD</div>
                     <div class="cashback-amount-row">
                         <span class="cashback-amount" id="campaignPayout">₹0</span>
+
+                        <!-- Green Wallet Icon Container -->
                         <div class="wallet-icon-container">
                             <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -667,11 +649,17 @@
                 </div>
             </div>
 
+            <!-- Content Area -->
             <div class="content-area">
                 <form id="campaignForm">
-                    <div id="formFieldsContainer"></div>
+                    <div id="formFieldsContainer">
+                        <!-- Dynamic Fields will be injected here -->
+                    </div>
+
+                    <!-- Honeypot -->
                     <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
 
+                    <!-- Submit Button -->
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -681,11 +669,14 @@
                     </button>
                 </form>
 
+                <!-- Track Status Link -->
                 <div class="track-status-container">
-                    <a href="#" id="trackStatusLink" class="track-link">Track Your Leads Status →</a>
+                    <a href="#" id="trackStatusLink" class="track-link">
+                        Track Your Leads Status →
+                    </a>
                 </div>
 
-                <!-- Accordions -->
+                <!-- How to Avail -->
                 <div class="accordion-section">
                     <button class="accordion-header active" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
@@ -704,10 +695,13 @@
                         </svg>
                     </button>
                     <div class="accordion-body open" style="max-height: 1000px;">
-                        <ul class="step-list" id="stepsContainer"></ul>
+                        <ul class="step-list" id="stepsContainer">
+                            <!-- Steps Injected Here -->
+                        </ul>
                     </div>
                 </div>
 
+                <!-- Terms -->
                 <div class="accordion-section">
                     <button class="accordion-header" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
@@ -727,192 +721,314 @@
                         </svg>
                     </button>
                     <div class="accordion-body">
-                        <ul class="step-list" id="termsContainer"></ul>
+                        <ul class="step-list" id="termsContainer">
+                            <!-- Terms Injected Here -->
+                        </ul>
                     </div>
                 </div>
 
-                <!-- Telegram Button -->
-                <a href="#" target="_blank" class="telegram-btn" id="telegramBtn">
+                <!-- Telegram Button (Hidden by default, shown via JS) -->
+                <a href="#" target="_blank" class="telegram-btn" id="telegramBtn" style="display: none;">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
                         <path
                             d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
                     </svg>
                     Join Our Telegram Channel
                 </a>
+
             </div>
         </div>
+
     </div>
 
     <!-- Scripts -->
     <script src="../campaigns-config.js"></script>
     <script>
-        const WORK_API = 'https://campaign-apii.businesstechy04.workers.dev';
-        const params = new URLSearchParams(window.location.search);
-        const campaignId = params.get('o') || params.get('v') || params.get('id') || 'bww4yubb';
-        const refId = params.get('ref');
-        const clickIdFromUrl = params.get('click_id') || params.get('source');
+        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        const urlParams = new URLSearchParams(window.location.search);
+        const campaignId = urlParams.get('o') || urlParams.get('v') || urlParams.get('id') || 'bww4yubb';
+        const clickId = urlParams.get('click_id') || urlParams.get('source');
+        const refId = urlParams.get('ref');
+        const telegramLink = urlParams.get('t'); // Get custom telegram link from URL
 
         let currentCampaign = null;
-        let customData = null;
 
-        // 🚀 SMART ID DECODER (0ms Sync)
-        let smartReward = null;
-        if (refId && refId.startsWith('ML')) {
-            const match = refId.match(/ML(\d+)Z/);
-            if (match && match[1]) smartReward = parseInt(match[1]);
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            // Attempt to init immediately
+            init();
 
-        // 🚀 PRE-LOAD TELEGRAM IF POSSIBLE
-        function checkTelegram(data) {
-            const btn = document.getElementById('telegramBtn');
-            const link = (data && data.telegram) ? data.telegram : null;
-            if (link && link !== 'https://t.me/camptechy' && link.trim() !== '') {
-                btn.href = link;
-                btn.style.display = 'flex';
-            } else {
-                btn.style.display = 'none';
-            }
-        }
-
-        // 🚀 SILENT SYNC BACKGROUND
-        if (refId) {
-            fetch(`${WORK_API}/register-referrer`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'getReferrerInfo', ref: refId, secretKey: 'Techybaanupxty892546' })
-            }).then(r => r.json()).then(data => {
-                if (data.success) {
-                    customData = data;
-                    checkTelegram(data);
-                    const isAllowed = currentCampaign ? currentCampaign.allowCustomPayout !== false : true;
-                    if (isAllowed && smartReward === null && data.payoutReferee) applyCustomization(data.payoutReferee);
+            // Check for referral Telegram link
+            if (refId) {
+                const referrerData = localStorage.getItem(`referrer_${refId}`);
+                if (referrerData) {
+                    try {
+                        const data = JSON.parse(referrerData);
+                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                            // This logic was for floating button, now removed.
+                            // The inline button will use `telegramLink` from URL params.
+                        }
+                    } catch (e) {
+                        console.error('Error parsing referrer data:', e);
+                    }
                 }
-            });
-        }
+            }
+        });
 
         async function init() {
-            currentCampaign = getCampaign(campaignId) || CAMPAIGNS[campaignId];
-            if (!currentCampaign) { toggleSection('errorView'); return; }
+            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : (typeof CAMPAIGNS !== 'undefined' ? CAMPAIGNS[campaignId] : null);
 
-            if (currentCampaign.allowCustomPayout === false) smartReward = null;
+            // Fallback if config not loaded
+            if (!currentCampaign) {
+                currentCampaign = {
+                    name: 'Campaign Offer',
+                    slug: campaignId,
+                    payout: 500,
+                    displayPayout: '₹500',
+                    requiredFields: ['upi', 'mobile'],
+                    steps: [
+                        'Enter your details and submit',
+                        'Complete the offer requirements',
+                        'Get cashback within 24-48 hours'
+                    ],
+                    terms: [
+                        'Valid only once per user/UPI/IP/Device',
+                        'Complete all steps to earn cashback',
+                        'Cashback processed after verification'
+                    ],
+                    active: true,
+                    redirectUrl: 'https://example.com'
+                };
+            }
 
-            if (currentCampaign.active === false || currentCampaign.active === 'false') {
+            if (currentCampaign.active === false) {
                 toggleSection('campaignEnded');
                 return;
             }
 
-            loadCampaignUI(smartReward);
-        }
+            loadCampaignUI();
 
-        function applyCustomization(amt) {
-            if (smartReward !== null) return;
-            document.getElementById('campaignPayout').textContent = `₹${amt}`;
-            const steps = [...(currentCampaign.steps || [])];
-            if (steps.length > 0) {
-                steps[steps.length - 1] = steps[steps.length - 1].replace(/₹[0-9]+/g, `₹${amt}`);
-                document.getElementById('stepsContainer').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
+            // 1. Try to get Telegram link from URL param or LocalStorage (Instant)
+            let initialTelegram = telegramLink;
+
+            if (!initialTelegram && refId) {
+                const cachedRef = localStorage.getItem(`referrer_${refId}`);
+                if (cachedRef) {
+                    try {
+                        const data = JSON.parse(cachedRef);
+                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                            initialTelegram = data.telegram;
+                        }
+                    } catch (e) {
+                        console.error('Error parsing local referrer data:', e);
+                    }
+                }
+            }
+
+            if (initialTelegram) {
+                const telegramBtn = document.getElementById('telegramBtn');
+                telegramBtn.href = initialTelegram;
+                telegramBtn.style.display = 'flex';
+            }
+
+            // 2. Non-blocking background fetch (Verify/Update)
+            if (refId) {
+                fetch(`https://campaign-apii.businesstechy04.workers.dev/get-referrer-telegram?ref=${refId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success && data.telegram && data.telegram !== 'https://t.me/camptechy') {
+                            const telegramBtn = document.getElementById('telegramBtn');
+                            // Only update if different or if we didn't have one
+                            if (telegramBtn.href !== data.telegram) {
+                                telegramBtn.href = data.telegram;
+                                telegramBtn.style.display = 'flex';
+                            }
+                        }
+                    })
+                    .catch(e => console.error('BG Telegram Fetch Error:', e));
             }
         }
 
-        function loadCampaignUI(customAmt) {
-            const finalAmt = customAmt !== null ? customAmt : currentCampaign.payout;
+        function toggleSection(viewId) {
+            ['formView', 'errorView', 'campaignEnded'].forEach(id => {
+                document.getElementById(id).classList.add('section-hidden');
+            });
+            document.getElementById(viewId).classList.remove('section-hidden');
+        }
+
+        function loadCampaignUI() {
             document.title = currentCampaign.name;
             document.getElementById('campaignName').textContent = currentCampaign.name;
-            document.getElementById('campaignPayout').textContent = `₹${finalAmt}`;
-            document.getElementById('trackStatusLink').href = `../tracker/index.html?id=${campaignId}`;
+            document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
+            document.getElementById('campaignPayout').textContent = currentCampaign.displayPayout || `₹${currentCampaign.payout}`;
 
-            renderFields();
+            // Fix Track Status link to point to ../tracker/
+            document.getElementById('trackStatusLink').href = `../tracker/?id=${campaignId}`;
 
-            const steps = [...(currentCampaign.steps || [])];
-            if (steps.length > 0) steps[steps.length - 1] = steps[steps.length - 1].replace(/₹[0-9]+/g, `₹${finalAmt}`);
-            document.getElementById('stepsContainer').innerHTML = steps.map(s => `<li>${s}</li>`).join('');
-            document.getElementById('termsContainer').innerHTML = (currentCampaign.terms || []).map(t => `<li>${t}</li>`).join('');
+            renderFormFields();
+
+            const stepsContainer = document.getElementById('stepsContainer');
+            stepsContainer.innerHTML = (currentCampaign.steps || []).map(step => `<li>${step}</li>`).join('');
+
+            const termsContainer = document.getElementById('termsContainer');
+            termsContainer.innerHTML = (currentCampaign.terms || []).map(term => `<li>${term}</li>`).join('');
         }
 
-        function renderFields() {
+        function renderFormFields() {
             const container = document.getElementById('formFieldsContainer');
+            container.innerHTML = '';
+
+            // Use requiredFields from config, fallback to upi
             const fields = currentCampaign.requiredFields || ['upi'];
-            container.innerHTML = fields.map(field => {
-                let label = '', placeholder = '', type = 'text', icon = '', validation = '';
+
+            fields.forEach(field => {
+                const group = document.createElement('div');
+                group.className = 'form-group';
+
+                let label = '';
+                let placeholder = '';
+                let type = 'text';
+                let icon = '';
+                let validation = '';
+
                 if (field === 'name') {
-                    label = 'Name'; placeholder = 'e.g. John Doe'; icon = '👤';
+                    label = 'Enter Your Name';
+                    placeholder = 'e.g. John Doe';
+                    icon = '👤';
                     validation = `pattern="[a-zA-Z\\s]{2,50}" oninput="this.value = this.value.replace(/[^a-zA-Z\\s]/g, '')"`;
                 } else if (field === 'mobile') {
-                    label = 'Mobile'; placeholder = '10-digits'; type = 'tel'; icon = '📱';
+                    label = 'Mobile Number';
+                    placeholder = '10-digit number';
+                    type = 'tel';
+                    icon = '📱';
                     validation = `pattern="[6-9][0-9]{9}" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"`;
                 } else if (field === 'upi') {
-                    label = 'UPI ID'; placeholder = 'e.g. name@upi'; icon = '@';
+                    label = 'Your UPI ID';
+                    placeholder = 'e.g. name@upi';
+                    icon = '@';
                     validation = `pattern="[a-zA-Z0-9.\\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()"`;
                 }
-                return `<div class="form-group"><label class="input-label">${label} <span style="color:#ef4444">*</span></label><div class="input-wrapper"><span class="input-icon">${icon}</span><input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}></div></div>`;
-            }).join('');
-        }
 
-        function toggleSection(id) {
-            ['formView', 'errorView', 'campaignEnded'].forEach(v => {
-                const el = document.getElementById(v); if (el) el.classList.add('section-hidden');
+                group.innerHTML = `
+                <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
+                <div class="input-wrapper">
+                    <span class="input-icon">${icon}</span>
+                    <input 
+                        type="${type}" 
+                        id="${field}" 
+                        class="form-input" 
+                        placeholder="${placeholder}" 
+                        required 
+                        ${validation}
+                    >
+                </div>
+            `;
+                container.appendChild(group);
             });
-            const target = document.getElementById(id); if (target) target.classList.remove('section-hidden');
         }
 
         window.toggleAccordion = function (btn) {
-            const body = btn.nextElementSibling;
-            const isOpen = body.classList.contains('open');
-            body.style.maxHeight = isOpen ? null : body.scrollHeight + "px";
-            body.classList.toggle('open');
-            btn.classList.toggle('active');
+            const content = btn.nextElementSibling;
+            const isOpen = content.classList.contains('open');
+
+            if (isOpen) {
+                content.style.maxHeight = null;
+                content.classList.remove('open');
+                btn.classList.remove('active');
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.classList.add('open');
+                btn.classList.add('active');
+            }
         };
 
         document.getElementById('campaignForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+
             const submitBtn = document.getElementById('submitBtn');
             const overlay = document.getElementById('loadingOverlay');
-            const sBox = document.getElementById('successBox');
 
-            const fields = currentCampaign.requiredFields || ['upi'];
             const formData = {};
-            fields.forEach(f => formData[f] = document.getElementById(f).value.trim());
+            const fields = currentCampaign.requiredFields || ['upi'];
+            let isValid = true;
+
+            fields.forEach(f => {
+                const el = document.getElementById(f);
+                if (!el) return;
+                const val = el.value.trim();
+                if (!val) isValid = false;
+                formData[f] = val;
+            });
+
+            if (!isValid) {
+                alert("Please fill all fields correctly.");
+                return;
+            }
 
             submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Processing...';
             overlay.classList.add('active');
 
             try {
-                const clickId = clickIdFromUrl || ('C' + Date.now().toString(36).toUpperCase());
-                const res = await fetch(WORK_API, {
+                const uniqueClickId = clickId || ('C' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).substring(2, 5).toUpperCase());
+
+                const payload = {
+                    ...formData,
+                    clickId: uniqueClickId,
+                    campaignId: campaignId,
+                    campaignSlug: currentCampaign.slug,
+                    referrerId: refId || null,
+                    website: document.querySelector('[name="website"]').value,
+                    origin: window.location.origin
+                };
+                const res = await fetch(WORKER_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ ...formData, clickId, campaignId, campaignSlug: currentCampaign.slug, referrerId: refId || null, origin: window.location.origin, secretKey: 'Techybaanupxty892546', offerUrl: currentCampaign.offerUrl })
+                    body: JSON.stringify(payload)
                 });
+
                 const result = await res.json();
 
-                // 🔥 THE ROBUST REDIRECT FIX
-                let finalRedirect = result.redirectUrl || currentCampaign.offerUrl;
+                if (!result.success && result.error && !result.error.includes('already submitted')) {
+                    throw new Error(result.error);
+                }
+
+                // Robust Redirect URL Handling
+                let finalRedirect = result.redirectUrl || currentCampaign.offerUrl || currentCampaign.redirectUrl;
+                if (!finalRedirect || finalRedirect === 'undefined') {
+                    finalRedirect = currentCampaign.offerUrl || 'https://google.com';
+                }
+
+                // 🔥 THE FIX: Robust ClickID Replacement Engine
+                // This ensures all placeholders like {clickid}, {click_id}, etc. are replaced correctly
                 const placeholders = ['{clickid}', '{click_id}', '{clickId}', '{your-sub-aff-id}'];
                 let replaced = false;
 
                 placeholders.forEach(p => {
-                    if (finalRedirect.toLowerCase().includes(p.toLowerCase())) {
+                    if (finalUrl.toLowerCase().includes(p.toLowerCase())) {
+                        // Case-insensitive regex replacement
                         const regex = new RegExp(p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
-                        finalRedirect = finalRedirect.replace(regex, clickId);
+                        finalUrl = finalUrl.replace(regex, uniqueClickId);
                         replaced = true;
                     }
                 });
 
-                if (!replaced && !finalRedirect.includes(clickId)) {
-                    finalRedirect += (finalRedirect.includes('?') ? '&' : '?') + 'aff_sub=' + clickId;
+                // Fail-safe: If no placeholder was found, append as standard aff_sub
+                if (!replaced) {
+                    const separator = finalUrl.includes('?') ? '&' : '?';
+                    finalUrl += separator + 'aff_sub=' + uniqueClickId;
                 }
 
-                overlay.classList.remove('active');
-                document.getElementById('modalOverlay').classList.add('active');
-                sBox.classList.add('active');
+                window.location.replace(finalUrl);
 
-                setTimeout(() => window.location.replace(finalRedirect), 800);
             } catch (err) {
-                window.location.replace(currentCampaign.offerUrl);
+                console.error(err);
+                alert("Submission failed. Please try again.");
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Claim Reward';
+                overlay.classList.remove('active');
             }
         });
 
-        init();
     </script>
 </body>
 
