@@ -85,8 +85,8 @@ const CAMPAIGNS = {
         active: true,
         allowCustomPayout: true, // Set to false to lock rewards
         description: 'Earn ₹700 Cashback',
-        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2792&pub_id=3546&source={your-sub-aff-id}',
-        requiredFields: ['upi','mobile'], // Minimum fields
+        offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
+        requiredFields: ['upi', 'mobile'], // Minimum fields
         steps: [
             'Enter your UPI ID & Mobile And Submit.',
             'Basic Details Email  Mobile, Pan Number Complete Basic Process.',
@@ -98,15 +98,13 @@ const CAMPAIGNS = {
         ],
         terms: [
             'Valid once per user/UPI/IP/Device',
-            'Multiple registrations from same user/UID/IP address, similar looking usernames and e mail ID & Device will not be paid.',
-            'Use only Real Indian Mobile Numbers and genuine mail ID to register in the app.',
-            'Merchant verifies your account, if they find any Duplicate or Suspicious transaction, then your Reward may get rejected.',
-            'CampTechy reserves the right to disapprove the rewards anytime if any Fraudulent activity found from your end.',
-            'Any query related to Reward will be entertained by the CampTechy Team. Email to camptechybusiness@gmail.com or Contact us via Telegram'
+            'Minimum investment ₹5000',
+            'KYC must be completed',
+            'Verification takes 48-72 hours'
         ],
         referralPayout: {
-            referrer: 200,
-            referee: 700
+            referrer: 700,
+            referee: 200
         }
     },
 
@@ -140,15 +138,51 @@ const CAMPAIGNS = {
             referrer: 35,
             referee: 50
         }
+    },
+    'abcd_gold': {
+        id: 'abcd_gold',
+        name: 'ABCD Gold',
+        slug: 'abcd-gold',
+        payout: 500,
+        type: 'online',
+        active: true,
+        allowCustomPayout: true,
+        description: 'Earn ₹500 Cashback on Gold Purchase',
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&aff_sub={clickid}',
+        statusFlow: {
+            'dg_gold_buy_proceed_click': 'Install Tracked',
+            'dg_purchase_success_screen_load': 'Gold Purchased'
+        },
+        referralTrigger: 'dg_purchase_success_screen_load',
+        requiredFields: ['upi'],
+        steps: [
+            'Submit your UPI ID',
+            'Download and Install ABCD Gold App',
+            'Complete Gold Purchase of ₹10 or more',
+            'Get ₹500 Instant Cashback'
+        ],
+        terms: [
+            'Valid once per user/UPI/IP/Device',
+            'Minimum purchase of ₹10 required',
+            'Reward will be credited within 24 hours of successful purchase'
+        ],
+        referralPayout: {
+            referrer: 300,
+            referee: 100
+        }
     }
 };
 
-// Helper function to get campaign by ID
-window.getCampaign = function (campaignId) {
-    if (typeof CAMPAIGNS !== 'undefined' && CAMPAIGNS[campaignId]) {
-        return CAMPAIGNS[campaignId];
-    }
-    return null;
+// Helper function to get campaign by ID or SLUG
+window.getCampaign = function (idOrSlug) {
+    if (!idOrSlug) return null;
+    const lower = idOrSlug.toLowerCase();
+
+    // Check by ID
+    if (CAMPAIGNS[lower]) return CAMPAIGNS[lower];
+
+    // Check by Slug
+    return Object.values(CAMPAIGNS).find(c => c.slug === lower);
 };
 
 // Helper function to check if campaign is active
