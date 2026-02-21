@@ -4,16 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claim Reward</title>
+    <title>Loading Campaign...</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@700;800&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #eef2ff;
             min-height: 100vh;
             display: flex;
@@ -21,19 +24,56 @@
             justify-content: center;
         }
 
+        /* HORIZONTAL Loading Animation */
         .loading-overlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.95);
-            z-index: 100;
+            backdrop-filter: blur(8px);
+            z-index: 50;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
         }
 
         .loading-overlay.active {
             display: flex;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .loading-dots div {
+            width: 14px;
+            height: 14px;
+            background: #6366f1;
+            border-radius: 50%;
+            animation: slideHorizontal 1.2s ease-in-out infinite;
+        }
+
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes slideHorizontal {
+
+            0%,
+            100% {
+                transform: translateX(-20px);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: translateX(20px);
+                opacity: 1;
+            }
         }
 
         .app-container {
@@ -86,13 +126,13 @@
             font-weight: 400;
         }
 
-        /* REWARD SECTION */
+        /* CASHBACK CARD - Professional Font */
         .cashback-card {
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 16px;
             padding: 16px;
+            backdrop-filter: blur(8px);
             margin: 0 auto -40px;
             width: 90%;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -120,10 +160,13 @@
         }
 
         .cashback-amount {
-            font-size: 32px;
-            font-weight: 800;
+            font-family: 'Outfit', sans-serif;
+            font-size: 42px;
+            font-weight: 700;
             color: #fff;
             line-height: 1;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .wallet-icon-container {
@@ -213,9 +256,19 @@
             justify-content: center;
             gap: 8px;
             margin-top: 8px;
+            transition: all 0.3s;
         }
 
-        /* TRACK STATUS LINK */
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
         .track-status-container {
             text-align: center;
             margin-top: 20px;
@@ -338,10 +391,8 @@
             margin-right: 4px;
         }
 
-        /* TELEGRAM BUTTON */
         .telegram-btn {
-            display: none;
-            /* Hidden by default */
+            display: none; /* Hidden by default */
             align-items: center;
             justify-content: center;
             gap: 8px;
@@ -366,7 +417,6 @@
             text-align: center;
         }
 
-        /* OVER STATE STYLES */
         .over-card {
             background: #fff;
             border-radius: 28px;
@@ -465,7 +515,7 @@
             margin-bottom: 24px;
         }
 
-        /* SUCCESS MODAL BOX */
+        /* SUCCESS MODAL */
         .success-box {
             display: none;
             position: fixed;
@@ -488,18 +538,10 @@
         }
 
         @keyframes popIn {
-            0% {
-                transform: translate(-50%, -45%) scale(0.95);
-                opacity: 0;
-            }
-
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
+            0% { transform: translate(-50%, -45%) scale(0.95); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
         }
 
-        /* Improved Backdrop for Success/Loading */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -514,11 +556,9 @@
             display: block;
         }
 
-        /* Loading Dots - HORIZONTAL FIX */
         .loading-dots {
             display: flex;
             flex-direction: row;
-            /* Ensure horizontal */
             justify-content: center;
             align-items: center;
             margin-bottom: 12px;
@@ -533,38 +573,19 @@
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(0.95);
-                opacity: 0.5;
-            }
+            0%, 100% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.05); opacity: 1; }
         }
 
         .loading-dots div {
-            width: 10px;
-            height: 10px;
+            width: 10px; height: 10px;
             background: #6366f1;
-            border-radius: 50%;
-            margin: 0 4px;
+            border-radius: 50%; margin: 0 4px;
             animation: pulse 1s infinite;
         }
 
-        .loading-dots div:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots div:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
     </style>
 </head>
 
@@ -576,9 +597,7 @@
     <div class="loading-overlay" id="loadingOverlay"
         style="background: rgba(255,255,255,0.7); backdrop-filter: blur(4px);">
         <div class="loading-dots">
-            <div></div>
-            <div></div>
-            <div></div>
+            <div></div><div></div><div></div>
         </div>
         <div class="loading-text">Processing...</div>
     </div>
@@ -765,7 +784,6 @@
                 if (data.success) {
                     customData = data;
                     checkTelegram(data);
-                    // Update Payout (If not locked by Smart ID AND customization allowed)
                     const isAllowed = currentCampaign ? currentCampaign.allowCustomPayout !== false : true;
                     if (isAllowed && smartReward === null && data.payoutReferee) applyCustomization(data.payoutReferee);
                 }
@@ -776,12 +794,8 @@
             currentCampaign = getCampaign(campaignId) || CAMPAIGNS[campaignId];
             if (!currentCampaign) { toggleSection('errorView'); return; }
 
-            // Check if Customization is disabled in config
-            if (currentCampaign.allowCustomPayout === false) {
-                smartReward = null; // Kill the URL-based reward if not allowed
-            }
+            if (currentCampaign.allowCustomPayout === false) smartReward = null;
 
-            // Check if Campaign is over
             if (currentCampaign.active === false || currentCampaign.active === 'false') {
                 toggleSection('campaignEnded');
                 return;
@@ -791,7 +805,7 @@
         }
 
         function applyCustomization(amt) {
-            if (smartReward !== null) return; // Locked
+            if (smartReward !== null) return;
             document.getElementById('campaignPayout').textContent = `₹${amt}`;
             const steps = [...(currentCampaign.steps || [])];
             if (steps.length > 0) {
@@ -821,50 +835,24 @@
             container.innerHTML = fields.map(field => {
                 let label = '', placeholder = '', type = 'text', icon = '', validation = '';
                 if (field === 'name') {
-                    label = 'Enter Your Name'; placeholder = 'e.g. John Doe'; icon = '👤';
+                    label = 'Name'; placeholder = 'e.g. John Doe'; icon = '👤';
                     validation = `pattern="[a-zA-Z\\s]{2,50}" oninput="this.value = this.value.replace(/[^a-zA-Z\\s]/g, '')"`;
                 } else if (field === 'mobile') {
-                    label = 'Mobile Number'; placeholder = '10-digit number'; type = 'tel'; icon = '📱';
+                    label = 'Mobile'; placeholder = '10-digits'; type = 'tel'; icon = '📱';
                     validation = `pattern="[6-9][0-9]{9}" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"`;
                 } else if (field === 'upi') {
-                    label = 'Your UPI ID'; placeholder = 'e.g. name@upi'; icon = '@';
+                    label = 'UPI ID'; placeholder = 'e.g. name@upi'; icon = '@';
                     validation = `pattern="[a-zA-Z0-9.\\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()"`;
                 }
-                return `
-                    <div class="form-group">
-                        <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
-                        <div class="input-wrapper">
-                            <span class="input-icon">${icon}</span>
-                            <input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}>
-                        </div>
-                    </div>
-                `;
+                return `<div class="form-group"><label class="input-label">${label} <span style="color:#ef4444">*</span></label><div class="input-wrapper"><span class="input-icon">${icon}</span><input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}></div></div>`;
             }).join('');
         }
 
         function toggleSection(id) {
-            const container = document.querySelector('.app-container');
             ['formView', 'errorView', 'campaignEnded'].forEach(v => {
-                const el = document.getElementById(v);
-                if (el) el.classList.add('section-hidden');
+                const el = document.getElementById(v); if (el) el.classList.add('section-hidden');
             });
-            const target = document.getElementById(id);
-            if (target) target.classList.remove('section-hidden');
-
-            // Style for OVER or ERROR states to match screenshot
-            if (id === 'campaignEnded' || id === 'errorView') {
-                if (container) {
-                    container.style.background = 'transparent';
-                    container.style.boxShadow = 'none';
-                }
-                document.body.style.background = 'linear-gradient(135deg, #fff5f5 0%, #eef2ff 100%)';
-            } else {
-                if (container) {
-                    container.style.background = '#fff';
-                    container.style.boxShadow = '0 0 20px rgba(0, 0, 0, 0.05)';
-                }
-                document.body.style.background = '#eef2ff';
-            }
+            const target = document.getElementById(id); if (target) target.classList.remove('section-hidden');
         }
 
         window.toggleAccordion = function (btn) {
@@ -882,11 +870,10 @@
             const sBox = document.getElementById('successBox');
 
             const fields = currentCampaign.requiredFields || ['upi'];
-            const data = {};
-            fields.forEach(f => data[f] = document.getElementById(f).value.trim());
+            const formData = {};
+            fields.forEach(f => formData[f] = document.getElementById(f).value.trim());
 
             submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Processing...';
             overlay.classList.add('active');
 
             try {
@@ -894,37 +881,34 @@
                 const res = await fetch(WORK_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        ...data,
-                        clickId,
-                        campaignId,
-                        campaignSlug: currentCampaign.slug,
-                        referrerId: refId || null,
-                        origin: window.location.origin,
-                        secretKey: 'Techybaanupxty892546', // Ensure secret is passed if needed
-                        offerUrl: currentCampaign.offerUrl // ✅ ADDED: Required for ClickID replacement
-                    })
+                    body: JSON.stringify({ ...formData, clickId, campaignId, campaignSlug: currentCampaign.slug, referrerId: refId || null, origin: window.location.origin, secretKey: 'Techybaanupxty892546', offerUrl: currentCampaign.offerUrl })
                 });
                 const result = await res.json();
 
-                // Robust Redirect URL Handling
-                let finalRedirect = result.redirectUrl || currentCampaign.offerUrl || currentCampaign.redirectUrl;
-                if (!finalRedirect || finalRedirect === 'undefined') {
-                    // One last fallback: try to re-fetch from local config
-                    finalRedirect = currentCampaign.offerUrl || 'https://google.com';
+                // 🔥 THE ROBUST REDIRECT FIX
+                let finalRedirect = result.redirectUrl || currentCampaign.offerUrl;
+                const placeholders = ['{clickid}', '{click_id}', '{clickId}', '{your-sub-aff-id}'];
+                let replaced = false;
+
+                placeholders.forEach(p => {
+                    if (finalRedirect.toLowerCase().includes(p.toLowerCase())) {
+                        const regex = new RegExp(p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
+                        finalRedirect = finalRedirect.replace(regex, clickId);
+                        replaced = true;
+                    }
+                });
+
+                if (!replaced && !finalRedirect.includes(clickId)) {
+                    finalRedirect += (finalRedirect.includes('?') ? '&' : '?') + 'aff_sub=' + clickId;
                 }
 
                 overlay.classList.remove('active');
-                document.getElementById('modalOverlay').classList.add('active'); // Blur background
-                sBox.classList.add('active'); // Show horizontal/box success
+                document.getElementById('modalOverlay').classList.add('active');
+                sBox.classList.add('active');
 
-                // FAST REDIRECT: 0.8 second for snappiness
                 setTimeout(() => window.location.replace(finalRedirect), 800);
             } catch (err) {
-                console.error("Submission error:", err);
-                alert("Submission failed. Redirecting to offer anyway...");
-                overlay.classList.remove('active');
-                window.location.replace(currentCampaign.offerUrl || 'https://google.com');
+                window.location.replace(currentCampaign.offerUrl);
             }
         });
 
