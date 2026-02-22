@@ -688,7 +688,7 @@
                 const finalId = (result.success && result.referrerId) ? result.referrerId : referrerId;
 
                 // Path check: landing page is c-index-fixed.html in root
-                document.getElementById('referralLink').value = `${window.location.origin}/c-index-fixed.html?o=${campaignId}&ref=${finalId}`;
+                document.getElementById('referralLink').value = `${window.location.origin}/c/?o=${campaignId}&ref=${finalId}`;
                 document.getElementById('linksModal').classList.add('active');
                 document.querySelector('.container').classList.add('blur');
             } catch (err) {
@@ -697,7 +697,7 @@
                 const upi = document.getElementById('upi').value.trim();
                 const friendAmt = parseInt(document.getElementById('friendInp').value);
                 const id = localStorage.getItem(`ref_for_${upi}_${campaignId}_${friendAmt}`) || 'ERR';
-                document.getElementById('referralLink').value = `${window.location.origin}/c-index-fixed.html?o=${campaignId}&ref=${id}`;
+                document.getElementById('referralLink').value = `${window.location.origin}/c/?o=${campaignId}&ref=${id}`;
                 document.getElementById('linksModal').classList.add('active');
                 document.querySelector('.container').classList.add('blur');
             } finally {
