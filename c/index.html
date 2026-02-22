@@ -254,6 +254,52 @@
             transition: background 0.2s;
         }
 
+        /* FLOATING TELEGRAM ICON */
+        .floating-telegram {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0ea5e9, #0284c7);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            cursor: pointer;
+            z-index: 999;
+            animation: pulse-float 2s ease-in-out infinite;
+            transition: transform 0.3s;
+        }
+
+        .floating-telegram.show {
+            display: flex;
+        }
+
+        .floating-telegram:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-telegram svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        @keyframes pulse-float {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6);
+                transform: translateY(-4px);
+            }
+        }
+
         /* SUCCESS MODAL BOX */
         .success-box {
             display: none;
@@ -460,6 +506,11 @@
 
         .section-hidden {
             display: none !important;
+        }
+
+        .blur {
+            filter: blur(8px);
+            transition: filter 0.3s ease;
         }
 
         .state-container {
@@ -692,6 +743,16 @@
                 return;
             }
 
+            // 🔥 v14 FIX: Smart Payout Override (ML75Z... Decoder)
+            if (refId && refId.startsWith('ML') && refId.includes('Z')) {
+                const parts = refId.split('Z');
+                const amt = parts[0].substring(2);
+                if (!isNaN(amt) && amt > 0) {
+                    currentCampaign.payout = parseInt(amt);
+                    currentCampaign.displayPayout = `₹${amt}`;
+                }
+            }
+
             loadCampaignUI();
 
             // 1. Try to get Telegram link from URL param or LocalStorage (Instant)
@@ -885,10 +946,16 @@
                 }
 
                 overlay.classList.remove('active');
-                if (sBox) sBox.classList.add('active');
+                if (sBox) {
+                    sBox.classList.add('active');
+                    // Blur the background container
+                    document.querySelector('.app-container').classList.add('blur');
+                }
 
-                // FAST SNAPPY REDIRECT: 800ms
-                setTimeout(() => window.location.replace(finalRedirect), 800);
+                // FAST SNAPPY REDIRECT: 1200ms
+                setTimeout(() => {
+                    window.location.replace(finalRedirect);
+                }, 1200);
 
             } catch (err) {
                 console.error(err);
