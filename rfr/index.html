@@ -451,7 +451,7 @@
             </div>
 
             <!-- Path check: both files are in root -->
-            <button class="track-btn" onclick="window.location.href='refer-tracker-index.html?id='+campaignId">
+            <button class="track-btn"onclick="window.location.href='/refer-tracker/?id='+campaignId">
                 📊 Track Earnings
             </button>
         </div>
@@ -546,7 +546,7 @@
         </div>
     </div>
 
-    <script src="../campaigns-config.js"></script>
+    <script src="/campaigns-config.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
