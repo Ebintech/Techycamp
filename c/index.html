@@ -25,55 +25,19 @@
         }
 
         /* HORIZONTAL Loading Animation */
-        .loading-overlay {
+        .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(8px);
-            z-index: 50;
+            z-index: 150;
             align-items: center;
             justify-content: center;
         }
 
-        .loading-overlay.active {
+        .modal-overlay.active {
             display: flex;
-        }
-
-        .loading-dots {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .loading-dots div {
-            width: 14px;
-            height: 14px;
-            background: #6366f1;
-            border-radius: 50%;
-            animation: slideHorizontal 1.2s ease-in-out infinite;
-        }
-
-        .loading-dots div:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots div:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes slideHorizontal {
-
-            0%,
-            100% {
-                transform: translateX(-20px);
-                opacity: 0.3;
-            }
-
-            50% {
-                transform: translateX(20px);
-                opacity: 1;
-            }
         }
 
         .app-container {
@@ -290,144 +254,92 @@
             transition: background 0.2s;
         }
 
-        /* FLOATING TELEGRAM ICON */
-        .floating-telegram {
-            position: fixed;
-            right: 20px;
-            bottom: 20px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, #0ea5e9, #0284c7);
-            border-radius: 50%;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
-            cursor: pointer;
-            z-index: 999;
-            animation: pulse-float 2s ease-in-out infinite;
-            transition: transform 0.3s;
-        }
-
-        .floating-telegram.show {
-            display: flex;
-        }
-
-        .floating-telegram:hover {
-            transform: scale(1.1);
-        }
-
-        .floating-telegram svg {
-            width: 28px;
-            height: 28px;
-            color: white;
-        }
-
-        @keyframes pulse-float {
-
-            0%,
-            100% {
-                box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6);
-                transform: translateY(-4px);
-            }
-        }
-
-        /* SUCCESS MODAL */
-        .success-modal {
+        /* SUCCESS MODAL BOX */
+        .success-box {
             display: none;
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .success-modal.active {
-            display: flex;
-        }
-
-        .success-modal-content {
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 320px;
             background: white;
-            border-radius: 24px;
-            padding: 40px 32px;
-            max-width: 400px;
-            width: 100%;
+            padding: 30px 20px;
+            border-radius: 20px;
             text-align: center;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            animation: modalSlideIn 0.4s ease-out;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 200;
         }
 
-        @keyframes modalSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-30px) scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+        .success-box.active {
+            display: block;
+            animation: popIn 0.3s ease-out;
         }
 
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, #10b981, #059669);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 24px;
-            animation: checkmark-pop 0.6s ease-out 0.2s both;
-        }
-
-        @keyframes checkmark-pop {
+        @keyframes popIn {
             0% {
-                transform: scale(0);
+                transform: translate(-50%, -45%) scale(0.95);
                 opacity: 0;
-            }
-
-            50% {
-                transform: scale(1.1);
             }
 
             100% {
-                transform: scale(1);
+                transform: translate(-50%, -50%) scale(1);
                 opacity: 1;
             }
         }
 
-        .success-icon svg {
-            width: 48px;
-            height: 48px;
-            color: white;
-        }
+        /* PULSE LOADING DOTS */
 
-        .success-modal h2 {
-            font-size: 24px;
-            font-weight: 800;
-            color: #1f2937;
+        /* Loading Dots - HORIZONTAL FIX */
+        .loading-dots {
+            display: flex;
+            flex-direction: row;
+            /* Ensure horizontal */
+            justify-content: center;
+            align-items: center;
             margin-bottom: 12px;
         }
 
-        .success-modal p {
-            font-size: 15px;
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 8px;
+        .loading-text {
+            color: #6366f1;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .redirect-timer {
-            font-size: 13px;
-            color: #9ca3af;
-            font-weight: 600;
+        @keyframes pulse {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.5;
+            }
+        }
+
+        .loading-dots div {
+            width: 10px;
+            height: 10px;
+            background: #6366f1;
+            border-radius: 50%;
+            margin: 0 4px;
+            animation: pulse 1s infinite;
+        }
+
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
         }
 
         /* ACCORDIONS */
@@ -579,7 +491,7 @@
 <body>
 
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
+    <div class="modal-overlay" id="loadingOverlay">
         <div class="loading-dots">
             <div></div>
             <div></div>
@@ -587,22 +499,12 @@
         </div>
     </div>
 
-    <!-- Success Modal -->
-    <div class="success-modal" id="successModal">
-        <div class="success-modal-content">
-            <div class="success-icon">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
-                </svg>
-            </div>
-            <h2>Submission Successful!</h2>
-            <p>Redirecting you to the offer page...</p>
-            <p style="margin-top: 8px;">Please complete the steps to earn cashback.</p>
-            <p class="redirect-timer" id="redirectTimer">Redirecting in 3 seconds...</p>
-        </div>
+    <!-- Success Box (Modal Style) -->
+    <div class="success-box" id="successBox">
+        <div class="state-icon" style="font-size:48px; margin-bottom:12px">✅</div>
+        <h2 class="state-title" style="font-size:18px">Submission Successful!</h2>
+        <p class="state-desc" style="font-size:12px; margin-bottom:0">Redirecting to offer page...</p>
     </div>
-
-    <!-- Floating Telegram Removed based on user request -->
 
     <!-- Main Application Container -->
     <div class="app-container">
@@ -756,26 +658,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             // Attempt to init immediately
             init();
-
-            // Check for referral Telegram link
-            if (refId) {
-                const referrerData = localStorage.getItem(`referrer_${refId}`);
-                if (referrerData) {
-                    try {
-                        const data = JSON.parse(referrerData);
-                        if (data.telegram && data.telegram !== 'https://t.me/camptechy') {
-                            // This logic was for floating button, now removed.
-                            // The inline button will use `telegramLink` from URL params.
-                        }
-                    } catch (e) {
-                        console.error('Error parsing referrer data:', e);
-                    }
-                }
-            }
         });
 
         async function init() {
-            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : (typeof CAMPAIGNS !== 'undefined' ? CAMPAIGNS[campaignId] : null);
+            // Use the globally attached window helper
+            currentCampaign = (typeof window.getCampaign === 'function') ? window.getCampaign(campaignId) : (typeof CAMPAIGNS !== 'undefined' ? CAMPAIGNS[campaignId] : null);
 
             // Fallback if config not loaded
             if (!currentCampaign) {
@@ -832,12 +719,11 @@
 
             // 2. Non-blocking background fetch (Verify/Update)
             if (refId) {
-                fetch(`https://campaign-apii.businesstechy04.workers.dev/get-referrer-telegram?ref=${refId}`)
+                fetch(`${WORKER_API}/get-referrer-telegram?ref=${refId}`)
                     .then(res => res.json())
                     .then(data => {
                         if (data.success && data.telegram && data.telegram !== 'https://t.me/camptechy') {
                             const telegramBtn = document.getElementById('telegramBtn');
-                            // Only update if different or if we didn't have one
                             if (telegramBtn.href !== data.telegram) {
                                 telegramBtn.href = data.telegram;
                                 telegramBtn.style.display = 'flex';
@@ -850,9 +736,11 @@
 
         function toggleSection(viewId) {
             ['formView', 'errorView', 'campaignEnded'].forEach(id => {
-                document.getElementById(id).classList.add('section-hidden');
+                const el = document.getElementById(id);
+                if (el) el.classList.add('section-hidden');
             });
-            document.getElementById(viewId).classList.remove('section-hidden');
+            const target = document.getElementById(viewId);
+            if (target) target.classList.remove('section-hidden');
         }
 
         function loadCampaignUI() {
@@ -862,49 +750,39 @@
             document.getElementById('campaignPayout').textContent = currentCampaign.displayPayout || `₹${currentCampaign.payout}`;
 
             // Fix Track Status link to point to ../tracker/
-            document.getElementById('trackStatusLink').href = `../tracker/?id=${campaignId}`;
+            const trackLink = document.getElementById('trackStatusLink');
+            if (trackLink) trackLink.href = `../tracker/?id=${campaignId}`;
 
             renderFormFields();
 
             const stepsContainer = document.getElementById('stepsContainer');
-            stepsContainer.innerHTML = (currentCampaign.steps || []).map(step => `<li>${step}</li>`).join('');
+            if (stepsContainer) stepsContainer.innerHTML = (currentCampaign.steps || []).map(step => `<li>${step}</li>`).join('');
 
             const termsContainer = document.getElementById('termsContainer');
-            termsContainer.innerHTML = (currentCampaign.terms || []).map(term => `<li>${term}</li>`).join('');
+            if (termsContainer) termsContainer.innerHTML = (currentCampaign.terms || []).map(term => `<li>${term}</li>`).join('');
         }
 
         function renderFormFields() {
             const container = document.getElementById('formFieldsContainer');
+            if (!container) return;
             container.innerHTML = '';
 
-            // Use requiredFields from config, fallback to upi
             const fields = currentCampaign.requiredFields || ['upi'];
 
             fields.forEach(field => {
                 const group = document.createElement('div');
                 group.className = 'form-group';
 
-                let label = '';
-                let placeholder = '';
-                let type = 'text';
-                let icon = '';
-                let validation = '';
+                let label = '', placeholder = '', type = 'text', icon = '', validation = '';
 
                 if (field === 'name') {
-                    label = 'Enter Your Name';
-                    placeholder = 'e.g. John Doe';
-                    icon = '👤';
+                    label = 'Enter Your Name'; placeholder = 'e.g. John Doe'; icon = '👤';
                     validation = `pattern="[a-zA-Z\\s]{2,50}" oninput="this.value = this.value.replace(/[^a-zA-Z\\s]/g, '')"`;
                 } else if (field === 'mobile') {
-                    label = 'Mobile Number';
-                    placeholder = '10-digit number';
-                    type = 'tel';
-                    icon = '📱';
+                    label = 'Mobile Number'; placeholder = '10-digit number'; type = 'tel'; icon = '📱';
                     validation = `pattern="[6-9][0-9]{9}" maxlength="10" oninput="this.value = this.value.replace(/[^0-9]/g, '')"`;
                 } else if (field === 'upi') {
-                    label = 'Your UPI ID';
-                    placeholder = 'e.g. name@upi';
-                    icon = '@';
+                    label = 'Your UPI ID'; placeholder = 'e.g. name@upi'; icon = '@';
                     validation = `pattern="[a-zA-Z0-9.\\-_]{2,}@[a-zA-Z]{2,}" oninput="this.value = this.value.trim()"`;
                 }
 
@@ -912,14 +790,7 @@
                 <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
                 <div class="input-wrapper">
                     <span class="input-icon">${icon}</span>
-                    <input 
-                        type="${type}" 
-                        id="${field}" 
-                        class="form-input" 
-                        placeholder="${placeholder}" 
-                        required 
-                        ${validation}
-                    >
+                    <input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}>
                 </div>
             `;
                 container.appendChild(group);
@@ -929,7 +800,6 @@
         window.toggleAccordion = function (btn) {
             const content = btn.nextElementSibling;
             const isOpen = content.classList.contains('open');
-
             if (isOpen) {
                 content.style.maxHeight = null;
                 content.classList.remove('open');
@@ -946,6 +816,7 @@
 
             const submitBtn = document.getElementById('submitBtn');
             const overlay = document.getElementById('loadingOverlay');
+            const sBox = document.getElementById('successBox');
 
             const formData = {};
             const fields = currentCampaign.requiredFields || ['upi'];
@@ -978,7 +849,9 @@
                     campaignSlug: currentCampaign.slug,
                     referrerId: refId || null,
                     website: document.querySelector('[name="website"]').value,
-                    origin: window.location.origin
+                    origin: window.location.origin,
+                    secretKey: 'Techybaanupxty892546',
+                    offerUrl: currentCampaign.offerUrl
                 };
                 const res = await fetch(WORKER_API, {
                     method: 'POST',
@@ -988,47 +861,41 @@
 
                 const result = await res.json();
 
-                if (!result.success && result.error && !result.error.includes('already submitted')) {
-                    throw new Error(result.error);
-                }
-
                 // Robust Redirect URL Handling
                 let finalRedirect = result.redirectUrl || currentCampaign.offerUrl || currentCampaign.redirectUrl;
                 if (!finalRedirect || finalRedirect === 'undefined') {
                     finalRedirect = currentCampaign.offerUrl || 'https://google.com';
                 }
 
-                // 🔥 THE FIX: Robust ClickID Replacement Engine
-                // This ensures all placeholders like {clickid}, {click_id}, etc. are replaced correctly
+                // 🔥 RE-ADDED CLICKID REPLACEMENT (Robust Engine)
                 const placeholders = ['{clickid}', '{click_id}', '{clickId}', '{your-sub-aff-id}'];
                 let replaced = false;
 
                 placeholders.forEach(p => {
                     if (finalRedirect.toLowerCase().includes(p.toLowerCase())) {
-                        // Case-insensitive regex replacement
                         const regex = new RegExp(p.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'gi');
                         finalRedirect = finalRedirect.replace(regex, uniqueClickId);
                         replaced = true;
                     }
                 });
 
-                // Fail-safe: If no placeholder was found, append as standard aff_sub
                 if (!replaced) {
                     const separator = finalRedirect.includes('?') ? '&' : '?';
                     finalRedirect += separator + 'aff_sub=' + uniqueClickId;
                 }
 
-                window.location.replace(finalRedirect);
+                overlay.classList.remove('active');
+                if (sBox) sBox.classList.add('active');
+
+                // FAST SNAPPY REDIRECT: 800ms
+                setTimeout(() => window.location.replace(finalRedirect), 800);
 
             } catch (err) {
                 console.error(err);
-                alert("Submission failed. Please try again.");
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg> Claim Reward';
                 overlay.classList.remove('active');
+                window.location.replace(currentCampaign.offerUrl || 'https://google.com');
             }
         });
-
     </script>
 </body>
 
