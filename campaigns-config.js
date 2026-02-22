@@ -1,11 +1,9 @@
-// campaigns-config.js
 // ========================================
-// CAMPAIGNS CONFIGURATION DATABASE
+// 📂 GLOBAL CAMPAIGN CONFIGURATION (v12.2 - WINDOW FIXED)
 // ========================================
-// Note: Add 'allowCustomPayout: false' inside any campaign 
-// to disable reward customization for that specific offer.
+
 const CAMPAIGNS = {
-    // Baja Broking Campaign
+    // Bajaj Broking Campaign
     'bww4yubb': {
         id: 'bww4yubb',
         name: 'Baja Broking',
@@ -13,11 +11,11 @@ const CAMPAIGNS = {
         payout: 301,
         type: 'online',
         active: false,
-        allowCustomPayout: false, // Set to false to lock rewards
+        allowCustomPayout: false,
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹301 Rewards',
-        offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
-        requiredFields: ['upi', 'mobile'], // Default fields
+        offerUrl: 'https://vdeal.onelink.me/5SGo?pid=vdeal_int&af_siteid=3546&c=2706&af_sub1={clickid}&af_click_lookback=7d&clickid={clickid}',
+        requiredFields: ['upi', 'mobile'],
         steps: [
             'Submit your UPI ID above',
             'Download & Install the Baja Broking App',
@@ -35,10 +33,8 @@ const CAMPAIGNS = {
             'Cashback credited after successful first trade completion',
             'Any suspicious activity will result in reward rejection'
         ],
-        referralPayout: {
-            referrer: 200,
-            referee: 101
-        }
+        referralPayout: { referrer: 200, referee: 101 },
+        secret: 'HizvggnR2H_BAJAJ_99'
     },
 
     // Angel One Campaign
@@ -49,11 +45,11 @@ const CAMPAIGNS = {
         payout: 500,
         type: 'online',
         active: false,
-        allowCustomPayout: true, // Set to false to lock rewards
+        allowCustomPayout: true,
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹500 Rewards',
-        offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
-        requiredFields: ['upi', 'mobile', 'name'], // Example with Name
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2557&pub_id=3546&source={clickid}&p1={clickid}',
+        requiredFields: ['upi', 'mobile', 'name'],
         steps: [
             'Submit your UPI ID above',
             'Download & Install Angel One App',
@@ -69,10 +65,8 @@ const CAMPAIGNS = {
             'Minimum deposit ₹100 required',
             'Cashback after first trade completion'
         ],
-        referralPayout: {
-            referrer: 300,
-            referee: 200
-        }
+        referralPayout: { referrer: 300, referee: 200 },
+        secret: 'ANGEL_ONE_SECRET_77'
     },
 
     // Axis Mutual Fund Campaign
@@ -83,29 +77,24 @@ const CAMPAIGNS = {
         payout: 700,
         type: 'offline',
         active: true,
-        allowCustomPayout: true, // Set to false to lock rewards
+        allowCustomPayout: true,
         description: 'Earn ₹700 Cashback',
-        offerUrl: 'https://track.cpaguruji.com/click?offer_id=XXXXX&aff_id=YOUR_ID',
-        requiredFields: ['upi', 'mobile'], // Minimum fields
+        offerUrl: 'https://bit.ly/axis-mf-invest',
+        requiredFields: ['upi', 'mobile'],
         steps: [
             'Enter your UPI ID & Mobile And Submit.',
-            'Basic Details Email  Mobile, Pan Number Complete Basic Process.',
-            'Then Choose Min Amount of ₹1000+or Above ( 1000, 1020, 1050, 1100) of Any SIP or Lumpsum & Don\'t Withdrawal At least 30 Days. { Amount 1000+ amount randomly choose 👍 }',
-            'Complete The Payment With Turn On Autopay.',
+            'Complete Basic Details Email  Mobile, Pan Number Complete Basic Process.',
+            'Then Choose Min Amount of ₹1000+or Above of Any SIP or Lumpsum.',
             'Complete Payment and Fill The Form',
-            'Done ✅ You will Get Cashback within 3/4 Working Days.',
-            'Important Note ⛔️:- Only For New User, If you have done Axis SIP from somewhere else before then dont try & process has to be completed in one touch go only, you have to pay along with the 1st installment of SIP only (If you have done Axis SIP before on Funds India, Edufund, Small Case Camp then dont try)'
+            'Done ✅ You will Get Cashback within 3/4 Working Days.'
         ],
         terms: [
             'Valid once per user/UPI/IP/Device',
-            'Minimum investment ₹5000',
-            'KYC must be completed',
+            'Only For New Users',
             'Verification takes 48-72 hours'
         ],
-        referralPayout: {
-            referrer: 700,
-            referee: 200
-        }
+        referralPayout: { referrer: 700, referee: 200 },
+        secret: 'AX_Axis_MF_Secure_01'
     },
 
     // Kalyan
@@ -116,29 +105,25 @@ const CAMPAIGNS = {
         payout: 50,
         type: 'offline',
         active: true,
-        allowCustomPayout: true, // Set to false to lock rewards
+        allowCustomPayout: true,
         description: 'Earn ₹50 Cashback',
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546&source={your-sub-aff-id}',
         requiredFields: ['upi'],
         steps: [
             'ONLY Female Registrations Will be paid',
-            'Submit your UPI ID above',
-            'Complete Registration',
-            'You will get a call from the company talk as you are interested',
-            'Done in 48-72 hours You will get ₹50 cashback!'
+            'Submit your UPI ID',
+            'Complete Registration & Answer Company Call',
+            'Get ₹50 cashback!'
         ],
         terms: [
             'ONLY Female Registration Will be paid',
-            'Valid once per user/UPI/IP/Device',
-            'Complete registration with real details',
             'Must answer the company call as interested',
-            'Cashback after verification (48-72 hours)'
+            'Cashback after verification'
         ],
-        referralPayout: {
-            referrer: 35,
-            referee: 50
-        }
+        referralPayout: { referrer: 35, referee: 50 },
+        secret: 'KL_Kalyan_Secret_88'
     },
+
     'abcd_gold': {
         id: 'abcd_gold',
         name: 'ABCD Gold',
@@ -150,53 +135,45 @@ const CAMPAIGNS = {
         description: 'Earn ₹500 Cashback on Gold Purchase',
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&source={clickid}&p1={clickid}',
         statusFlow: {
-            'dg_gold_buy_proceed_click': 'Install Tracked',
-            'dg_purchase_success_screen_load': 'Gold Purchased'
+            'default': 'App Installed',
+            'dg_purchase_success_screen_load': 'Approved'
         },
         referralTrigger: 'dg_purchase_success_screen_load',
         requiredFields: ['upi'],
         steps: [
-            'Submit your UPI ID',
-            'Download and Install ABCD Gold App',
-            'Complete Gold Purchase of ₹10 or more',
-            'Get ₹500 Instant Cashback'
+            'Submit UPI',
+            'Install ABCD Gold App',
+            'Buy Gold of ₹10+',
+            'Get ₹500 Cashback'
         ],
         terms: [
-            'Valid once per user/UPI/IP/Device',
-            'Minimum purchase of ₹10 required',
-            'Reward will be credited within 24 hours of successful purchase'
+            'Valid once per user/UPI/Device',
+            'Min purchase ₹10 required'
         ],
-        referralPayout: {
-            referrer: 15,
-            referee: 25
-        }
+        referralPayout: { referrer: 300, referee: 100 },
+        secret: 'Gs82Jk91Xv4PqT2_ABCD'
     }
 };
 
-// Helper function to get campaign by ID or SLUG
+// --- 🌏 GLOBAL WINDOW ATTACHMENT (SAFEST FIX) ---
+
 window.getCampaign = function (idOrSlug) {
     if (!idOrSlug) return null;
     const lower = idOrSlug.toLowerCase();
-
-    // Check by ID
     if (CAMPAIGNS[lower]) return CAMPAIGNS[lower];
-
-    // Check by Slug
     return Object.values(CAMPAIGNS).find(c => c.slug === lower);
 };
 
-// Helper function to check if campaign is active
-function isCampaignActive(campaignId) {
+window.isCampaignActive = function (campaignId) {
     const campaign = CAMPAIGNS[campaignId];
     return campaign && campaign.active;
-}
+};
 
-// Helper function to get all active campaigns
-function getActiveCampaigns() {
+window.getActiveCampaigns = function () {
     return Object.values(CAMPAIGNS).filter(c => c.active);
-}
+};
 
-// Export for use in other files
+// Export for module systems
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { CAMPAIGNS, getCampaign, isCampaignActive, getActiveCampaigns };
 }
