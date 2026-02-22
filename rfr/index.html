@@ -111,6 +111,7 @@
             text-decoration: none;
             border: 1px solid rgba(255, 255, 255, 0.1);
             transition: 0.2s;
+            cursor: pointer;
         }
 
         /* Compact Form Section */
@@ -340,10 +341,46 @@
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .loading-overlay.active {
             display: flex;
+        }
+
+        .loading-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .loading-dots div {
+            width: 10px;
+            height: 10px;
+            background: #6366f1;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            80%,
+            100% {
+                transform: scale(0);
+            }
+
+            40% {
+                transform: scale(1);
+            }
         }
 
         .modal {
@@ -351,6 +388,7 @@
             position: fixed;
             inset: 0;
             background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             z-index: 2000;
             align-items: center;
             justify-content: center;
@@ -361,43 +399,59 @@
             display: flex;
         }
 
+        .blur {
+            filter: blur(8px);
+            transition: filter 0.3s ease;
+        }
+
         .modal-content {
             background: white;
             width: 100%;
             max-width: 360px;
-            border-radius: 20px;
-            padding: 24px;
+            border-radius: 24px;
+            padding: 30px;
             text-align: center;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
         }
 
         .link-box {
             width: 100%;
-            padding: 12px;
-            background: #f1f5f9;
-            border: 1.5px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 12px;
-            margin: 15px 0;
+            padding: 14px;
+            background: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 13px;
+            margin: 20px 0;
+            color: #475569;
+            font-weight: 500;
         }
     </style>
 </head>
 
 <body>
-    <div class="loading-overlay" id="loadingOverlay">⚡ Loading...</div>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-dots">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <p style="font-size: 12px; font-weight: 600; color: #6366f1;">Processing...</p>
+    </div>
 
     <div class="container">
         <!-- COMPACT HEADER -->
         <div class="header">
             <div class="header-badge">🎁 REFER & EARN</div>
             <h1 class="campaign-name" id="campaignName">Baja Broking</h1>
-            <p class="campaign-subtitle">Share & earn reward!</p>
+            <p class="campaign-subtitle">Share & earn rewards!</p>
 
             <div class="payout-card">
                 <div class="payout-amount" id="totalDisplay">₹200</div>
                 <div class="payout-label" id="payoutLabel">YOU EARN PER REFERRAL</div>
             </div>
 
-            <button class="track-btn" onclick="window.location.href='../refer-tracker/?id='+campaignId">
+            <!-- Path check: both files are in root -->
+            <button class="track-btn" onclick="window.location.href='refer-tracker-index.html?id='+campaignId">
                 📊 Track Earnings
             </button>
         </div>
@@ -425,7 +479,7 @@
                     <input type="url" id="telegram" class="form-input" placeholder="https://t.me/yourchannel">
                 </div>
 
-                <!-- CUSTOMIZATION - Below Telegram -->
+                <!-- CUSTOMIZATION PANEL -->
                 <div class="customize-panel">
                     <div class="customize-header">
                         <div class="customize-title">⚙️ Customize Commission</div>
@@ -446,23 +500,27 @@
                         <div class="range-container">
                             <input type="range" id="splitSlider" class="custom-slider" min="0" max="100" value="75">
                         </div>
+                        <p style="font-size: 10px; color: #94a3b8; text-align: center; margin-top: 8px;">
+                            Drag the slider to share a portion of your commission with your friend!
+                        </p>
                     </div>
                 </div>
 
-                <!-- GENERATE BUTTON - Visible above fold -->
+                <!-- GENERATE BUTTON -->
                 <button type="submit" class="submit-btn" id="submitBtn">
                     ⚡ Generate My Referral Link
                 </button>
             </form>
 
             <div class="accordion">
-                <button class="acc-header" onclick="toggleAcc()">
-                    Terms & Conditions <span>▼</span>
+                <button class="acc-header" type="button" onclick="toggleAcc()">
+                    Terms & Conditions <span id="accArrow">▼</span>
                 </button>
                 <div class="acc-content" id="accContent">
-                    <ul>
-                        <li>Valid once per user/UPI/IP/Device</li>
-                        <li>Payout after successful KYC/Requirements</li>
+                    <ul style="list-style: none; padding: 5px;">
+                        <li>• Valid once per user/UPI/IP/Device</li>
+                        <li>• Payout after successful KYC/Requirements completed by friend</li>
+                        <li>• Referrals are tracked automatically in real-time</li>
                     </ul>
                 </div>
             </div>
@@ -472,17 +530,23 @@
     <!-- Modal -->
     <div class="modal" id="linksModal">
         <div class="modal-content">
-            <h2>🎉 Ready!</h2>
+            <div style="font-size: 40px; margin-bottom: 10px;">🎉</div>
+            <h2 style="color: #1e293b; font-size: 20px; margin-bottom: 8px;">Link Ready!</h2>
+            <p style="font-size: 13px; color: #64748b;">Copy and share this link with your friends</p>
+
             <input type="text" id="referralLink" class="link-box" readonly>
-            <button onclick="copyLink()"
-                style="width:100%; padding:14px; background:#6366f1; color:white; border:none; border-radius:10px; font-weight:700; cursor:pointer;">COPY
-                LINK</button>
+
+            <button onclick="copyLink()" id="copyBtn"
+                style="width:100%; padding:14px; background:#6366f1; color:white; border:none; border-radius:12px; font-weight:800; cursor:pointer; font-size: 15px; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);">
+                COPY LINK
+            </button>
             <button onclick="closeModal()"
-                style="margin-top:10px; background:none; border:none; font-size:12px; color:#64748b; cursor:pointer;">Close</button>
+                style="margin-top:15px; background:none; border:none; font-size:12px; color:#94a3b8; cursor:pointer; font-weight: 600;">Close
+                Window</button>
         </div>
     </div>
 
-    <script src="../campaigns-config.js"></script>
+    <script src="campaigns-config.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
@@ -495,27 +559,40 @@
         });
 
         function init() {
-            currentCampaign = getCampaign(campaignId) || { name: 'Campaign', referralPayout: { referrer: 200, referee: 0 } };
+            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : null;
+
+            // Fallback if not found
+            if (!currentCampaign) {
+                currentCampaign = { name: 'Campaign', referralPayout: { referrer: 200, referee: 0 }, allowCustomPayout: true };
+            }
+
             totalPayout = (currentCampaign.referralPayout?.referrer || 0) + (currentCampaign.referralPayout?.referee || 0);
 
             document.getElementById('campaignName').textContent = currentCampaign.name;
             document.title = `Refer & Earn - ${currentCampaign.name}`;
             document.getElementById('totalDisplay').textContent = `₹${currentCampaign.referralPayout?.referrer || totalPayout}`;
 
-            // 🚀 DISABLE CUSTOMIZATION IF CONFIG SAYS SO
+            // 🚀 Respect "allowCustomPayout" from config
             if (currentCampaign.allowCustomPayout === false) {
                 const panel = document.querySelector('.customize-panel');
                 if (panel) panel.style.display = 'none';
             }
 
-            // Sync Slider + Inputs
+            // Sync Slider + Inputs initially
             const initialReferrer = currentCampaign.referralPayout?.referrer || totalPayout;
             syncAll('slider', (initialReferrer / totalPayout) * 100);
 
-            // Logic for bi-directional sync
+            // Bi-directional sync listeners
             document.getElementById('splitSlider').addEventListener('input', (e) => syncAll('slider', e.target.value));
             document.getElementById('youInp').addEventListener('input', (e) => syncAll('you', e.target.value));
             document.getElementById('friendInp').addEventListener('input', (e) => syncAll('friend', e.target.value));
+
+            // Toggle Logic
+            document.getElementById('toggleCustom').addEventListener('click', function () {
+                const content = document.getElementById('sliderContent');
+                content.classList.toggle('active');
+                this.textContent = content.classList.contains('active') ? 'CLOSE' : 'EDIT';
+            });
         }
 
         function syncAll(source, val) {
@@ -525,11 +602,11 @@
                 you = Math.round((val / 100) * totalPayout);
                 friend = totalPayout - you;
             } else if (source === 'you') {
-                you = Math.max(0, Math.min(totalPayout, val));
+                you = Math.max(0, Math.min(totalPayout, parseFloat(val) || 0));
                 friend = totalPayout - you;
                 sliderVal = (you / totalPayout) * 100;
             } else {
-                friend = Math.max(0, Math.min(totalPayout, val));
+                friend = Math.max(0, Math.min(totalPayout, parseFloat(val) || 0));
                 you = totalPayout - friend;
                 sliderVal = (you / totalPayout) * 100;
             }
@@ -539,25 +616,37 @@
             document.getElementById('splitSlider').value = sliderVal;
         }
 
-        document.getElementById('toggleCustom').addEventListener('click', function () {
-            const content = document.getElementById('sliderContent');
-            content.classList.toggle('active');
-            this.textContent = content.classList.contains('active') ? 'CLOSE' : 'EDIT';
-        });
-
-        function toggleAcc() { document.getElementById('accContent').classList.toggle('open'); }
-        function closeModal() { document.getElementById('linksModal').classList.remove('active'); }
-        function copyLink() {
-            const input = document.getElementById('referralLink');
-            input.select();
-            document.execCommand('copy');
-            alert('Copied!');
+        function toggleAcc() {
+            const content = document.getElementById('accContent');
+            const arrow = document.getElementById('accArrow');
+            content.classList.toggle('open');
+            arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
         }
 
-        // PRESERVED REGISTRATION LOGIC from OLD CODE
-        function generateReferrerId(amt) {
+        function closeModal() {
+            document.getElementById('linksModal').classList.remove('active');
+            document.querySelector('.container').classList.remove('blur');
+        }
+
+        function copyLink() {
+            const input = document.getElementById('referralLink');
+            const btn = document.getElementById('copyBtn');
+            input.select();
+            document.execCommand('copy');
+
+            const oldText = btn.textContent;
+            btn.textContent = '✓ COPIED!';
+            btn.style.background = '#10b981';
+
+            setTimeout(() => {
+                btn.textContent = oldText;
+                btn.style.background = '#6366f1';
+            }, 2000);
+        }
+
+        function generateReferrerId(friendAmt) {
             const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-            return `ML${amt}Z${random}`; // Using 'Z' as a separator to prevent digit collision
+            return `ML${friendAmt}Z${random}`;
         }
 
         document.getElementById('referForm').addEventListener('submit', async function (e) {
@@ -576,13 +665,11 @@
                 const finalYou = parseInt(document.getElementById('youInp').value);
                 const finalFriend = parseInt(document.getElementById('friendInp').value);
 
-                // LocalStorage Logic (Includes amount in key so split changes generate new Smart IDs)
                 const localKey = `ref_for_${upi}_${campaignId}_${finalFriend}`;
                 let referrerId = localStorage.getItem(localKey) || generateReferrerId(finalFriend);
                 localStorage.setItem(localKey, referrerId);
 
-                // Register API with Type & Secret
-                console.log('Registering custom split...', { finalYou, finalFriend });
+                // API Registration
                 const response = await fetch('https://campaign-apii.businesstechy04.workers.dev/register-referrer', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -598,23 +685,21 @@
                 });
 
                 const result = await response.json();
-                if (result.success) {
-                    console.log('Registration Successful:', result);
-                } else {
-                    console.error('Registration Failed:', result.message || 'Unknown error');
-                }
-
                 const finalId = (result.success && result.referrerId) ? result.referrerId : referrerId;
 
-                document.getElementById('referralLink').value = `${window.location.origin}/c/?o=${campaignId}&ref=${finalId}`;
+                // Path check: landing page is c-index-fixed.html in root
+                document.getElementById('referralLink').value = `${window.location.origin}/c-index-fixed.html?o=${campaignId}&ref=${finalId}`;
                 document.getElementById('linksModal').classList.add('active');
+                document.querySelector('.container').classList.add('blur');
             } catch (err) {
+                console.error(err);
                 alert('Connection Error. Link generated locally.');
-                // Fallback Link
                 const upi = document.getElementById('upi').value.trim();
-                const id = localStorage.getItem(`ref_for_${upi}_${campaignId}`) || 'ERROR';
-                document.getElementById('referralLink').value = `${window.location.origin}/c/?o=${campaignId}&ref=${id}`;
+                const friendAmt = parseInt(document.getElementById('friendInp').value);
+                const id = localStorage.getItem(`ref_for_${upi}_${campaignId}_${friendAmt}`) || 'ERR';
+                document.getElementById('referralLink').value = `${window.location.origin}/c-index-fixed.html?o=${campaignId}&ref=${id}`;
                 document.getElementById('linksModal').classList.add('active');
+                document.querySelector('.container').classList.add('blur');
             } finally {
                 submitBtn.disabled = false;
                 overlay.classList.remove('active');
