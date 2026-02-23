@@ -4,128 +4,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Referral History - Refer & Earn</title>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title id="pageTitle">Referral Summary</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --primary: #8DE02C;
-            --primary-dark: #76bc25;
-            --bg-page: #f8fafc;
-            --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-sub: #64748b;
-            --success: #22c55e;
-            --pending: #f97316;
-            --paid: #3b82f6;
-            --border: #e2e8f0;
+            --primary: #059669;
+            --primary-light: #10b981;
+            --primary-bg: #ecfdf5;
+            --text-dark: #111827;
+            --text-muted: #6b7280;
+            --bg-gradient: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            --error-bg: #fef2f2;
+            --error-border: #fee2e2;
+            --error-text: #991b1b;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Outfit', sans-serif;
         }
 
         body {
-            background-color: var(--bg-page);
-            color: var(--text-main);
-            line-height: 1.6;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-dark);
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             padding: 20px;
         }
 
         .container {
+            width: 100%;
             max-width: 480px;
-            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-
-        .header h1 {
-            font-weight: 700;
-            font-size: 24px;
-            color: var(--text-main);
-        }
-
-        /* Premium Stats Card */
-        .stats-card {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            border-radius: 24px;
-            padding: 28px;
+        /* CARD HEADER */
+        .summary-header {
+            background: var(--primary);
+            padding: 32px 24px;
             color: white;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .header-top {
             display: flex;
-            justify-content: space-around;
-            text-align: center;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
         }
 
-        .stat-item h2 {
-            font-size: 32px;
+        .header-icon {
+            width: 28px;
+            height: 28px;
+            opacity: 0.9;
+        }
+
+        .header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--primary);
         }
 
-        .stat-item p {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            opacity: 0.8;
-            font-weight: 600;
+        .header-desc {
+            font-size: 14px;
+            opacity: 0.85;
+            line-height: 1.5;
         }
 
-        /* Input Form Card */
-        .input-card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 24px;
+        /* CONTENT AREA */
+        .content {
+            padding: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #374151;
         }
 
         .input-group {
             position: relative;
+            margin-bottom: 16px;
         }
 
         .input-group input {
             width: 100%;
-            padding: 16px;
-            padding-right: 100px;
-            border: 2px solid var(--border);
-            border-radius: 14px;
-            font-size: 16px;
-            outline: none;
+            padding: 14px 16px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 500;
             transition: all 0.2s;
-            color: var(--text-main);
+            background: #f9fafb;
         }
 
         .input-group input:focus {
+            outline: none;
             border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(5, 150, 105, 0.1);
         }
 
         .check-btn {
-            position: absolute;
-            right: 6px;
-            top: 6px;
-            bottom: 6px;
+            width: 100%;
             background: var(--primary);
-            color: #000;
+            color: white;
             border: none;
-            padding: 0 20px;
-            border-radius: 10px;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 16px;
             font-weight: 700;
-            font-size: 14px;
             cursor: pointer;
-            transition: transform 0.2s, background 0.2s;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 24px;
         }
 
-        .check-btn:active {
-            transform: scale(0.95);
+        .check-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2);
         }
 
         .check-btn:disabled {
@@ -133,283 +146,399 @@
             cursor: not-allowed;
         }
 
-        /* List Section */
-        .list-section {
+        /* ALERT BOXES */
+        .alert {
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-size: 13.5px;
+            line-height: 1.5;
             display: none;
         }
 
-        .list-section.active {
-            display: block;
-            animation: fadeIn 0.4s ease-out;
+        .alert-info {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #dcfce7;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .alert-error {
+            background: var(--error-bg);
+            color: var(--error-text);
+            border: 1px solid var(--error-border);
+            border-left: 4px solid #ef4444;
         }
 
-        .ref-item {
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 18px;
+        .alert-icon {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+        }
+
+        /* RESULTS SECTION */
+        .results-section {
+            display: none;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 24px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
             padding: 16px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: transform 0.2s, box-shadow 0.2s;
+            text-align: center;
         }
 
-        .ref-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
-        }
-
-        .ref-info h4 {
-            font-size: 15px;
-            font-weight: 600;
+        .stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
             margin-bottom: 2px;
-            color: var(--text-main);
         }
 
-        .ref-info p {
-            font-size: 12px;
-            color: var(--text-sub);
-        }
-
-        /* Status Badges */
-        .status-badge {
-            padding: 6px 12px;
-            border-radius: 10px;
+        .stat-label {
             font-size: 11px;
             font-weight: 700;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .badge-success {
-            background: #f0fdf4;
-            color: #22c55e;
-            border: 1px solid #dcfce7;
+        /* REFERRAL LIST */
+        .list-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #374151;
         }
 
-        .badge-pending {
-            background: #fff7ed;
-            color: #f97316;
-            border: 1px solid #ffedd5;
+        .referral-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .badge-paid {
+        .referral-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 16px;
+            background: #f9fafb;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+        }
+
+        .ref-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .ref-upi {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .ref-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .status-badge {
+            font-size: 11px;
+            font-weight: 800;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .status-paid {
             background: #eff6ff;
             color: #3b82f6;
             border: 1px solid #dbeafe;
         }
 
+        .status-approved {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .footer a {
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        /* LOADER */
         .loader {
             display: none;
             text-align: center;
-            padding: 30px;
+            padding: 24px;
         }
 
-        .loader-dots {
-            display: inline-flex;
-            gap: 6px;
-        }
-
-        .loader-dots span {
-            width: 8px;
-            height: 8px;
-            background: var(--primary);
+        .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid #e2e8f0;
+            border-top-color: var(--primary);
             border-radius: 50%;
-            animation: bounce 1.4s infinite ease-in-out;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
         }
 
-        .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
-
-        @keyframes bounce {
-            0%, 80%, 100% { transform: scale(0); opacity: 0.4; }
-            40% { transform: scale(1); opacity: 1; }
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 60px 40px;
-            color: var(--text-sub);
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            display: block;
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1 id="campaignName">Referral Tracker</h1>
-            <p style="font-size: 14px; color: var(--text-sub);">Track your bonus earnings in real-time</p>
-        </div>
-
-        <!-- Premium Stats Card -->
-        <div class="stats-card">
-            <div class="stat-item">
-                <h2 id="totalReferrals">0</h2>
-                <p>Referrals</p>
+        <!-- HEADER -->
+        <header class="summary-header">
+            <div class="header-top">
+                <svg class="header-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                </svg>
+                <h1 class="header-title" id="headerTitle">Referral Summary</h1>
             </div>
-            <div class="stat-item">
-                <h2 id="totalEarnings">0</h2>
-                <p>Earned (₹)</p>
-            </div>
-        </div>
+            <p class="header-desc">Check your referral earnings and track who you've referred</p>
+        </header>
 
-        <!-- Input Form -->
-        <div class="input-card">
+        <div class="content">
+            <label class="form-label">Your UPI Address</label>
             <div class="input-group">
-                <input type="text" id="upiInput" placeholder="Enter your registered UPI ID" 
-                    title="Please enter the correct UPI which you have used to refer">
-                <button class="check-btn" id="checkBtn">Check</button>
+                <input type="text" id="upiInput" placeholder="yourname@upi" value="">
+            </div>
+
+            <button class="check-btn" id="checkBtn" onclick="trackEarnings()">
+                <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <span>Check</span>
+            </button>
+
+            <!-- ERROR ALERT -->
+            <div id="errorAlert" class="alert alert-error">
+                <div class="alert-icon">⚠️</div>
+                <div>No referral data found for this UPI. You may not have generated a referral link yet.</div>
+            </div>
+
+            <!-- INFO ALERT -->
+            <div id="infoAlert" class="alert alert-info" style="display: flex;">
+                <svg class="alert-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <div>Enter your UPI/mobile to see all users who signed up using your referral link and your earnings.
+                </div>
+            </div>
+
+            <!-- LOADER -->
+            <div id="loader" class="loader">
+                <div class="spinner"></div>
+            </div>
+
+            <!-- RESULTS -->
+            <div id="results" class="results-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-val" id="totalRefs">0</div>
+                        <div class="stat-label">Total Referrals</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-val" id="totalEarned">₹0</div>
+                        <div class="stat-label">Total Earnings</div>
+                    </div>
+                </div>
+
+                <h3 class="list-title">Your Referrals</h3>
+                <div id="referralList" class="referral-list">
+                    <!-- Items go here -->
+                </div>
             </div>
         </div>
 
-        <!-- Loading Screen -->
-        <div id="loader" class="loader">
-            <div class="loader-dots">
-                <span></span><span></span><span></span>
-            </div>
-            <p style="font-size: 12px; margin-top: 10px; color: var(--text-sub);">Syncing data...</p>
-        </div>
-
-        <!-- Results List -->
-        <div id="listSection" class="list-section">
-            <div id="referralList"></div>
-            <div id="emptyState" class="empty-state" style="display: none;">
-                <span class="empty-icon">🚀</span>
-                <p>No referrals found yet. Share your link to start earning!</p>
-            </div>
-        </div>
+        <footer class="footer">
+            Having issues? <a href="mailto:camptechybusiness@gmail.com">Contact our support team for assistance</a>
+        </footer>
     </div>
 
     <script src="../campaigns-config.js"></script>
     <script>
-        const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
+        const CLOUDFLARE_WORKER = 'https://campaign-apii.businesstechy04.workers.dev';
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
 
-        // Initialize Header with Campaign Name
-        function init() {
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update Branding
             if (typeof getCampaign !== 'undefined') {
                 const camp = getCampaign(campaignId);
                 if (camp) {
-                    document.getElementById('campaignName').textContent = camp.name + ' Earnings';
-                    document.title = `Referral History - ${camp.name}`;
+                    document.getElementById('pageTitle').textContent = `${camp.name} - Referral Summary`;
+                    document.getElementById('headerTitle').textContent = `${camp.name} Summary`;
                 }
             }
-        }
 
-        document.getElementById('checkBtn').addEventListener('click', async () => {
+            // Auto-load if in URL
+            const urlUpi = urlParams.get('upi') || urlParams.get('ref');
+            if (urlUpi && (urlUpi.includes('@') || urlUpi.length >= 10)) {
+                document.getElementById('upiInput').value = urlUpi;
+                trackEarnings();
+            }
+        });
+
+        async function trackEarnings() {
             const upi = document.getElementById('upiInput').value.trim();
-            if (!upi) return alert('Please enter your UPI ID');
+            if (!upi) {
+                alert('Please enter your UPI ID');
+                return;
+            }
 
+            // UI Reset
             const btn = document.getElementById('checkBtn');
+            const results = document.getElementById('results');
             const loader = document.getElementById('loader');
-            const listSection = document.getElementById('listSection');
-            const listContainer = document.getElementById('referralList');
-            const emptyState = document.getElementById('emptyState');
+            const errorAlert = document.getElementById('errorAlert');
+            const infoAlert = document.getElementById('infoAlert');
 
             btn.disabled = true;
             loader.style.display = 'block';
-            listSection.classList.remove('active');
+            results.style.display = 'none';
+            errorAlert.style.display = 'none';
+            infoAlert.style.display = 'none';
 
             try {
-                // Fetch referrals from Cloudflare Worker
-                const response = await fetch(`${WORKER_API}/track-referrals?upi=${encodeURIComponent(upi)}`);
+                const response = await fetch(`${CLOUDFLARE_WORKER}/track-referrals?upi=${encodeURIComponent(upi)}`);
                 const data = await response.json();
 
-                listContainer.innerHTML = '';
-                let successCount = 0;
-                let earnings = 0;
-
                 if (data.success && data.referrals && data.referrals.length > 0) {
-                    emptyState.style.display = 'none';
-
-                    // Use the more advanced mapping logic for statuses
-                    data.referrals.forEach(ref => {
-                        const rawStatus = (ref.status || 'pending').toLowerCase();
-                        const camp = (typeof getCampaign !== 'undefined') ? getCampaign(ref.campaign) : null;
-                        const statusFlow = camp?.statusFlow || {};
-                        const trigger = (camp?.referralTrigger || 'approved').toLowerCase();
-
-                        let badgeClass = 'badge-pending';
-                        let badgeText = 'TRACKING';
-
-                        // 🏆 SUCCESS CRITERIA: approved, paid, or matches campaign trigger
-                        const isPaid = (rawStatus === 'paid' || rawStatus === 'cashback_paid');
-                        const isApproved = (rawStatus === 'approved' || rawStatus === 'success' || rawStatus === trigger);
-                        
-                        // ⏱️ INTERMEDIATE CRITERIA: statuses from statusFlow (like 'KYC DONE')
-                        const isIntermediate = Object.values(statusFlow).map(v => v.toLowerCase()).includes(rawStatus) || 
-                                              ['installed', 'kyc_done', 'submission_ready'].includes(rawStatus);
-
-                        if (isPaid) {
-                            badgeClass = 'badge-paid';
-                            badgeText = 'PAID';
-                            successCount++;
-                            earnings += parseFloat(ref.payoutReferrer || camp?.referralPayout?.referrer || 0);
-                        } else if (isApproved) {
-                            badgeClass = 'badge-success';
-                            badgeText = 'VERIFIED';
-                            successCount++;
-                            earnings += parseFloat(ref.payoutReferrer || camp?.referralPayout?.referrer || 0);
-                        } else if (isIntermediate) {
-                            badgeClass = 'badge-pending';
-                            // Map back to pretty name from statusFlow if possible
-                            const flowEntry = Object.entries(statusFlow).find(([k, v]) => v.toLowerCase() === rawStatus);
-                            badgeText = flowEntry ? flowEntry[1].toUpperCase() : rawStatus.toUpperCase();
-                        } else {
-                            // Default pending
-                            if (rawStatus !== 'pending') badgeText = rawStatus.toUpperCase();
-                        }
-
-                        const item = document.createElement('div');
-                        item.className = 'ref-item';
-                        item.innerHTML = `
-                            <div class="ref-info">
-                                <h4>${ref.refereeUpi}</h4>
-                                <p>${new Date(ref.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
-                                <div style="font-size: 10px; color: #94a3b8; font-weight: 600;">${camp?.name || ref.campaign}</div>
-                            </div>
-                            <div class="status-badge ${badgeClass}">${badgeText}</div>
-                        `;
-                        listContainer.appendChild(item);
-                    });
+                    renderResults(data.referrals);
+                    results.style.display = 'block';
                 } else {
-                    emptyState.style.display = 'block';
+                    errorAlert.style.display = 'flex';
                 }
-
-                // Update Stats
-                document.getElementById('totalReferrals').textContent = successCount;
-                document.getElementById('totalEarnings').textContent = earnings;
-                listSection.classList.add('active');
-
-            } catch (e) {
-                console.error(e);
-                alert('Communication failed. Please try again.');
+            } catch (err) {
+                console.error(err);
+                alert("Server error. Please try again later.");
             } finally {
                 btn.disabled = false;
                 loader.style.display = 'none';
             }
-        });
+        }
 
-        // Allow Enter key
-        document.getElementById('upiInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') document.getElementById('checkBtn').click();
-        });
+        function renderResults(referrals) {
+            const listContainer = document.getElementById('referralList');
+            listContainer.innerHTML = '';
 
-        init();
+            let successCount = 0;
+            let earnings = 0;
+
+            // Sort: Approved/Paid first
+            const sorted = [...referrals].sort((a, b) => {
+                const statusA = (a.status || 'pending').toLowerCase();
+                const statusB = (b.status || 'pending').toLowerCase();
+                const isWinnerA = ['paid', 'approved', 'cashback_paid', 'success'].includes(statusA);
+                const isWinnerB = ['paid', 'approved', 'cashback_paid', 'success'].includes(statusB);
+
+                if (isWinnerA && !isWinnerB) return -1;
+                if (!isWinnerA && isWinnerB) return 1;
+                return 0;
+            });
+
+            sorted.forEach(ref => {
+                const rawStatus = (ref.status || 'pending').toLowerCase();
+                const camp = (typeof getCampaign !== 'undefined') ? getCampaign(ref.campaign) : null;
+                const statusFlow = camp?.statusFlow || {};
+                const trigger = (camp?.referralTrigger || 'approved').toLowerCase();
+
+                let badgeClass = 'status-pending';
+                let badgeText = 'TRACKING';
+
+                // 🏆 SUCCESS CRITERIA
+                const isPaid = (rawStatus === 'paid' || rawStatus === 'cashback_paid');
+                const isApproved = (rawStatus === 'approved' || rawStatus === 'success' || rawStatus === trigger);
+
+                // ⏱️ INTERMEDIATE CRITERIA
+                const isIntermediate = Object.values(statusFlow).map(v => v.toLowerCase()).includes(rawStatus) ||
+                    ['installed', 'kyc_done', 'submission_ready'].includes(rawStatus);
+
+                if (isPaid) {
+                    badgeClass = 'status-paid';
+                    badgeText = 'PAID';
+                    successCount++;
+                    earnings += parseFloat(ref.payoutReferrer || camp?.referralPayout?.referrer || 0);
+                } else if (isApproved) {
+                    badgeClass = 'status-approved';
+                    badgeText = 'VERIFIED';
+                    successCount++;
+                    earnings += parseFloat(ref.payoutReferrer || camp?.referralPayout?.referrer || 0);
+                } else if (isIntermediate) {
+                    badgeClass = 'status-pending';
+                    const flowEntry = Object.entries(statusFlow).find(([k, v]) => v.toLowerCase() === rawStatus);
+                    badgeText = flowEntry ? flowEntry[1].toUpperCase() : rawStatus.toUpperCase();
+                } else {
+                    if (rawStatus !== 'pending') badgeText = rawStatus.toUpperCase();
+                }
+
+                // Render Item
+                const item = document.createElement('div');
+                item.className = 'referral-item';
+                item.innerHTML = `
+                    <div class="ref-info">
+                        <div class="ref-upi">${maskUPI(ref.refereeUpi)}</div>
+                        <div class="ref-date">${new Date(ref.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short' })} • ${camp?.name || ref.campaign}</div>
+                    </div>
+                    <div class="status-badge ${badgeClass}">${badgeText}</div>
+                `;
+                listContainer.appendChild(item);
+            });
+
+            // Update Stats
+            document.getElementById('totalRefs').textContent = successCount;
+            document.getElementById('totalEarned').textContent = `₹${earnings}`;
+        }
+
+        function maskUPI(upi) {
+            if (!upi || !upi.includes('@')) return upi || 'N/A';
+            const parts = upi.split('@');
+            const name = parts[0];
+            if (name.length <= 4) return `***@${parts[1]}`;
+            return `${name.substring(0, 3)}***${name.substring(name.length - 1)}@${parts[1]}`;
+        }
     </script>
 </body>
 
