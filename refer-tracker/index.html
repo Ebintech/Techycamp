@@ -397,11 +397,14 @@
         </footer>
     </div>
 
-    <script src="../campaigns-config.js"></script>
+    <!-- START OF FIX: Absolute Path for Config -->
+    <script src="/campaigns-config.js"></script>
+    <!-- END OF FIX -->
+
     <script>
         const CLOUDFLARE_WORKER = 'https://campaign-apii.businesstechy04.workers.dev';
         const urlParams = new URLSearchParams(window.location.search);
-        const campaignId = urlParams.get('id') || 'bww4yubb';
+        const campaignId = urlParams.get('id') || urlParams.get('o') || urlParams.get('v') || 'bww4yubb';
 
         document.addEventListener('DOMContentLoaded', () => {
             // Update Branding
