@@ -101,7 +101,7 @@ const CAMPAIGNS = {
         slug: 'kalyan',
         payout: 50,
         type: 'offline',
-        active: true,
+        active: false,
         allowCustomPayout: true,
         description: 'Earn ₹50 Cashback',
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2155&pub_id=3546&source={your-sub-aff-id}',
