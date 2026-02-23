@@ -10,7 +10,7 @@ const CAMPAIGNS = {
         slug: 'baja-broking',
         payout: 301,
         type: 'online',
-        active: true,
+        active: false,
         allowCustomPayout: false,
         logo: 'https://campguruji.in/img/app-logo.png',
         description: 'Earn ₹301 Rewards',
@@ -33,8 +33,7 @@ const CAMPAIGNS = {
             'Cashback credited after successful first trade completion',
             'Any suspicious activity will result in reward rejection'
         ],
-        referralPayout: { referrer: 200, referee: 101 },
-        secret: 'HizvggnR2H_BAJAJ_99'
+        referralPayout: { referrer: 200, referee: 101 }
     },
 
     // Angel One Campaign
@@ -65,8 +64,7 @@ const CAMPAIGNS = {
             'Minimum deposit ₹100 required',
             'Cashback after first trade completion'
         ],
-        referralPayout: { referrer: 300, referee: 200 },
-        secret: 'ANGEL_ONE_SECRET_77'
+        referralPayout: { referrer: 300, referee: 200 }
     },
 
     // Axis Mutual Fund Campaign
@@ -79,7 +77,7 @@ const CAMPAIGNS = {
         active: true,
         allowCustomPayout: true,
         description: 'Earn ₹700 Cashback',
-        offerUrl: 'https://bit.ly/axis-mf-invest',
+        offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2792&pub_id=3546&source={your-sub-aff-id}',
         requiredFields: ['upi', 'mobile'],
         steps: [
             'Enter your UPI ID & Mobile And Submit.',
@@ -93,8 +91,7 @@ const CAMPAIGNS = {
             'Only For New Users',
             'Verification takes 48-72 hours'
         ],
-        referralPayout: { referrer: 700, referee: 200 },
-        secret: 'AX_Axis_MF_Secure_01'
+        referralPayout: { referrer: 200, referee: 700 }
     },
 
     // Kalyan
@@ -120,8 +117,7 @@ const CAMPAIGNS = {
             'Must answer the company call as interested',
             'Cashback after verification'
         ],
-        referralPayout: { referrer: 35, referee: 50 },
-        secret: 'KL_Kalyan_Secret_88'
+        referralPayout: { referrer: 35, referee: 50 }
     },
 
     'abcd_gold': {
@@ -150,8 +146,7 @@ const CAMPAIGNS = {
             'Valid once per user/UPI/Device',
             'Min purchase ₹10 required'
         ],
-        referralPayout: { referrer: 300, referee: 100 },
-        secret: 'Gs82Jk91Xv4PqT2_ABCD'
+        referralPayout: { referrer: 300, referee: 100 }
     }
 };
 
