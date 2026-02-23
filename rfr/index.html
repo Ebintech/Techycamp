@@ -32,7 +32,7 @@
             flex-direction: column;
         }
 
-        /* COMPACT Purple Gradient Header */
+        /* COMPAPER Purple Gradient Header */
         .header {
             background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 50%, #6d28d9 100%);
             padding: 16px 20px 24px;
@@ -450,8 +450,8 @@
                 <div class="payout-label" id="payoutLabel">YOU EARN PER REFERRAL</div>
             </div>
 
-            <!-- Path check: both files are in root -->
-            <button class="track-btn" onclick="window.location.href='/refer-tracker/?id='+campaignId">
+            <!-- Path check: directory is tracker/ -->
+            <button class="track-btn" onclick="window.location.href='./tracker/?id='+campaignId">
                 📊 Track Earnings
             </button>
         </div>
@@ -546,7 +546,8 @@
         </div>
     </div>
 
-    <script src="/campaigns-config.js"></script>
+    <!-- campaigns-config.js is in the same directory -->
+    <script src="campaigns-config.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
@@ -559,7 +560,7 @@
         });
 
         function init() {
-            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : null;
+            currentCampaign = (typeof getCampaign === 'function') ? getCampaign(campaignId) : (typeof CAMPAIGNS !== 'undefined' ? CAMPAIGNS[campaignId] : null);
 
             // Fallback if not found
             if (!currentCampaign) {
@@ -669,7 +670,7 @@
                 let referrerId = localStorage.getItem(localKey) || generateReferrerId(finalFriend);
                 localStorage.setItem(localKey, referrerId);
 
-                // API Registration
+                // API Registration - HARDENED (No Secret Key)
                 const response = await fetch('https://campaign-apii.businesstechy04.workers.dev/register-referrer', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -679,15 +680,15 @@
                         campaignSlug: campaignId,
                         payoutReferrer: finalYou,
                         payoutReferee: finalFriend,
-                        type: 'referrer',
-                        secretKey: 'Techybaanupxty892546'
+                        type: 'referrer'
                     })
                 });
 
                 const result = await response.json();
                 const finalId = (result.success && result.referrerId) ? result.referrerId : referrerId;
 
-                // Path check: landing page is c-index-fixed.html in root
+                // Path check: landing page is c-index-fixed.html in root (linked as /c/)
+                // We'll use the user's intended /c/ URL block.
                 document.getElementById('referralLink').value = `${window.location.origin}/c/?o=${campaignId}&ref=${finalId}`;
                 document.getElementById('linksModal').classList.add('active');
                 document.querySelector('.container').classList.add('blur');
