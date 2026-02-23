@@ -241,6 +241,37 @@
             justify-content: center;
             gap: 6px;
         }
+
+        /* ⭐ SMALL INLINE STATUS */
+        .inline-status {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            padding: 10px 14px;
+            background: #f1f5f9;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-sub);
+            width: fit-content;
+        }
+
+        .inline-spinner {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #e2e8f0;
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
@@ -259,16 +290,21 @@
             <button id="trackBtn" class="track-btn">
                 Track My Rewards
             </button>
+            <div id="inlineStatus" class="inline-status">
+                <span class="inline-spinner"></span>
+                <span id="inlineStatusText">Checking your campaign progress…</span>
+            </div>
         </div>
 
         <div id="resultArea" class="result-section">
-            <div id="statusCard" class="status-card">
-                <span id="statusIcon" class="status-icon-large">⏳</span>
-                <div id="statusTitle" class="status-heading">Searching...</div>
-                <div id="statusDesc" class="status-desc">Fetching latest data for your UPI</div>
+            <div id="noRecordMessage"
+                style="display:none; text-align:center; padding: 30px; background:white; border:1px solid var(--border); border-radius:20px; margin-bottom:20px;">
+                <span style="font-size:32px; display:block; margin-bottom:10px;">❌</span>
+                <div style="font-weight:700; font-size:18px; color:#991b1b;">No Record Found</div>
+                <div style="font-size:13px; color:var(--text-sub);">We couldn't find any submission for this UPI.</div>
             </div>
 
-            <div class="steps-container">
+            <div id="stepsContainer" class="steps-container">
                 <!-- Step 1 -->
                 <div class="step-box pending" id="step_1">
                     <div class="step-left">
@@ -324,8 +360,10 @@
             const campaignId = urlParams.get('id') || urlParams.get('o') || urlParams.get('v');
             const titleElement = document.getElementById('campaignNameTitle');
 
-            if (campaignId && typeof CAMPAIGNS !== 'undefined' && getCampaign(campaignId)) {
-                const campaign = getCampaign(campaignId);
+            // 🔍 USE GLOBAL HELPER
+            const campaign = (typeof window.getCampaign === 'function') ? window.getCampaign(campaignId) : null;
+
+            if (campaign) {
                 titleElement.textContent = campaign.name;
                 document.title = `Track: ${campaign.name}`;
             }
@@ -345,16 +383,26 @@
                 trackBtn.disabled = true;
                 trackBtn.innerHTML = 'Searching...';
 
+                const inlineStatus = document.getElementById('inlineStatus');
+                if (inlineStatus) inlineStatus.style.display = 'flex';
+
                 try {
                     const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
                     const response = await fetch(`${WORKER_API}/status?upi=${encodeURIComponent(upi)}&campaign=${campaignId || ''}`);
                     const data = await response.json();
 
+                    if (inlineStatus) inlineStatus.style.display = 'none';
                     resultArea.classList.add('active');
 
+                    const noRecord = document.getElementById('noRecordMessage');
+                    const steps = document.getElementById('stepsContainer');
+
                     if (data.found) {
+                        if (noRecord) noRecord.style.display = 'none';
+                        if (steps) steps.style.display = 'flex';
+
                         const status = String(data.status).toLowerCase();
-                        const campaign = getCampaign(campaignId);
+                        // 🔍 USE RESOLVED CAMPAIGN
                         const statusFlow = campaign?.statusFlow || {};
                         const goals = Object.keys(statusFlow);
 
@@ -418,20 +466,20 @@
                         // STEP 3: Payment
                         if (isFinal) {
                             setSuccess(3, 'Paid on ' + (data.paidDate || 'Recently'));
-                            statusIcon.textContent = '🎉';
-                            statusTitle.textContent = 'Cashback Paid!';
+                            if (statusIcon) statusIcon.textContent = '🎉';
+                            if (statusTitle) statusTitle.textContent = 'Cashback Paid!';
                         } else if (isApproved || hitGoal2) {
                             setActive(3, 'Processing Payout');
-                            statusIcon.textContent = '✅';
-                            statusTitle.textContent = 'Verified!';
+                            if (statusIcon) statusIcon.textContent = '✅';
+                            if (statusTitle) statusTitle.textContent = 'Verified!';
                         } else {
-                            statusIcon.textContent = '⏳';
-                            statusTitle.textContent = 'Tracking...';
+                            if (statusIcon) statusIcon.textContent = '⏳';
+                            if (statusTitle) statusTitle.textContent = 'Tracking...';
                         }
 
                     } else {
-                        statusTitle.textContent = 'No Record Found';
-                        statusIcon.textContent = '❌';
+                        if (noRecord) noRecord.style.display = 'block';
+                        if (steps) steps.style.display = 'none';
                     }
 
                 } catch (e) {
@@ -440,6 +488,7 @@
                 } finally {
                     trackBtn.disabled = false;
                     trackBtn.innerHTML = 'Track My Rewards';
+                    if (inlineStatus) inlineStatus.style.display = 'none';
                 }
             });
         });
