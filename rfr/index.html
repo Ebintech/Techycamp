@@ -450,8 +450,8 @@
                 <div class="payout-label" id="payoutLabel">YOU EARN PER REFERRAL</div>
             </div>
 
-            <!-- Path check: directory is tracker/ -->
-            <button class="track-btn" onclick="window.location.href='./tracker/?id='+campaignId">
+            <!-- Fix: Use absolute path for tracker -->
+            <button class="track-btn" onclick="window.location.href='/tracker/?id='+campaignId">
                 📊 Track Earnings
             </button>
         </div>
@@ -547,7 +547,7 @@
     </div>
 
     <!-- campaigns-config.js is in the same directory -->
-    <script src="campaigns-config.js"></script>
+    <script src="/campaigns-config.js"></script>
     <script>
         const urlParams = new URLSearchParams(window.location.search);
         const campaignId = urlParams.get('id') || 'bww4yubb';
