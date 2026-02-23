@@ -695,7 +695,7 @@
     </div>
 
     <!-- Scripts -->
-    <script src="../campaigns-config.js"></script>
+    <script src="/campaigns-config.js"></script>
     <script>
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
         const urlParams = new URLSearchParams(window.location.search);
@@ -812,7 +812,7 @@
 
             // Fix Track Status link to point to ../tracker/
             const trackLink = document.getElementById('trackStatusLink');
-            if (trackLink) trackLink.href = `../tracker/?id=${campaignId}`;
+            if (trackLink) trackLink.href = `/tracker/?id=${campaignId}`;
 
             renderFormFields();
 
@@ -911,7 +911,6 @@
                     referrerId: refId || null,
                     website: document.querySelector('[name="website"]').value,
                     origin: window.location.origin,
-                    secretKey: 'Techybaanupxty892546',
                     offerUrl: currentCampaign.offerUrl
                 };
                 const res = await fetch(WORKER_API, {
