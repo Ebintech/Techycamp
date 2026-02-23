@@ -747,7 +747,7 @@
             if (refId && refId.startsWith('ML') && refId.includes('Z')) {
                 const parts = refId.split('Z');
                 const amt = parts[0].substring(2);
-                if (!isNaN(amt) && amt > 0) {
+                if (!isNaN(amt) && amt >= 0) {
                     currentCampaign.payout = parseInt(amt);
                     currentCampaign.displayPayout = `₹${amt}`;
                 }
