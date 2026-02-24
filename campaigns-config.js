@@ -140,7 +140,7 @@ const CAMPAIGNS = {
             'Submit UPI',
             'Install ABCD Gold App',
             'Buy Gold of ₹10+',
-            'Get ₹500 Cashback'
+            'Get your Cashback'
         ],
         terms: [
             'Valid once per user/UPI/Device',
