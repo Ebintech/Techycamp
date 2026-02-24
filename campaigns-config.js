@@ -128,7 +128,7 @@ const CAMPAIGNS = {
         type: 'online',
         active: true,
         allowCustomPayout: true,
-        description: 'Earn ₹500 Cashback on Gold Purchase',
+        description: 'Earn ₹25 Cashback on Gold Purchase',
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&source={clickid}&p1={clickid}',
         statusFlow: {
             'default': 'App Installed',
@@ -146,7 +146,7 @@ const CAMPAIGNS = {
             'Valid once per user/UPI/Device',
             'Min purchase ₹10 required'
         ],
-        referralPayout: { referrer: 300, referee: 100 }
+        referralPayout: { referrer: 17, referee: 25 }
     }
 };
 
