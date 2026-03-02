@@ -49,7 +49,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
         }
 
-        /* HEADER SECTION */
+        /* HEADER SECTION - Blue Gradient */
         .header {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 60%, #4338ca 100%);
             padding: 24px 20px 50px;
@@ -90,6 +90,7 @@
             font-weight: 400;
         }
 
+        /* CASHBACK CARD - Professional Font */
         .cashback-card {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -143,10 +144,21 @@
             border: 1px solid rgba(16, 185, 129, 0.4);
         }
 
-        .icon-svg { width: 20px; height: 20px; color: #34d399; }
+        .icon-svg {
+            width: 20px;
+            height: 20px;
+            color: #34d399;
+        }
 
-        .content-area { padding: 50px 20px 40px; background: #fff; }
-        .form-group { margin-bottom: 20px; }
+        /* FORM SECTION */
+        .content-area {
+            padding: 50px 20px 40px;
+            background: #fff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
 
         .input-label {
             display: block;
@@ -158,7 +170,9 @@
             letter-spacing: 0.5px;
         }
 
-        .input-wrapper { position: relative; }
+        .input-wrapper {
+            position: relative;
+        }
 
         .input-icon {
             position: absolute;
@@ -208,10 +222,21 @@
             transition: all 0.3s;
         }
 
-        .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35); }
-        .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+        }
 
-        .track-status-container { text-align: center; margin-top: 20px; margin-bottom: 24px; }
+        .submit-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .track-status-container {
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 24px;
+        }
 
         .track-link {
             display: inline-flex;
@@ -229,6 +254,7 @@
             transition: background 0.2s;
         }
 
+        /* FLOATING TELEGRAM ICON */
         .floating-telegram {
             position: fixed;
             right: 20px;
@@ -247,28 +273,102 @@
             transition: transform 0.3s;
         }
 
-        .floating-telegram.show { display: flex; }
-        .floating-telegram:hover { transform: scale(1.1); }
-        .floating-telegram svg { width: 28px; height: 28px; color: white; }
-
-        @keyframes pulse-float {
-            0%, 100% { box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4); }
-            50% { box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6); transform: translateY(-4px); }
+        .floating-telegram.show {
+            display: flex;
         }
 
-        /* LOADING DOTS */
+        .floating-telegram:hover {
+            transform: scale(1.1);
+        }
+
+        .floating-telegram svg {
+            width: 28px;
+            height: 28px;
+            color: white;
+        }
+
+        @keyframes pulse-float {
+
+            0%,
+            100% {
+                box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6);
+                transform: translateY(-4px);
+            }
+        }
+
+        /* SUCCESS MODAL BOX */
+        .success-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 320px;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            z-index: 200;
+        }
+
+        .success-box.active {
+            display: block;
+            animation: popIn 0.3s ease-out;
+        }
+
+        @keyframes popIn {
+            0% {
+                transform: translate(-50%, -45%) scale(0.95);
+                opacity: 0;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* PULSE LOADING DOTS */
+
+        /* Loading Dots - HORIZONTAL FIX */
         .loading-dots {
             display: flex;
             flex-direction: row;
+            /* Ensure horizontal */
             justify-content: center;
             align-items: center;
             margin-bottom: 12px;
         }
 
+        .loading-text {
+            color: #6366f1;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
         @keyframes pulse {
-            0%   { transform: scale(0.95); opacity: 0.5; }
-            50%  { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(0.95); opacity: 0.5; }
+            0% {
+                transform: scale(0.95);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: scale(1.05);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(0.95);
+                opacity: 0.5;
+            }
         }
 
         .loading-dots div {
@@ -280,11 +380,21 @@
             animation: pulse 1s infinite;
         }
 
-        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
+        .loading-dots div:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .loading-dots div:nth-child(3) {
+            animation-delay: 0.4s;
+        }
 
         /* ACCORDIONS */
-        .accordion-section { border: 1px solid #f1f5f9; border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+        .accordion-section {
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
 
         .accordion-header {
             width: 100%;
@@ -299,10 +409,29 @@
             border-bottom: 1px solid transparent;
         }
 
-        .accordion-header.active { border-bottom: 1px solid #f1f5f9; background: #f8fafc; }
-        .accordion-title { font-weight: 600; font-size: 14px; color: #334155; display: flex; align-items: center; gap: 8px; }
-        .accordion-icon { color: #94a3b8; transition: transform 0.3s; }
-        .accordion-header.active .accordion-icon { transform: rotate(180deg); color: #6366f1; }
+        .accordion-header.active {
+            border-bottom: 1px solid #f1f5f9;
+            background: #f8fafc;
+        }
+
+        .accordion-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #334155;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .accordion-icon {
+            color: #94a3b8;
+            transition: transform 0.3s;
+        }
+
+        .accordion-header.active .accordion-icon {
+            transform: rotate(180deg);
+            color: #6366f1;
+        }
 
         .accordion-body {
             max-height: 0;
@@ -312,9 +441,16 @@
             padding: 0 16px;
         }
 
-        .accordion-body.open { padding: 12px 16px; max-height: 1000px; }
+        .accordion-body.open {
+            padding: 12px 16px;
+            max-height: 1000px;
+        }
 
-        .step-list { list-style: none; padding: 0; margin: 0; }
+        .step-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
 
         .step-list li {
             position: relative;
@@ -342,7 +478,15 @@
             top: 3px;
         }
 
-        .acc-icon-bg { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; margin-right: 4px; }
+        .acc-icon-bg {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            margin-right: 4px;
+        }
 
         .telegram-btn {
             display: flex;
@@ -360,84 +504,44 @@
             font-size: 14px;
         }
 
-        .section-hidden { display: none !important; }
-        .blur { filter: blur(8px); transition: filter 0.3s ease; }
-        .state-container { padding: 60px 20px; text-align: center; }
-        .state-icon { font-size: 64px; margin-bottom: 16px; display: block; }
-        .state-title { font-size: 20px; font-weight: 700; color: #1e293b; margin-bottom: 8px; }
-        .state-desc { font-size: 14px; color: #64748b; margin-bottom: 24px; }
-
-        /* ===== NEW SUCCESS MORPH ANIMATION ===== */
-        #morphOverlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.97);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+        .section-hidden {
+            display: none !important;
         }
 
-        #morphOverlay.active {
-            display: flex;
+        .blur {
+            filter: blur(8px);
+            transition: filter 0.3s ease;
         }
 
-        .morph-pill {
-            width: 64px;
-            height: 64px;
-            background: #22c55e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 28px;
-            font-weight: 800;
-            box-shadow: 0 8px 28px rgba(34, 197, 94, 0.45);
-            overflow: hidden;
-            position: relative;
-            transition: all 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+        .state-container {
+            padding: 60px 20px;
+            text-align: center;
         }
 
-        .morph-pill.expand {
-            width: 260px;
-            height: 60px;
-            border-radius: 16px;
+        .state-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: block;
         }
 
-        .morph-text {
-            opacity: 0;
-            margin-left: 10px;
-            font-size: 16px;
+        .state-title {
+            font-size: 20px;
             font-weight: 700;
-            white-space: nowrap;
-            transition: opacity 0.3s ease 0.25s;
+            color: #1e293b;
+            margin-bottom: 8px;
         }
 
-        .morph-pill.expand .morph-text {
-            opacity: 1;
-        }
-
-        .redirect-text {
-            margin-top: 22px;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            color: #6366f1;
-            opacity: 0;
-            transition: opacity 0.4s ease 0.5s;
-        }
-
-        .redirect-text.show {
-            opacity: 1;
+        .state-desc {
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
         }
     </style>
 </head>
 
 <body>
 
-    <!-- Loading Overlay — original, unchanged -->
+    <!-- Loading Overlay -->
     <div class="modal-overlay" id="loadingOverlay">
         <div class="loading-dots">
             <div></div>
@@ -446,57 +550,69 @@
         </div>
     </div>
 
-    <!-- NEW Morph Animation Overlay -->
-    <div id="morphOverlay">
-        <div class="morph-pill" id="morphPill">
-            ₹
-            <span class="morph-text" id="morphText">Cashback Activated!</span>
-        </div>
-        <div class="redirect-text" id="redirectText">REDIRECTING...</div>
+    <!-- Success Box (Modal Style) -->
+    <div class="success-box" id="successBox">
+        <div class="state-icon" style="font-size:48px; margin-bottom:12px">✅</div>
+        <h2 class="state-title" style="font-size:18px">Submission Successful!</h2>
+        <p class="state-desc" style="font-size:12px; margin-bottom:0">Redirecting to offer page...</p>
     </div>
 
     <!-- Main Application Container -->
     <div class="app-container">
 
-        <!-- ERROR STATE -->
+        <!-- 1. ERROR STATE -->
         <div id="errorView" class="state-container section-hidden">
             <span class="state-icon">❌</span>
             <h2 class="state-title">Campaign Not Found</h2>
             <p class="state-desc">This offer is unavailable or the link is incorrect.</p>
         </div>
 
-        <!-- ENDED STATE -->
+        <!-- 2. ENDED STATE -->
         <div id="campaignEnded" class="state-container section-hidden">
             <span class="state-icon">⏰</span>
             <h2 class="state-title">Offer Expired</h2>
             <p class="state-desc">This campaign has ended. Stay tuned for new offers!</p>
         </div>
 
-        <!-- ACTIVE FORM VIEW -->
+        <!-- 3. ACTIVE FORM VIEW -->
         <div id="formView">
+            <!-- Header -->
             <div class="header">
-                <div class="badge"><span>🎁</span> COMPLETE & EARN</div>
+                <div class="badge">
+                    <span>🎁</span> COMPLETE & EARN
+                </div>
                 <h1 id="campaignName">&nbsp;</h1>
                 <p id="campaignDescription">Complete the offer to get instant cashback!</p>
+
+                <!-- Compact Cashback Card -->
                 <div class="cashback-card">
                     <div class="cashback-label">YOUR CASHBACK REWARD</div>
                     <div class="cashback-amount-row">
                         <span class="cashback-amount" id="campaignPayout">₹0</span>
+
+                        <!-- Green Wallet Icon Container -->
                         <div class="wallet-icon-container">
                             <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path>
+                                    d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
+                                </path>
                             </svg>
                         </div>
                     </div>
                 </div>
             </div>
 
+            <!-- Content Area -->
             <div class="content-area">
                 <form id="campaignForm">
-                    <div id="formFieldsContainer"></div>
+                    <div id="formFieldsContainer">
+                        <!-- Dynamic Fields will be injected here -->
+                    </div>
+
                     <!-- Honeypot -->
                     <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+
+                    <!-- Submit Button -->
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -506,14 +622,18 @@
                     </button>
                 </form>
 
+                <!-- Track Status Link -->
                 <div class="track-status-container">
-                    <a href="#" id="trackStatusLink" class="track-link">Track Your Leads Status →</a>
+                    <a href="#" id="trackStatusLink" class="track-link">
+                        Track Your Leads Status →
+                    </a>
                 </div>
 
+                <!-- How to Avail -->
                 <div class="accordion-section">
                     <button class="accordion-header active" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
-                            <span class="acc-icon-bg" style="background:#eff6ff;color:#6366f1;">
+                            <span class="acc-icon-bg" style="background:#eff6ff; color:#6366f1;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -521,46 +641,60 @@
                             </span>
                             How to Complete
                         </span>
-                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
                         </svg>
                     </button>
-                    <div class="accordion-body open" style="max-height:1000px;">
-                        <ul class="step-list" id="stepsContainer"></ul>
+                    <div class="accordion-body open" style="max-height: 1000px;">
+                        <ul class="step-list" id="stepsContainer">
+                            <!-- Steps Injected Here -->
+                        </ul>
                     </div>
                 </div>
 
+                <!-- Terms -->
                 <div class="accordion-section">
                     <button class="accordion-header" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
-                            <span class="acc-icon-bg" style="background:#fef2f2;color:#ef4444;">
+                            <span class="acc-icon-bg" style="background:#fef2f2; color:#ef4444;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                    </path>
                                 </svg>
                             </span>
                             Terms & Conditions
                         </span>
-                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
+                            </path>
                         </svg>
                     </button>
                     <div class="accordion-body">
-                        <ul class="step-list" id="termsContainer"></ul>
+                        <ul class="step-list" id="termsContainer">
+                            <!-- Terms Injected Here -->
+                        </ul>
                     </div>
                 </div>
 
-                <a href="#" target="_blank" class="telegram-btn" id="telegramBtn" style="display:none;">
+                <!-- Telegram Button (Hidden by default, shown via JS) -->
+                <a href="#" target="_blank" class="telegram-btn" id="telegramBtn" style="display: none;">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z"/>
+                        <path
+                            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
                     </svg>
                     Join Our Telegram Channel
                 </a>
+
             </div>
         </div>
 
     </div>
 
+    <!-- Scripts -->
     <script src="/campaigns-config.js"></script>
     <script>
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
@@ -714,11 +848,12 @@
                 }
 
                 group.innerHTML = `
-                    <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">${icon}</span>
-                        <input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}>
-                    </div>`;
+                <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
+                <div class="input-wrapper">
+                    <span class="input-icon">${icon}</span>
+                    <input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}>
+                </div>
+            `;
                 container.appendChild(group);
             });
         }
@@ -737,40 +872,12 @@
             }
         };
 
-        // ✅ NEW: Success animation function
-        function playSuccessAnimation(finalRedirect) {
-            const overlay = document.getElementById('morphOverlay');
-            const pill = document.getElementById('morphPill');
-            const redirectText = document.getElementById('redirectText');
-
-            // Show overlay
-            overlay.classList.add('active');
-
-            // Blur background
-            document.querySelector('.app-container').classList.add('blur');
-
-            // Morph: circle → pill
-            setTimeout(() => {
-                pill.classList.add('expand');
-            }, 180);
-
-            // Show REDIRECTING text
-            setTimeout(() => {
-                redirectText.classList.add('show');
-            }, 650);
-
-            // Redirect
-            setTimeout(() => {
-                window.location.replace(finalRedirect);
-            }, 1200);
-        }
-
-        // ── ORIGINAL SUBMIT HANDLER — only sBox replaced with playSuccessAnimation ──
         document.getElementById('campaignForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             const overlay = document.getElementById('loadingOverlay');
+            const sBox = document.getElementById('successBox');
 
             const formData = {};
             const fields = currentCampaign.requiredFields || ['upi'];
@@ -806,7 +913,6 @@
                     origin: window.location.origin,
                     offerUrl: currentCampaign.offerUrl
                 };
-
                 const res = await fetch(WORKER_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -839,7 +945,16 @@
                 }
 
                 overlay.classList.remove('active');
-                playSuccessAnimation(finalRedirect);
+                if (sBox) {
+                    sBox.classList.add('active');
+                    // Blur the background container
+                    document.querySelector('.app-container').classList.add('blur');
+                }
+
+                // FAST SNAPPY REDIRECT: 450ms
+                setTimeout(() => {
+                    window.location.replace(finalRedirect);
+                }, 450);
 
             } catch (err) {
                 console.error(err);
