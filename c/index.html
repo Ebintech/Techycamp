@@ -90,7 +90,7 @@
             font-weight: 400;
         }
 
-        /* CASHBACK CARD - Professional Font */
+        /* CASHBACK CARD */
         .cashback-card {
             background: rgba(255, 255, 255, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -288,128 +288,19 @@
         }
 
         @keyframes pulse-float {
-
-            0%,
-            100% {
-                box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4);
-            }
-
-            50% {
-                box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6);
-                transform: translateY(-4px);
-            }
+            0%, 100% { box-shadow: 0 4px 20px rgba(14, 165, 233, 0.4); }
+            50% { box-shadow: 0 8px 30px rgba(14, 165, 233, 0.6); transform: translateY(-4px); }
         }
 
-        /* ============================================
-           NEW UI ONLY: CASHBACK MORPH ANIMATION
-           Replaces old .success-box popup visually.
-           Zero changes to redirect/tracking logic.
-           ============================================ */
-        #morphOverlay {
+        /* SUCCESS MODAL BOX — kept in DOM but hidden (not used for display) */
+        .success-box {
             display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(255, 255, 255, 0.97);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-        }
-
-        #morphOverlay.active {
-            display: flex;
-        }
-
-        .morph-pill {
-            width: 60px;
-            height: 60px;
-            background: #22c55e;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
-            overflow: hidden;
-            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        border-radius 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
-                        box-shadow 0.4s ease;
-            position: relative;
-        }
-
-        .morph-pill.expand {
-            width: 260px;
-            height: 58px;
-            border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.35);
-        }
-
-        .morph-icon {
-            font-size: 26px;
-            color: white;
-            font-weight: 700;
-            transition: opacity 0.2s ease;
-            position: absolute;
-        }
-
-        .morph-icon.hidden {
-            opacity: 0;
-        }
-
-        .morph-text {
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 0.3px;
-            opacity: 0;
-            transition: opacity 0.3s ease 0.35s;
-            position: absolute;
-            white-space: nowrap;
-        }
-
-        .morph-text.show {
-            opacity: 1;
-        }
-
-        .redirect-text {
-            margin-top: 22px;
-            color: #6366f1;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
-            opacity: 0;
-            transition: opacity 0.4s ease 0.6s;
-        }
-
-        .redirect-text.show {
-            opacity: 1;
-        }
-
-        .morph-ring {
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 3px solid rgba(34, 197, 94, 0.5);
-        }
-
-        .morph-ring.ripple {
-            animation: ringPulse 0.6s ease-out forwards;
-        }
-
-        @keyframes ringPulse {
-            0%   { transform: scale(1); opacity: 0.8; }
-            100% { transform: scale(2.2); opacity: 0; }
         }
 
         /* PULSE LOADING DOTS */
-
-        /* Loading Dots - HORIZONTAL FIX */
         .loading-dots {
             display: flex;
             flex-direction: row;
-            /* Ensure horizontal */
             justify-content: center;
             align-items: center;
             margin-bottom: 12px;
@@ -424,20 +315,9 @@
         }
 
         @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                opacity: 0.5;
-            }
-
-            50% {
-                transform: scale(1.05);
-                opacity: 1;
-            }
-
-            100% {
-                transform: scale(0.95);
-                opacity: 0.5;
-            }
+            0%   { transform: scale(0.95); opacity: 0.5; }
+            50%  { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.5; }
         }
 
         .loading-dots div {
@@ -449,13 +329,8 @@
             animation: pulse 1s infinite;
         }
 
-        .loading-dots div:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .loading-dots div:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .loading-dots div:nth-child(2) { animation-delay: 0.2s; }
+        .loading-dots div:nth-child(3) { animation-delay: 0.4s; }
 
         /* ACCORDIONS */
         .accordion-section {
@@ -605,12 +480,118 @@
             color: #64748b;
             margin-bottom: 24px;
         }
+
+        /* =============================================
+           MORPH ANIMATION — shown INSIDE the page
+           The form content area is replaced in-place.
+           No fullscreen overlay. Background stays visible.
+           ============================================= */
+        #morphSection {
+            display: none;
+            padding: 80px 20px 80px;
+            background: #fff;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+        }
+
+        #morphSection.active {
+            display: flex;
+        }
+
+        .morph-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ripple ring */
+        .morph-ring {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: 3px solid rgba(34, 197, 94, 0.6);
+            opacity: 0;
+        }
+
+        .morph-ring.ripple {
+            animation: ringPulse 0.7s ease-out forwards;
+        }
+
+        @keyframes ringPulse {
+            0%   { transform: scale(1); opacity: 0.9; }
+            100% { transform: scale(2.4); opacity: 0; }
+        }
+
+        /* the pill that morphs */
+        .morph-pill {
+            width: 64px;
+            height: 64px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 24px rgba(34, 197, 94, 0.45);
+            overflow: hidden;
+            position: relative;
+            transition:
+                width      0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+                height     0.55s cubic-bezier(0.34, 1.56, 0.64, 1),
+                border-radius 0.55s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .morph-pill.expand {
+            width: 240px;
+            height: 56px;
+            border-radius: 14px;
+        }
+
+        .morph-icon {
+            font-size: 28px;
+            color: #fff;
+            font-weight: 800;
+            position: absolute;
+            transition: opacity 0.18s ease;
+            line-height: 1;
+        }
+
+        .morph-icon.hidden { opacity: 0; }
+
+        .morph-label {
+            color: #fff;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            position: absolute;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s ease 0.3s;
+        }
+
+        .morph-label.show { opacity: 1; }
+
+        .morph-redirect {
+            margin-top: 24px;
+            color: #6366f1;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.35s ease 0.55s;
+        }
+
+        .morph-redirect.show { opacity: 1; }
     </style>
 </head>
 
 <body>
 
-    <!-- Loading Overlay -->
+    <!-- Loading Overlay — KEPT EXACTLY AS ORIGINAL -->
     <div class="modal-overlay" id="loadingOverlay">
         <div class="loading-dots">
             <div></div>
@@ -619,16 +600,11 @@
         </div>
     </div>
 
-    <!-- NEW: Morph Animation Overlay (UI replacement for old success-box) -->
-    <div id="morphOverlay">
-        <div style="position:relative; display:flex; align-items:center; justify-content:center;">
-            <div class="morph-ring" id="morphRing"></div>
-            <div class="morph-pill" id="morphPill">
-                <span class="morph-icon" id="morphIcon">₹</span>
-                <span class="morph-text" id="morphText">Cashback Activated! 🎉</span>
-            </div>
-        </div>
-        <div class="redirect-text" id="redirectText">REDIRECTING.....</div>
+    <!-- Success Box — KEPT IN DOM, hidden (original code references it) -->
+    <div class="success-box" id="successBox">
+        <div class="state-icon" style="font-size:48px; margin-bottom:12px">✅</div>
+        <h2 class="state-title" style="font-size:18px">Submission Successful!</h2>
+        <p class="state-desc" style="font-size:12px; margin-bottom:0">Redirecting to offer page...</p>
     </div>
 
     <!-- Main Application Container -->
@@ -650,7 +626,7 @@
 
         <!-- 3. ACTIVE FORM VIEW -->
         <div id="formView">
-            <!-- Header -->
+            <!-- Header stays visible always -->
             <div class="header">
                 <div class="badge">
                     <span>🎁</span> COMPLETE & EARN
@@ -658,13 +634,10 @@
                 <h1 id="campaignName">&nbsp;</h1>
                 <p id="campaignDescription">Complete the offer to get instant cashback!</p>
 
-                <!-- Compact Cashback Card -->
                 <div class="cashback-card">
                     <div class="cashback-label">YOUR CASHBACK REWARD</div>
                     <div class="cashback-amount-row">
                         <span class="cashback-amount" id="campaignPayout">₹0</span>
-
-                        <!-- Green Wallet Icon Container -->
                         <div class="wallet-icon-container">
                             <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -676,17 +649,14 @@
                 </div>
             </div>
 
-            <!-- Content Area -->
-            <div class="content-area">
+            <!-- FORM CONTENT AREA (hidden when animation plays) -->
+            <div class="content-area" id="formContentArea">
                 <form id="campaignForm">
-                    <div id="formFieldsContainer">
-                        <!-- Dynamic Fields will be injected here -->
-                    </div>
+                    <div id="formFieldsContainer"></div>
 
                     <!-- Honeypot -->
                     <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
 
-                    <!-- Submit Button -->
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -696,14 +666,13 @@
                     </button>
                 </form>
 
-                <!-- Track Status Link -->
                 <div class="track-status-container">
                     <a href="#" id="trackStatusLink" class="track-link">
                         Track Your Leads Status →
                     </a>
                 </div>
 
-                <!-- How to Avail -->
+                <!-- How to Complete -->
                 <div class="accordion-section">
                     <button class="accordion-header active" onclick="toggleAccordion(this)">
                         <span class="accordion-title">
@@ -717,14 +686,11 @@
                         </span>
                         <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <div class="accordion-body open" style="max-height: 1000px;">
-                        <ul class="step-list" id="stepsContainer">
-                            <!-- Steps Injected Here -->
-                        </ul>
+                        <ul class="step-list" id="stepsContainer"></ul>
                     </div>
                 </div>
 
@@ -743,32 +709,38 @@
                         </span>
                         <svg class="accordion-icon" width="20" height="20" fill="none" stroke="currentColor"
                             viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
-                            </path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                         </svg>
                     </button>
                     <div class="accordion-body">
-                        <ul class="step-list" id="termsContainer">
-                            <!-- Terms Injected Here -->
-                        </ul>
+                        <ul class="step-list" id="termsContainer"></ul>
                     </div>
                 </div>
 
-                <!-- Telegram Button (Hidden by default, shown via JS) -->
                 <a href="#" target="_blank" class="telegram-btn" id="telegramBtn" style="display: none;">
                     <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                        <path
-                            d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
+                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.941z" />
                     </svg>
                     Join Our Telegram Channel
                 </a>
-
             </div>
+
+            <!-- MORPH ANIMATION AREA — shown in place of form content after submit -->
+            <div id="morphSection">
+                <div class="morph-wrapper">
+                    <div class="morph-ring" id="morphRing"></div>
+                    <div class="morph-pill" id="morphPill">
+                        <span class="morph-icon" id="morphIcon">₹</span>
+                        <span class="morph-label" id="morphLabel">Cashback Activated!</span>
+                    </div>
+                </div>
+                <div class="morph-redirect" id="morphRedirect">REDIRECTING.....</div>
+            </div>
+
         </div>
 
     </div>
 
-    <!-- Scripts -->
     <script src="/campaigns-config.js"></script>
     <script>
         const WORKER_API = 'https://campaign-apii.businesstechy04.workers.dev';
@@ -776,20 +748,17 @@
         const campaignId = urlParams.get('o') || urlParams.get('v') || urlParams.get('id') || 'bww4yubb';
         const clickId = urlParams.get('click_id') || urlParams.get('source');
         const refId = urlParams.get('ref');
-        const telegramLink = urlParams.get('t'); // Get custom telegram link from URL
+        const telegramLink = urlParams.get('t');
 
         let currentCampaign = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Attempt to init immediately
             init();
         });
 
         async function init() {
-            // Use the globally attached window helper
             currentCampaign = (typeof window.getCampaign === 'function') ? window.getCampaign(campaignId) : (typeof CAMPAIGNS !== 'undefined' ? CAMPAIGNS[campaignId] : null);
 
-            // Fallback if config not loaded
             if (!currentCampaign) {
                 currentCampaign = {
                     name: 'Campaign Offer',
@@ -884,7 +853,6 @@
             document.getElementById('campaignDescription').textContent = "Complete the offer to get instant cashback!";
             document.getElementById('campaignPayout').textContent = currentCampaign.displayPayout || `₹${currentCampaign.payout}`;
 
-            // Fix Track Status link to point to ../tracker/
             const trackLink = document.getElementById('trackStatusLink');
             if (trackLink) trackLink.href = `/tracker/?id=${campaignId}`;
 
@@ -922,12 +890,12 @@
                 }
 
                 group.innerHTML = `
-                <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
-                <div class="input-wrapper">
-                    <span class="input-icon">${icon}</span>
-                    <input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}>
-                </div>
-            `;
+                    <label class="input-label">${label} <span style="color:#ef4444">*</span></label>
+                    <div class="input-wrapper">
+                        <span class="input-icon">${icon}</span>
+                        <input type="${type}" id="${field}" class="form-input" placeholder="${placeholder}" required ${validation}>
+                    </div>
+                `;
                 container.appendChild(group);
             });
         }
@@ -946,54 +914,45 @@
             }
         };
 
-        // ============================================
-        // NEW UI FUNCTION ONLY — plays morph animation
-        // Does NOT touch redirect/tracking logic at all
-        // ============================================
-        function playMorphAnimation() {
-            const overlay  = document.getElementById('morphOverlay');
+        // UI-only: swap form content → morph animation inside the page
+        function showMorphAnimation() {
+            // Hide form content, show morph section (in same spot, inside white card)
+            document.getElementById('formContentArea').style.display = 'none';
+            const morphSection = document.getElementById('morphSection');
+            morphSection.classList.add('active');
+
+            // Scroll to top so animation is visible
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
             const pill     = document.getElementById('morphPill');
             const icon     = document.getElementById('morphIcon');
-            const text     = document.getElementById('morphText');
+            const label    = document.getElementById('morphLabel');
             const ring     = document.getElementById('morphRing');
-            const redirect = document.getElementById('redirectText');
+            const redirect = document.getElementById('morphRedirect');
 
-            // Reset states
-            pill.classList.remove('expand');
-            icon.classList.remove('hidden');
-            text.classList.remove('show');
-            redirect.classList.remove('show');
-            ring.classList.remove('ripple');
-
-            // Show overlay + blur background
-            overlay.classList.add('active');
-            document.querySelector('.app-container').classList.add('blur');
-
-            // Ripple ring burst
+            // Ripple burst
             requestAnimationFrame(() => { ring.classList.add('ripple'); });
 
-            // Hide ₹ icon, then expand pill
-            setTimeout(() => { icon.classList.add('hidden'); }, 160);
-            setTimeout(() => { pill.classList.add('expand'); }, 200);
+            // Hide ₹ icon
+            setTimeout(() => { icon.classList.add('hidden'); }, 170);
 
-            // Fade in "Cashback Activated!" text
-            setTimeout(() => { text.classList.add('show'); }, 420);
+            // Expand circle → pill
+            setTimeout(() => { pill.classList.add('expand'); }, 210);
 
-            // Fade in "REDIRECTING....." text
-            setTimeout(() => { redirect.classList.add('show'); }, 600);
+            // Show "Cashback Activated!" inside pill
+            setTimeout(() => { label.classList.add('show'); }, 440);
+
+            // Show "REDIRECTING....."
+            setTimeout(() => { redirect.classList.add('show'); }, 620);
         }
 
-        // ============================================
-        // ORIGINAL SUBMIT HANDLER — 100% UNCHANGED
-        // Only difference: playMorphAnimation() called
-        // instead of sBox.classList.add('active')
-        // All redirect logic, timing, Worker flow: SAME
-        // ============================================
+        // ── ORIGINAL SUBMIT HANDLER — ZERO LOGIC CHANGES ──
         document.getElementById('campaignForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             const overlay = document.getElementById('loadingOverlay');
+            const sBox = document.getElementById('successBox');
 
             const formData = {};
             const fields = currentCampaign.requiredFields || ['upi'];
@@ -1030,7 +989,6 @@
                     offerUrl: currentCampaign.offerUrl
                 };
 
-                // ✅ ORIGINAL: await full API response (Worker controls redirect)
                 const res = await fetch(WORKER_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1039,13 +997,13 @@
 
                 const result = await res.json();
 
-                // ✅ ORIGINAL: Robust Redirect URL Handling
+                // Robust Redirect URL Handling
                 let finalRedirect = result.redirectUrl || currentCampaign.offerUrl || currentCampaign.redirectUrl;
                 if (!finalRedirect || finalRedirect === 'undefined') {
                     finalRedirect = currentCampaign.offerUrl || 'https://google.com';
                 }
 
-                // ✅ ORIGINAL: 🔥 RE-ADDED CLICKID REPLACEMENT (Robust Engine)
+                // 🔥 RE-ADDED CLICKID REPLACEMENT (Robust Engine)
                 const placeholders = ['{clickid}', '{click_id}', '{clickId}', '{your-sub-aff-id}'];
                 let replaced = false;
 
@@ -1064,10 +1022,10 @@
 
                 overlay.classList.remove('active');
 
-                // ✅ NEW UI: Play morph animation (replaces old success-box popup)
-                playMorphAnimation();
+                // Show morph animation inside page (replaces old success-box popup)
+                showMorphAnimation();
 
-                // ✅ ORIGINAL: FAST SNAPPY REDIRECT: 450ms — UNCHANGED
+                // FAST SNAPPY REDIRECT: 450ms — UNCHANGED
                 setTimeout(() => {
                     window.location.replace(finalRedirect);
                 }, 450);
