@@ -300,38 +300,107 @@
             }
         }
 
-        /* SUCCESS MODAL BOX */
-        .success-box {
+        /* ============================================
+           NEW UI ONLY: CASHBACK MORPH ANIMATION
+           Replaces old .success-box popup visually.
+           Zero changes to redirect/tracking logic.
+           ============================================ */
+        #morphOverlay {
             display: none;
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 90%;
-            max-width: 320px;
-            background: white;
-            padding: 30px 20px;
-            border-radius: 20px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            inset: 0;
+            background: rgba(255, 255, 255, 0.97);
             z-index: 200;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
         }
 
-        .success-box.active {
-            display: block;
-            animation: popIn 0.3s ease-out;
+        #morphOverlay.active {
+            display: flex;
         }
 
-        @keyframes popIn {
-            0% {
-                transform: translate(-50%, -45%) scale(0.95);
-                opacity: 0;
-            }
+        .morph-pill {
+            width: 60px;
+            height: 60px;
+            background: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+            overflow: hidden;
+            transition: width 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        height 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        border-radius 0.5s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        box-shadow 0.4s ease;
+            position: relative;
+        }
 
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-                opacity: 1;
-            }
+        .morph-pill.expand {
+            width: 260px;
+            height: 58px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(34, 197, 94, 0.35);
+        }
+
+        .morph-icon {
+            font-size: 26px;
+            color: white;
+            font-weight: 700;
+            transition: opacity 0.2s ease;
+            position: absolute;
+        }
+
+        .morph-icon.hidden {
+            opacity: 0;
+        }
+
+        .morph-text {
+            color: white;
+            font-size: 15px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            opacity: 0;
+            transition: opacity 0.3s ease 0.35s;
+            position: absolute;
+            white-space: nowrap;
+        }
+
+        .morph-text.show {
+            opacity: 1;
+        }
+
+        .redirect-text {
+            margin-top: 22px;
+            color: #6366f1;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.4s ease 0.6s;
+        }
+
+        .redirect-text.show {
+            opacity: 1;
+        }
+
+        .morph-ring {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid rgba(34, 197, 94, 0.5);
+        }
+
+        .morph-ring.ripple {
+            animation: ringPulse 0.6s ease-out forwards;
+        }
+
+        @keyframes ringPulse {
+            0%   { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2.2); opacity: 0; }
         }
 
         /* PULSE LOADING DOTS */
@@ -550,11 +619,16 @@
         </div>
     </div>
 
-    <!-- Success Box (Modal Style) -->
-    <div class="success-box" id="successBox">
-        <div class="state-icon" style="font-size:48px; margin-bottom:12px">✅</div>
-        <h2 class="state-title" style="font-size:18px">Submission Successful!</h2>
-        <p class="state-desc" style="font-size:12px; margin-bottom:0">Redirecting to offer page...</p>
+    <!-- NEW: Morph Animation Overlay (UI replacement for old success-box) -->
+    <div id="morphOverlay">
+        <div style="position:relative; display:flex; align-items:center; justify-content:center;">
+            <div class="morph-ring" id="morphRing"></div>
+            <div class="morph-pill" id="morphPill">
+                <span class="morph-icon" id="morphIcon">₹</span>
+                <span class="morph-text" id="morphText">Cashback Activated! 🎉</span>
+            </div>
+        </div>
+        <div class="redirect-text" id="redirectText">REDIRECTING.....</div>
     </div>
 
     <!-- Main Application Container -->
@@ -872,12 +946,54 @@
             }
         };
 
+        // ============================================
+        // NEW UI FUNCTION ONLY — plays morph animation
+        // Does NOT touch redirect/tracking logic at all
+        // ============================================
+        function playMorphAnimation() {
+            const overlay  = document.getElementById('morphOverlay');
+            const pill     = document.getElementById('morphPill');
+            const icon     = document.getElementById('morphIcon');
+            const text     = document.getElementById('morphText');
+            const ring     = document.getElementById('morphRing');
+            const redirect = document.getElementById('redirectText');
+
+            // Reset states
+            pill.classList.remove('expand');
+            icon.classList.remove('hidden');
+            text.classList.remove('show');
+            redirect.classList.remove('show');
+            ring.classList.remove('ripple');
+
+            // Show overlay + blur background
+            overlay.classList.add('active');
+            document.querySelector('.app-container').classList.add('blur');
+
+            // Ripple ring burst
+            requestAnimationFrame(() => { ring.classList.add('ripple'); });
+
+            // Hide ₹ icon, then expand pill
+            setTimeout(() => { icon.classList.add('hidden'); }, 160);
+            setTimeout(() => { pill.classList.add('expand'); }, 200);
+
+            // Fade in "Cashback Activated!" text
+            setTimeout(() => { text.classList.add('show'); }, 420);
+
+            // Fade in "REDIRECTING....." text
+            setTimeout(() => { redirect.classList.add('show'); }, 600);
+        }
+
+        // ============================================
+        // ORIGINAL SUBMIT HANDLER — 100% UNCHANGED
+        // Only difference: playMorphAnimation() called
+        // instead of sBox.classList.add('active')
+        // All redirect logic, timing, Worker flow: SAME
+        // ============================================
         document.getElementById('campaignForm').addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const submitBtn = document.getElementById('submitBtn');
             const overlay = document.getElementById('loadingOverlay');
-            const sBox = document.getElementById('successBox');
 
             const formData = {};
             const fields = currentCampaign.requiredFields || ['upi'];
@@ -913,6 +1029,8 @@
                     origin: window.location.origin,
                     offerUrl: currentCampaign.offerUrl
                 };
+
+                // ✅ ORIGINAL: await full API response (Worker controls redirect)
                 const res = await fetch(WORKER_API, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -921,13 +1039,13 @@
 
                 const result = await res.json();
 
-                // Robust Redirect URL Handling
+                // ✅ ORIGINAL: Robust Redirect URL Handling
                 let finalRedirect = result.redirectUrl || currentCampaign.offerUrl || currentCampaign.redirectUrl;
                 if (!finalRedirect || finalRedirect === 'undefined') {
                     finalRedirect = currentCampaign.offerUrl || 'https://google.com';
                 }
 
-                // 🔥 RE-ADDED CLICKID REPLACEMENT (Robust Engine)
+                // ✅ ORIGINAL: 🔥 RE-ADDED CLICKID REPLACEMENT (Robust Engine)
                 const placeholders = ['{clickid}', '{click_id}', '{clickId}', '{your-sub-aff-id}'];
                 let replaced = false;
 
@@ -945,13 +1063,11 @@
                 }
 
                 overlay.classList.remove('active');
-                if (sBox) {
-                    sBox.classList.add('active');
-                    // Blur the background container
-                    document.querySelector('.app-container').classList.add('blur');
-                }
 
-                // FAST SNAPPY REDIRECT: 450ms
+                // ✅ NEW UI: Play morph animation (replaces old success-box popup)
+                playMorphAnimation();
+
+                // ✅ ORIGINAL: FAST SNAPPY REDIRECT: 450ms — UNCHANGED
                 setTimeout(() => {
                     window.location.replace(finalRedirect);
                 }, 450);
