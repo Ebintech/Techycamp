@@ -126,7 +126,7 @@ const CAMPAIGNS = {
         slug: 'abcd-gold',
         payout: 25,
         type: 'online',
-        active: false,
+        active: true,
         allowCustomPayout: true,
         description: 'Earn ₹25 Cashback on Gold Purchase',
         offerUrl: 'https://trk.opiclepxl.com/click?campaign_id=2825&pub_id=3546&source={clickid}&p1={clickid}',
@@ -146,7 +146,7 @@ const CAMPAIGNS = {
             'Valid once per user/UPI/Device',
             'Min purchase ₹10 required'
         ],
-        referralPayout: { referrer: 17, referee: 25 }
+        referralPayout: { referrer: 20, referee: 25 }
     }
 };
 
